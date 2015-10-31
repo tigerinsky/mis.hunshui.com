@@ -1,0 +1,200 @@
+<{include file="../common/header.html"}>
+<!--<div class="subnav">-->
+    <!--<div class="content-menu ib-a blue line-x">-->
+        <!--<a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/imgmgr/imgmgr/imgmgr_add/'}>?', title:'添加二级分类图片', width:'800', height:'600', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>添加二级分类图片</em></a> <a href="<{site_url url='/imgmgr/imgmgr/index/'}>" class="on"><em>二级分类图片列表</em></a></div>-->
+<!--</div>-->
+<style type="text/css">
+    html{_overflow-y:scroll}
+</style>
+<div class="pad_10">
+    <div id="searchid">
+        <form name="searchform" action="<{site_url url='/uploadbatch/uploadbatch/index/'}>" method="get" >
+            <!--<table width="100%" cellspacing="0" class="search-form">-->
+                <!--<tbody>-->
+                <!--<tr>-->
+                    <!--<td>-->
+                        <!--<div class="explain-col">-->
+                            <!--<{$search_arr['img_type_sel']}>-->
+                            <!--<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />-->
+                            <!--<input type="submit" name="search" class="button" value="搜索" />-->
+                        <!--</div>-->
+                    <!--</td>-->
+                <!--</tr>-->
+                <!--</tbody>-->
+            <!--</table>-->
+            <input type="hidden" value="1" name="show">
+            <input type="hidden" value="ok" name="dosearch">
+            <input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+        </form>
+    </div>
+    <div class="content-menu ib-a blue line-x">
+        <a class="add fb" href="javascript:_push();void(0);"><em>同步</em></a> </div>
+    <!--<form name="myform" id="myform" action="" method="post" >-->
+
+        <div class="table-list">
+            <table width="100%" cellspacing="0">
+                <thead>
+                <tr>
+                    <th width="60">图片</th>
+                    <th width="40">原始名称</th>
+                    <!--<th width="60">UID</th>-->
+                    <th width="30">一级分类</th>
+                    <th width="30">二级分类</th>
+                    <th width="100">Tag</th>
+                    <th width="100">描述(双击编辑)</th>
+                </tr>
+                </thead>
+
+                <tbody>
+                <{foreach from=$list_data item=row}>
+                <tr>
+                    <td align="center"><a target="_blank" href="<{$row['img']['s']['url']}>" ><{if <{$row['img']['t']['url']}>}><img width="100" height="100" src="<{$row['img']['t']['url']}>"/><{else}>[无图片]<{/if}></a></td>
+                    <td width="60" align="center"><{$row['img_oname']}></td>
+                    <!--<td align="center"><{$row['uid']}></td>-->
+                    <td align="center">
+                        <select onchange="add_select(<{$row['tid']}>,1)" id="class_1_<{$row['tid']}>" title="<{$row['tid']}>" name="class_1" form="carform">
+                                <option value="0">暂无</option>
+                            <{foreach from=$class_1 item=cla1}>
+                                 <option <{if $cla1['name']==$row['f_catalog'] }>selected = "selected"<{/if}> value="<{$cla1['id']}>"><{$cla1['name']}></option>
+                            <{/foreach}>
+                        </select>
+                    </td>
+                    <td align="center">
+                        <select onchange="add_select(<{$row['tid']}>,2)" id="class_2_<{$row['tid']}>" title="<{$row['tid']}>" name="class_2" form="carform">
+                            <{if $row['s_catalog']}><option value="0"><{$row['s_catalog']}></option><{else}><option value="0">暂无</option><{/if}>
+                        </select></td>
+                    <td align="center" id="class_3_<{$row['tid']}>" title="<{$row['tid']}>">
+                        <{$row['tags']}>
+                    </td>
+                    <td align="center" title="<{$row['tid']}>" id="desc"><{$row['content']}></td>
+                </tr>
+                <{foreachelse}>
+                <tr>
+                    <td colspan="10">没有数据</td>
+                </tr>
+                <{/foreach}>
+                </tbody>
+            </table>
+            <div class="btn">
+                <label for="check_box">全选/取消</label>
+                <input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+                <input type="hidden" value="1" name="dosubmit">
+                <!--
+                <input type="button" class="button" value="推荐" onclick="myform.action='<{site_url url='/mis/tweet/tweet_sug/'}>';return change_more_sug();"/>
+                <input type="button" class="button" value="删除" onclick="myform.action='<{site_url url='/mis/tweet/tweet_del/'}>';return change_more_del()"/>
+                <input type="button" class="button" value="取消推荐" onclick="myform.action='<{site_url url='/mis/tweet/tweet_clear_sug/'}>';return change_more_clear_sug();"/>
+                <input type="button" class="button" value="审核" onclick="myform.action='<{site_url url='/weibo/news/news_status/'}>';return change_more_status();"/>
+                <input type="button" class="button" value="取消删除" onclick="myform.action='<{site_url url='/mis/tweet/tweet_clear_del/'}>';return change_more_clear_del()"/>
+                -->
+            </div>
+            <div id="pages"><{$pages}></div>
+        </div>
+    <!--</form>-->
+</div>
+<script type="text/javascript">
+    //动态修改数据
+    $(document).ready(function(){
+        //二级
+        $("select[name=class_1]").each(function(){
+            $(this).change(function(){
+                var tt = $(this).attr('title');
+                var tid = $("#class_1_"+tt).val();
+                $.post("<{site_url url='/uploadbatch/uploadbatch/addClass/'}>/",{id:tid,tag:''},function(result){
+                    if(result)
+                    {
+                        var dataObj = eval("("+result+")");
+                        $("#class_2_"+tt).empty();
+                        $.each( dataObj, function(index,item){
+                            $("#class_2_"+tt).prepend("<option value='"+item.id+"'>"+item.name+"</option>");
+                        });
+                    }
+                });
+            });
+        });
+        //TAG
+        $("select[name=class_2]").each(function(){
+            $(this).change(function(){
+                var tt = $(this).attr('title');
+                var tid = $("#class_2_"+tt).val();
+                $.post("<{site_url url='/uploadbatch/uploadbatch/addClass/'}>/",{id:tid,tag:1},function(result){
+                    if(result)
+                    {
+                        var dataObj = eval("("+result+")");
+//                        $("#class_3_"+tt).empty();
+                        var select = "";
+                        $.each( dataObj, function(index,item){
+                            if(index) select += index+":";
+                            select += "<select id='s3_"+tt+"'>";
+                            $(item).each(function(x,ind) {
+                                select += "<option value='"+ind.name+"'>"+ind.name+"</option>";                                           });
+                            select += "</select>&nbsp;&nbsp;&nbsp;";
+                        });
+                        select += '<br><br><button type="button" value="" onclick="add_select('+tt+',3);">保存Tag</button>';
+                        $("#class_3_"+tt).html(select);
+                    }
+                });
+            });
+        });
+        $("tr td:nth-child(6)").each(function(){
+            $(this).dblclick(function(){
+                var inval=$(this).html();
+                var inid=$(this).attr("title");
+                $(this).html("<input id='edit"+inid+"' name='' value='"+inval+"'>");
+                $("#edit"+inid).focus().live("blur",function(){
+                    var editval=$(this).val();//获取更改内容
+                    $(this).parents("td").html(editval); //将点击的td中原内容改为输入的新内容
+                    $.post("<{site_url url='/uploadbatch/uploadbatch/edit_one/'}>/",{id:inid,val:editval},function(result){
+                        if(result != 1)
+                            alert("修改失败");
+                    });
+                });
+            });
+        });
+    })
+
+    function del_one(obj,aid) {
+        window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'sug_one'},
+                function(){
+                    $.get('<{site_url url='/imgmgr/imgmgr/del_one_ajax/'}>?&id='+aid+'&wb_hash='+wb_hash,function(data){
+                        if(data == 1) $(obj).parent().parent().fadeOut("slow");
+                    })
+                },
+                function(){});
+    }
+
+    function add_select(id,classid)
+    {
+        var val = "";
+        if(classid == 3)
+        {
+            $("#class_3_"+id+" select").each(function(){
+                var sval = $(this).find("option:selected").text();
+                if(sval)
+                    val += sval+",";
+            })
+        }else{
+            val = $("#class_"+classid+"_"+id).find("option:selected").text();
+        }
+        $.post("<{site_url url='/uploadbatch/uploadbatch/editClass/'}>/",{id:id,val:val,class:classid},function(result){
+            if(result != 1)
+                alert("修改失败");
+            else {
+                if(classid == 3)
+                {
+                    $("#class_3_"+id).html(val);
+                }
+            }
+        });
+    }
+
+    function _push()
+    {
+        $.post("<{site_url url='/uploadbatch/uploadbatch/pushData/'}>/",{},function(result){
+//            if(result != 1)
+                alert("同步成功");
+        });
+    }
+
+    //-->
+</script>
+<{include file="../common/footer.html"}>

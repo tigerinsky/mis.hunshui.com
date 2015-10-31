@@ -1,0 +1,117 @@
+<{include file="../common/header.html"}>
+<script src="<{$sys_config['exten_pub_path']}>js/uploadify/jquery.uploadify.min.js?ver=<{$random_version}>" type="text/javascript"></script>
+<link href="<{$sys_config['exten_pub_path']}>js/swfupload/swfupload.css" rel="stylesheet" type="text/css" />
+<link href="<{$sys_config['exten_pub_path']}>css/uploadify.css" rel="stylesheet" type="text/css" />
+<style type="text/css">
+    html{_overflow-y:scroll}
+    .common-form>li{ float:left;display:inline; }
+</style>
+<script type="text/javascript"> 
+<!--
+	$(function(){
+		$.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+		$("#img_type").formValidator({onshow:"请选择图片类型",onfocus:"图片类型不能为空",empty:false}).inputValidator({min:1,onerror:"图片类型不能为空"});
+		$("#img_title").formValidator({onshow:"请选择图片二级分类",onfocus:"图片二级分类不能为空",empty:false}).inputValidator({min:1,onerror:"图片二级分类不能为空"});
+	})
+    
+    $(document).ready(function() {
+		
+		$("#img_type").change(function() {
+		 	var img_type = $("#img_type").val();
+		 	console.log(img_type);
+			var url = "<{site_url url='/imgmgr/imgmgr/get_img_title_list_ajax/'}>";
+			var data = {'img_type':img_type};
+		    jQuery.ajax({
+				type: 'GET',
+				url: url,
+				data: data,
+				success: imgTypeOnSuccess,
+				error: imgTypeOnError,
+				dataType: 'json',
+				async:false
+			});
+		});
+		
+		// 触发上面注册的函数,这样就不用执行最上面的初始化函数了
+		$("#img_type").change();
+		
+		// 服务器类型发生改变时触发此函数
+		function imgTypeOnSuccess(data) {
+			console.log(data);
+			var title = "<{$info['title']}>";
+			var img_title_json = data["data"]["content"];
+			$("#img_title").html("<option value='-1'>二级分类</option>");
+			for(var i in img_title_json) {
+				var t = $("<option></option>");
+				t.html(img_title_json[i]);
+				//t.val(i);
+				t.val(img_title_json[i]);
+				$("#img_title").append(t);
+			}
+			$("#img_title").val(title);
+		}
+		
+		function imgTypeOnError() {
+			console.log("发生错误!");
+		}
+		 
+	});
+    
+//-->
+</script>
+
+<div class="pad_10">
+	<div class="common-form">
+		<form name="myform" action="<{site_url url='/product/product/product_edit_do/'}>" enctype="multipart/form-data"  method="post" id="myform">
+			<table width="100%" class="table_form contentWrap">
+				<tr>
+					<td>图片一级分类</td>
+					<td>
+					    <{$img_type_sel}>
+					</td>
+				</tr>
+				<tr>
+					<td width="80">图片二级分类</td>
+					<td>
+					    <select name="info[title]" id="img_title">
+						</select>
+					</td>
+				</tr>
+				<tr>
+					<td width="80">是否素材</td>
+					<td>
+				    	<input type="radio" name="info[type]" value="1" <{if $info['type'] == '1'}>checked<{/if}> />&nbsp;是 &nbsp;&nbsp;
+				    	<input type="radio" name="info[type]" value="2" <{if $info['type'] == '2'}>checked<{/if}> />&nbsp;否
+					</td>
+				</tr>
+				<tr>
+					<td width="80">标签：</td>
+					<td>
+						<{if $tag_group }>
+				    		<{foreach from=$tag_group item=row name=foo}>
+			    				<select name="tag<{$smarty.foreach.foo.iteration}>" id="tag<{$smarty.foreach.foo.iteration}>">
+			    					<option value="-1">请选择</option>
+				    				<{foreach from=$row['tag'] item=tmp}>
+				    					<{if in_array($tmp, $tag_list) || strpos($tmp, $tag_list)}>
+				    						<option value="<{$tmp}>" selected="selected" ><{$tmp}></option>
+				    					<{else}>
+				    						<option value="<{$tmp}>" ><{$tmp}></option>
+				    					<{/if}>
+				    				<{/foreach}>
+			    				</select>
+				    			&nbsp;&nbsp;&nbsp;
+		            		<{/foreach}>
+		            	<{else}>
+		            		[无tag]
+	            		<{/if}>
+					</td>
+				</tr>
+			</table>
+		    <div class="bk15"></div>
+		    <input type="hidden" value="<{$info['tid']}>" name="tid">
+		    <input type="hidden" value="<{$tag_count}>" name="tag_count">
+		    <input type="submit" class="dialog" id="dosubmit" name="dosubmit" value="提交"/>
+		</form>
+	</div>
+</div>
+<{include file="../common/footer.html"}>
