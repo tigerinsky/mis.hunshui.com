@@ -34,34 +34,43 @@
 	<table width="100%" cellspacing="0">
         <thead>
             <tr>
-            <th width="80">SID</th>
-            <th width="80">UID</th>
-            <th width="80">手机号</th>
-            <th width="80">短信校验码</th>
-            <th width="80">短信自增标识</th>
-            <th width="80">验证成功后操作</th>
-            <th width="80">状态</th>
-            <th width="80">发送短信成功后置为有效</th>
-            <th width="80">IP地址字符串</th>
+	            <th width="10">SID</th>
+	            <th width="10">UID</th>
+	            <th width="80">手机号</th>
+	            <th width="80">短信校验码</th>
+	            <th width="80">短信自增标识</th>
+	            <th width="80">状态</th>
+	            <th width="80">发送短信成功后置为有效</th>
+	            <th width="80">IP地址数值型</th>
+	            <th width="120">失效时间</th>
+	            <th width="120">创建时间</th>
+	            <th width="80">验证成功后操作</th>
             </tr>
         </thead>
         
         <tbody>
         	<{foreach from=$list_data item=row}>		
             <tr>
-            <td align="center"><{$row['sid']}></td>
-            <td align="center"><{$row['uid']}></td>
-            <td align="center"><{$row['mobile']}></td>
-            <td align="center"><{$row['verifycode']}></td>
-            <td align="center"><{$row['identifier']}></td>
-            <td align="center"><{$row['operate']}></td>
-            <td align="center"><{$row['status']}></td>
-            <td align="center"><{$row['valid']}></td>
-            <td align="center"><{$row['ip']}></td>
+	            <td align="center"><{$row['sid']}></td>
+	            <td align="center"><{$row['uid']}></td>
+	            <td align="center"><{$row['phone']}></td>
+	            <td align="center"><{$row['verifycode']}></td>
+	            <td align="center"><{$row['identifier']}></td>
+	            <td align="center"><{$row['status']}></td>
+	            <td align="center"><{$row['valid']}></td>
+	            <td align="center"><{$row['ip_long']}></td>
+	            <td align="center"><{date("Y-m-d H:i:s", $row['ctime_keep'])}></td>
+	            <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
+	            <td align="center">
+	            	<{if $row['operate'] == 1}>注册<{/if}>
+	            	<{if $row['operate'] == 2}>忘记密码<{/if}>
+	            	<{if $row['operate'] == 3}>绑定<{/if}>
+	            	<{if $row['operate'] == 4}>登录<{/if}>
+	            </td>
             </tr>
             <{foreachelse}>
 			<tr>
-            <td colspan="10">没有数据</td>
+            	<td colspan="11">没有数据</td>
             </tr>
             <{/foreach}>
     	</tbody>

@@ -194,7 +194,7 @@ class user extends MY_Controller {
             $keywords=trim($this->input->get('keywords'));
             $search_arr['keywords']=$keywords;
             if($keywords!=''){
-                $where_array[]="mobile='{$keywords}'";                                                                         
+                $where_array[]="phone='{$keywords}'";                                                                         
             }                                                                                                                        
             if(is_array($where_array) and count($where_array)>0){
                 $where=' WHERE '.join(' AND ',$where_array);
@@ -203,11 +203,11 @@ class user extends MY_Controller {
         $pagesize = 10;
         $offset = $pagesize*($page-1);                                                                                               
         $limit = " LIMIT $offset,$pagesize";
-        $sql_ct = "SELECT sid FROM ci_user_sms $where";
+        $sql_ct = "SELECT sid FROM user_sms $where";
         $query = $this->dbr->query($sql_ct);
         $log_num = $query->num_rows();
         $pages = pages($log_num, $page, $pagesize);
-        $sql = "SELECT `sid`, `uid`, `mobile`, `verifycode`, `identifier`, `operate`, `status`, `valid`, `ip`, `ip_long`, `ctime_keep` FROM ci_user_sms $where  ORDER BY ctime DESC $limit";
+        $sql = "SELECT `sid`, `uid`, `phone`, `verifycode`, `identifier`, `status`, `valid`, `ip_long`, `ctime_keep`, `ctime`, `operate` FROM user_sms $where  ORDER BY ctime DESC $limit";
         $result = $this->dbr->query($sql);
         $list_data = $result->result_array();                                                                                        
         $this->smarty->assign('search_arr', $search_arr);
