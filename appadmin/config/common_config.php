@@ -35,4 +35,12 @@ $config['push_type'] = array(
     2 => "wap页",
     3 => "帖子",
 );
+$config['user_type'] = array(
+    1 => "广告主",
+    2 => "媒体主",
+);
+$config['user_level'] = array(
+    1 => "一级",
+    2 => "二级",
+);
 

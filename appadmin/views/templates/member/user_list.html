@@ -35,15 +35,18 @@
         <thead>
             <tr>
             <th width="16"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
-            <th width="30">ID</th>
-            <th width="50">用户昵称</th>
-            <th width="50">用户头像</th>
-            <th width="50">身份</th>
-            <th width="50">手机号码</th>
-            <th width="50">城市</th>
-            <th width="50">目标学校</th>
-            <th width="50">是否认证</th>
+            <th width="30">UID</th>
+            <th width="50">微信号</th>
+            <th width="50">微信昵称</th>
+            <th width="50">公司名</th>
+            <th width="50">手机号</th>
+            <th width="50">邮箱</th>
+            <th width="50">头像链接</th>
+            <th width="50">用户类型</th>
+            <th width="50">广告主等级</th>
+            <th width="50">支付宝帐号</th>
             <th width="120">注册时间</th>
+            <th width="120">更新时间</th>
             <th width="140">管理操作</th>
             </tr>
         </thead>
@@ -51,34 +54,33 @@
         <tbody>
         	<{foreach from=$list_data item=row}>		
             <tr>
-            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['id']}>" type="checkbox"></td>
-            <td align="center"><{$row['id']}></td>
-            <td align="center"><{$row['sname']}></td>
-            <td align="center"><{if $row['avatar']}><img width=45 src="<{$row['avatar']}>" /><{/if}></td>
-            <td align="center"><{$row['ukind_verify']}></td>
-            <td align="center"><{$row['umobile']}></td>
-            <td align="center"><{$row['city']}></td>
-            <td align="center"><{$row['school']}></td>
-            <td align="center"><{if $row['ukind']==1}><font color="#D75145">是</font><{else}><font color="#008000">否</font><{/if}></td>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['uid']}>" type="checkbox"></td>
+            <td align="center"><{$row['uid']}></td>
+            <td align="center"><{$row['wx_name']}></td>
+            <td align="center"><{$row['nick_name']}></td>
+            <td align="center"><{$row['cmpy_name']}></td>
+            <td align="center"><{$row['phone']}></td>
+            <td align="center"><{$row['email']}></td>
+            <td align="center"><{if $row['url']}><img width=45 src="<{$row['url']}>" /><{/if}></td>
+            <td align="center"><{$user_type_arr[$row['type']]}></td>
+            <td align="center"><{$row['level']}></td>
+            <td align="center"><{$row['zfb_account']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
             <!-- 
-            <td align="center"><{$identify_arr[$row['ukind']]}></td>
+            <td align="center"><{if $row['ukind']==1}><font color="#D75145">是</font><{else}><font color="#008000">否</font><{/if}></td>
 			<td align="center" id="user_status"><{if $row['status'] == 1}><font color="#008000">已通过</font><{elseif $row['status'] == 2}><font color="#D75145">未通过</font><{elseif $row['status'] == 0}>未审核<{elseif $row['status'] == -1}>已删除<{/if}></td>
 			<td align="center"><{if $row['ukind_verify'] == 1}><span style="color:green"></span><{else}><span style="color:red">未认证</span><{/if}></td>
              -->
-            <td align="center"><{date("Y-m-d H:i:s", $row['create_time'])}></td>
             <td align="center">
-            	<!-- 
-                <a href="javascript:edit(<{$row['id']}>,'<{$row['uname']}>')">修改</a> | 
-                 -->
-			    <a href="javascript:;" onclick="del_one(this,'<{$row['id']}>')">删除</a>
-			    <!-- 
-			    <a href="javascript:view(<{$row['id']}>,'<{$row['uname']}>')">查看详情</a>
-			     -->
+                <a href="javascript:edit(<{$row['uid']}>,'<{$row['wx_name']}>')">修改</a> | 
+			    <a href="javascript:view(<{$row['uid']}>,'<{$row['wx_name']}>')">查看详情</a> | 
+			    <a href="javascript:;" onclick="del_one(this,'<{$row['uid']}>')">删除</a>
             </td>
             </tr>
             <{foreachelse}>
 			<tr>
-            <td colspan="10">没有数据</td>
+            <td colspan="13">没有数据</td>
             </tr>
             <{/foreach}>
     	</tbody>
@@ -87,6 +89,7 @@
     	<label for="check_box">全选/取消</label>
 		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
 		<input type="hidden" value="1" name="dosubmit">
+		<input type="button" class="button" value="批量删除" onclick="delete_more();">
 	</div>
     <div id="pages"><{$pages}></div>
 </div>
@@ -117,7 +120,10 @@ function del_one(obj,aid) {
 }
 
 function delete_more(){
-	if(confirm('确认删除吗？')) $('#myform').submit();
+	if(confirm('确认删除吗？')) {
+		myform.action='<{site_url url='/member/user/user_delete/'}>';
+		$('#myform').submit();
+	}
 }
 
 function delete_more_like(){

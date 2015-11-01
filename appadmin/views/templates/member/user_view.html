@@ -6,30 +6,42 @@
 <div class="pad_10">
 <div class="common-form">
 <table width="100%" class="table_form contentWrap">
-<tr>
-<td width="80">用户昵称</td> 
-<td><input type="text" name="info[sname]" disabled class="input-text" id="sname" value="<{$info['sname']}>"></td>
-</tr>
-<tr>
-<td>用户头像</td> 
-<td><{if $info['avatar']}><img src="<{$info['avatar']}>"><{/if}></td>
-</tr>
-<tr>
-<td>身份</td> 
-<td><input type="text" name="ukind_verify" disabled class="input-text" id="umobile" value="<{$info['ukind_verify']}>"></td>
-</tr>
-<tr>
-<td>手机号</td> 
-<td><input type="text" name="umobile" disabled class="input-text" id="umobile" value="<{$info['umobile']}>"></td>
-</tr>
-<tr>
-<td>城市</td> 
-<td><input type="text" name="info[city]" disabled class="input-text" id="uemail" value="<{$info['city']}>" ></td>
-</tr>
-<tr>
-<td>目标学校</td> 
-<td><input type="text" name="info[school]" disabled class="input-text" id="uemail" value="<{$info['school']}>" ></td>
-</tr>
+	<tr>
+		<td width="80">微信号</td> 
+		<td><input type="text" name="info[wx_name]" disabled class="input-text" id="wx_name" value="<{$info['wx_name']}>"></td>
+	</tr>
+	<tr>
+		<td width="80">微信昵称</td> 
+		<td><input type="text" name="info[nick_name]" disabled class="input-text" id="nick_name" value="<{$info['nick_name']}>"></td>
+	</tr>
+	<tr>
+		<td>公司名</td> 
+		<td><input type="text" name="info[cmpy_name]" disabled class="input-text" id="cmpy_name" value="<{$info['cmpy_name']}>"></td>
+	</tr>
+	<tr>
+		<td>用户头像</td> 
+		<td><{if $info['url']}><img src="<{$info['url']}>"><{/if}></td>
+	</tr>
+	<tr>
+		<td>手机号</td> 
+		<td><input type="text" name="info[phone]" disabled class="input-text" id="phone" value="<{$info['phone']}>" ></td>
+	</tr>
+	<tr>
+		<td>邮箱</td> 
+		<td><input type="text" name="info[email]" disabled class="input-text" id="email" value="<{$info['email']}>" ></td>
+	</tr>
+	<tr>
+		<td>用户类型</td> 
+		<td><{$type_radio}></td>
+	</tr>
+	<tr>
+		<td>用户等级</td> 
+		<td><{$level_radio}></td>
+	</tr>
+	<tr>
+		<td>支付宝帐号</td> 
+		<td><input type="text" name="info[zfb_account]" disabled class="input-text" id="zfb_account" value="<{$info['zfb_account']}>" ></td>
+	</tr>
 
 </table>
 <div class="bk15"></div>
