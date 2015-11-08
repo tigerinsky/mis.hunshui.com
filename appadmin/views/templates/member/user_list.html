@@ -82,10 +82,10 @@
             		<a href="javascript:;" onclick="upgrade_one(this,'<{$row['uid']}>')" id="upgrade_<{$row['uid']}>" <{if $row['level']==1}>style="display:block;"<{else}>style="display:none;"<{/if}> >升级V2</a>
 			    	<a href="javascript:;" onclick="degrade_one(this,'<{$row['uid']}>')" id="degrade_<{$row['uid']}>" <{if $row['level']==2}>style="display:block;"<{else}>style="display:none;"<{/if}> >降级V1</a>
             		<!-- 
-            		<{if $row['level']==1}>
-				    	 | <a href="javascript:;" onclick="upgrade_one(this,'<{$row['uid']}>')">升级V2</a>
-				    <{else}>
+            		<{if $row['level']==2}>
 				    	 | <a href="javascript:;" onclick="degrade_one(this,'<{$row['uid']}>')">降级V1</a>
+				    <{else}>
+				    	 | <a href="javascript:;" onclick="upgrade_one(this,'<{$row['uid']}>')">升级V2</a>
 				    <{/if}>
 				     -->
 			    <{/if}>
