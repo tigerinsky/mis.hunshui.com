@@ -15,6 +15,8 @@
 		<tr>
 		<td>
 		<div class="explain-col">
+				<{$search_arr['user_type_sel']}>
+				<{$search_arr['user_level_sel']}>
 			    关键词：	
 				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
 				<input type="submit" name="search" class="button" value="搜索" />
@@ -34,7 +36,7 @@
 	<table width="100%" cellspacing="0">
         <thead>
             <tr>
-            <th width="16"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
             <th width="30">UID</th>
             <th width="50">微信号</th>
             <th width="50">微信昵称</th>
@@ -63,7 +65,7 @@
             <td align="center"><{$row['email']}></td>
             <td align="center"><{if $row['url']}><img width=45 src="<{$row['url']}>" /><{/if}></td>
             <td align="center"><{$user_type_arr[$row['type']]}></td>
-            <td align="center"><{$row['level']}></td>
+            <td align="center">V<{$row['level']}></td>
             <td align="center"><{$row['zfb_account']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
@@ -76,6 +78,17 @@
                 <a href="javascript:edit(<{$row['uid']}>,'<{$row['wx_name']}>')">修改</a> | 
 			    <a href="javascript:view(<{$row['uid']}>,'<{$row['wx_name']}>')">查看详情</a> | 
 			    <a href="javascript:;" onclick="del_one(this,'<{$row['uid']}>')">删除</a>
+            	<{if $row['type']==1}>
+            		<a href="javascript:;" onclick="upgrade_one(this,'<{$row['uid']}>')" id="upgrade_<{$row['uid']}>" <{if $row['level']==1}>style="display:block;"<{else}>style="display:none;"<{/if}> >升级V2</a>
+			    	<a href="javascript:;" onclick="degrade_one(this,'<{$row['uid']}>')" id="degrade_<{$row['uid']}>" <{if $row['level']==2}>style="display:block;"<{else}>style="display:none;"<{/if}> >降级V1</a>
+            		<!-- 
+            		<{if $row['level']==1}>
+				    	 | <a href="javascript:;" onclick="upgrade_one(this,'<{$row['uid']}>')">升级V2</a>
+				    <{else}>
+				    	 | <a href="javascript:;" onclick="degrade_one(this,'<{$row['uid']}>')">降级V1</a>
+				    <{/if}>
+				     -->
+			    <{/if}>
             </td>
             </tr>
             <{foreachelse}>
@@ -98,22 +111,60 @@
 <script type="text/javascript"> 
 <!--
 
-/*
-function delete_one(obj,aid){
-	window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'delete_one'}, 
-	function(){
-	$.get('<{site_url url='/member/user/user_del_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
-				if(data == 1) $("#user_status").html("已删除");
-			})
-	},function(){});
-};
-*/
-
 function del_one(obj,aid) {
     window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'delete_one'}, 
     function(){
     $.get('<{site_url url='/member/user/user_del_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+
+/*
+function upgrade_one(obj,aid) {
+	if(confirm('确认升级吗？')) {
+		myform.action='<{site_url url='/member/user/user_upgrade_one/'}>?&uid='+aid;
+		$('#myform').submit();
+	}
+}
+
+function degrade_one(obj,aid) {
+	if(confirm('确认降级吗？')) {
+		myform.action='<{site_url url='/member/user/user_degrade_one/'}>?&uid='+aid;
+		$('#myform').submit();
+	}
+}
+*/
+
+
+function upgrade_one(obj,aid) {
+	console.log($(obj).parent().parent());
+    window.top.art.dialog({content:'确认升级吗？', fixed:true, style:'confirm',id:'upgrade_one'}, 
+    function(){
+    $.get('<{site_url url='/member/user/user_upgrade_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
+                //if(data == 1) $(obj).parent().parent().fadeOut("slow");
+                if(data == 1) {
+                	$(obj).parent().parent().children().eq(9).html("V2");
+                	document.getElementById('upgrade_' + aid).style.display="none";
+                	document.getElementById('degrade_' + aid).style.display="block";
+                }
+            })
+         },
+    function(){});
+}
+
+function degrade_one(obj,aid) {
+	console.log($(obj).parent().parent());
+    window.top.art.dialog({content:'确认降级吗？', fixed:true, style:'confirm',id:'degrade_one'}, 
+    function(){
+    $.get('<{site_url url='/member/user/user_degrade_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
+                //if(data == 1) $(obj).parent().parent().fadeOut("slow");
+                if(data == 1) {
+                	$(obj).parent().parent().children().eq(9).html("V1");
+                	document.getElementById('upgrade_' + aid).style.display="block";
+                	document.getElementById('degrade_' + aid).style.display="none";
+                }
             })
          },
     function(){});

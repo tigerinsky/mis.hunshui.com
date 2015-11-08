@@ -18,14 +18,40 @@ class user extends MY_Controller {
     }
     
     public function user_list() {
+    	$this->load->library('form');
         $page = $this->input->get('page');
         $page = max(intval($page),1);
         $dosearch = $this->input->get('dosearch');
         
-        //$where_array = array();
+        $search_arr['status']=1;
         $where_array[] = "status = 1";
         
         if($dosearch == 'ok'){
+        	
+        	$search_filed=array(
+        		'user_type'=>array(
+        			1=>'type=1',
+        			2=>'type=2',
+        		),
+        		'user_level'=>array(
+        			1=>'level=1',
+        			2=>'level=2',
+        		)
+        	);
+        	
+        	if(intval($this->input->get('user_type_id'))!=''){
+        		$user_type_id=$this->input->get('user_type_id');
+        		if($search_filed['user_type'][$user_type_id]!=''){
+        			$where_array[]=$search_filed['user_type'][$user_type_id];
+        		}
+        	}
+        	if(intval($this->input->get('user_level_id'))!=''){
+        		$user_level_id=$this->input->get('user_level_id');
+        		if($search_filed['user_level'][$user_level_id]!=''){
+        			$where_array[]=$search_filed['user_level'][$user_level_id];
+        		}
+        	}
+        	
             $keywords = trim($this->input->get('keywords'));
             $search_arr['keywords'] = $keywords;
             if($keywords != ''){
@@ -35,7 +61,7 @@ class user extends MY_Controller {
         if(is_array($where_array) and count($where_array) > 0) {
             $where = ' WHERE '.join(' AND ',$where_array);
         }
-        $pagesize  = 10;
+        $pagesize  = 20;
         $offset    = $pagesize*($page-1);                                                                                     
         $limit     = " LIMIT $offset,$pagesize";
 		$order     = " ORDER BY uid DESC";
@@ -48,8 +74,15 @@ class user extends MY_Controller {
         $result    = $this->dbr->query($sql);
         //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
+        
+        $user_type_arr = self::$common_config['user_type'];
+        $search_arr['user_type_sel']=$this->form->select($user_type_arr,$user_type_id,'name="user_type_id"','选择用户类型');
+        $user_level_arr = self::$common_config['user_level'];
+        $search_arr['user_level_sel']=$this->form->select($user_level_arr,$user_level_id,'name="user_level_id"','选择用户等级');
+        
         $this->smarty->assign('search_arr', $search_arr);
-        $this->smarty->assign('user_type_arr', self::$common_config['user_type']);
+        $this->smarty->assign('user_type_arr', $user_type_arr);
+        $this->smarty->assign('user_level_arr', $user_level_arr);
         $this->smarty->assign('list_data', $list_data);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
@@ -168,8 +201,62 @@ class user extends MY_Controller {
         }
 	
 	}
+	
+	public function user_upgrade_one() {
+		if(intval($_POST['dosubmit'])==1) {
+			$uid=$this->input->post('uid');
+			if($uid>0) {
+				$sql = "UPDATE {$this->table_name}  SET `level`= 2 WHERE uid={$uid}";
+				$this->db->query($sql);
+				show_tips('操作成功',HTTP_REFERER);
+			} else {
+				show_tips('参数有误，请重新提交');
+			}
+		} else {
+			show_tips('操作异常');
+		}
+	}
+	
+	public function user_degrade_one() {
+		if(intval($_POST['dosubmit'])==1) {
+			$uid=$this->input->post('uid');
+			if($uid>0) {
+				$sql = "UPDATE {$this->table_name}  SET `level`= 1 WHERE uid={$uid}";
+				$this->db->query($sql);
+				show_tips('操作成功',HTTP_REFERER);
+			} else {
+				show_tips('参数有误，请重新提交');
+			}
+		} else {
+			show_tips('操作异常');
+		}
+	}
+
+	public function user_upgrade_one_ajax() {
+		$aid = intval($this->input->get('uid'));
+        if($aid>0) {
+            $del_query = "UPDATE {$this->table_name}  SET `level`= 2 WHERE uid={$aid}";
+            $this->db->query($del_query);
+            echo 1;
+        } else {
+            echo 0;
+        }
+	
+	}
+
+	public function user_degrade_one_ajax() {
+		$aid = intval($this->input->get('uid'));
+        if($aid>0) {
+            $del_query = "UPDATE {$this->table_name}  SET `level`= 1 WHERE uid={$aid}";
+            $this->db->query($del_query);
+            echo 1;
+        } else {
+            echo 0;
+        }
+	
+	}
+	
     public function user_delete() {
-    	$test = "[dashan]";
         if(intval($_POST['dosubmit'])==1) {
             $ids=$this->input->post('ids');
             if(is_array($ids) and count($ids) > 0) {
