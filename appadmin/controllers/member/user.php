@@ -92,7 +92,7 @@ class user extends MY_Controller {
         			$ofc_name = '未绑定';
         		}
         	} else {
-        		$ofc_name = '无效';
+        		$ofc_name = ''; // 广告主没有公众号的概念
         	}
         	$item_user['ofc_name'] = $ofc_name;
         	$res_content[] = $item_user;

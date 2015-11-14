@@ -67,7 +67,7 @@
             <td align="center"><{$row['email']}></td>
             <td align="center"><{if $row['url']}><img width=45 src="<{$row['url']}>" /><{/if}></td>
             <td align="center"><{$user_type_arr[$row['type']]}></td>
-            <td align="center">V<{$row['level']}></td>
+            <td align="center"><{if $row['type']==1 }>V<{$row['level']}><{/if}></td>
             <td align="center"><{$row['zfb_account']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
