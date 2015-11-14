@@ -10,6 +10,7 @@ class user extends MY_Controller {
         $this->dbr = $this->load->database("dbr", TRUE);
         $this->load->config("common_config", TRUE);
         self::$common_config = $this->config->item('common_config');
+        $this->load->model("member/official_accounts_model", "official_accounts_model");
         $this->table_name = "user";
     }
 
@@ -75,6 +76,30 @@ class user extends MY_Controller {
         //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
         
+        // 获取详情
+        $res_content = array();
+        foreach($list_data as $item_user) {
+        	$uid = $item_user['uid'];
+        	$type = $item_user['type'];
+        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' curr uid [' . $uid .']');
+//         	$sql_ofc = "select oaid,uid,ofc_account,nick_name from official_accounts ";
+        	$ofc_list = $this->official_accounts_model->get_ofc_list_by_uid($uid);
+        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($ofc_list) .']');
+        	if ($type == 2) { //类型：1广告主，2媒体主
+        		if (count($ofc_list) > 0) {
+        			$ofc_name = $ofc_list[0]['nick_name']; // 暂时取昵称
+        		} else {
+        			$ofc_name = '未绑定';
+        		}
+        	} else {
+        		$ofc_name = '无效';
+        	}
+        	$item_user['ofc_name'] = $ofc_name;
+        	$res_content[] = $item_user;
+        	
+        }
+        
+        
         $user_type_arr = self::$common_config['user_type'];
         $search_arr['user_type_sel']=$this->form->select($user_type_arr,$user_type_id,'name="user_type_id"','选择用户类型');
         $user_level_arr = self::$common_config['user_level'];
@@ -83,7 +108,7 @@ class user extends MY_Controller {
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('user_type_arr', $user_type_arr);
         $this->smarty->assign('user_level_arr', $user_level_arr);
-        $this->smarty->assign('list_data', $list_data);
+        $this->smarty->assign('list_data', $res_content);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
         $this->smarty->display("member/user_list.html");
