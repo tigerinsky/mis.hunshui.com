@@ -37,7 +37,8 @@
             <tr>
             <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
             <th width="30">问询id</th>
-            <th width="50">公众帐号id</th>
+            <th width="50">广告标题</th>
+            <th width="50">公众帐号</th>
             <th width="50">媒体主uid</th>
             <th width="50">询购id</th>
             <th width="50">闪购id</th>
@@ -53,7 +54,8 @@
             <tr>
             <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['clid']}>" type="checkbox"></td>
             <td align="center"><{$row['clid']}></td>
-            <td align="center"><{$row['oaid']}></td>
+            <td align="center"><{$row['article_title']}></td>
+            <td align="center"><{$row['ofc_nick_name']}></td>
             <td align="center"><{$row['media_uid']}></td>
             <td align="center"><{$row['consult_id']}></td>
             <td align="center"><{$row['flash_sale_id']}></td>

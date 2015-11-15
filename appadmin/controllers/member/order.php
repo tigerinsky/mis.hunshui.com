@@ -70,8 +70,8 @@ class order extends MY_Controller {
         // 获取详情
         $res_content = array();
         foreach($list_data as $item_order) {
-        	$uid = $item_user['uid'];
-        	$art_id = $item_a['art_id'];
+        	$uid = $item_order['uid'];
+        	$art_id = $item_order['art_id'];
         	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' curr uid [' . $uid .']');
         	$adv_article_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
         	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($adv_article_info) .']');

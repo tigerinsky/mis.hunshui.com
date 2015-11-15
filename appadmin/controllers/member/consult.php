@@ -10,6 +10,9 @@ class consult extends MY_Controller {
         $this->dbr = $this->load->database("dbr", TRUE);
         $this->load->config("common_config", TRUE);
         self::$common_config = $this->config->item('common_config');
+        $this->load->model("member/adv_consult_model", "adv_consult_model");
+        $this->load->model("member/adv_article_model", "adv_article_model");
+        $this->load->model("member/official_accounts_model", "official_accounts_model");
         $this->table_name = "consult_list";
     }
 
@@ -66,12 +69,31 @@ class consult extends MY_Controller {
         //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
         
+        // 获取详情
+        $res_content = array();
+        foreach($list_data as $item_consult) {
+        	$oaid = $item_consult['oaid']; // 公众帐号id
+        	$consult_id = $item_consult['consult_id']; // 询购id
+        	//log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' curr uid [' . $uid .']');
+        	// 通过询购id获取文章id
+        	$adv_consult_info = $this->adv_consult_model->get_adv_consult_info_by_aid($consult_id);
+        	$art_id = $adv_consult_info['art_id'];
+        	$adv_article_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
+        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($adv_article_info) .']');
+        	// 通过公众号id获取公众号信息
+        	$official_accounts_info = $this->official_accounts_model->get_ofc_info_by_oaid($oaid);
+        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($official_accounts_info) .']');
+        	$item_consult['article_title'] = $adv_article_info['title'];
+        	$item_consult['ofc_nick_name'] = $official_accounts_info['nick_name'];
+        	$res_content[] = $item_consult;
+        }
+        
         $consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
         $search_arr['consult_status_sel']=$this->form->select($consult_status_list,$consult_status_id,'name="consult_status_id"','接单状态');
         
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('consult_status_list', $consult_status_list);
-        $this->smarty->assign('list_data', $list_data);
+        $this->smarty->assign('list_data', $res_content);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
         $this->smarty->display("member/consult_list.html");
