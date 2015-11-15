@@ -53,6 +53,11 @@ class user extends MY_Controller {
         		}
         	}
         	
+            $phone = trim($this->input->get('phone'));
+            $search_arr['phone'] = $phone;
+            if($phone != ''){
+                $where_array[] = "phone = '{$phone}' ";
+            }
             $keywords = trim($this->input->get('keywords'));
             $search_arr['keywords'] = $keywords;
             if($keywords != ''){
@@ -71,9 +76,9 @@ class user extends MY_Controller {
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
         $sql       = "SELECT uid, wx_name, nick_name, cmpy_name, phone, email, url, type, level, zfb_account, ctime, utime FROM $this->table_name $where $order $limit";
-        //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' user_list sql [' . $sql .']');
+        log_message('debug', '[************************************]'. __METHOD__ .':'.__LINE__.' user_list sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
-        //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
+        log_message('debug', '[************************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
         
         // 获取详情

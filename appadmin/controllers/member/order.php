@@ -11,6 +11,7 @@ class order extends MY_Controller {
         $this->load->config("common_config", TRUE);
         self::$common_config = $this->config->item('common_config');
         $this->load->model("member/adv_article_model", "adv_article_model");
+        $this->load->model("member/user_model", "user_model");
         $this->table_name = "adv_consult";
     }
 
@@ -44,6 +45,15 @@ class order extends MY_Controller {
         		}
         	}
         	
+            $phone = trim($this->input->get('phone'));
+            $search_arr['phone'] = $phone;
+            if($phone != ''){
+            	// 通过手机号获取用户id
+            	$user_info = $this->user_model->get_user_info_by_phone($phone);
+            	$uid = $user_info['uid'];
+                $where_array[] = "uid = '{$uid}' ";
+            }
+        	
             $keywords = trim($this->input->get('keywords'));
             $search_arr['keywords'] = $keywords;
             if($keywords != ''){
@@ -62,9 +72,9 @@ class order extends MY_Controller {
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
         $sql       = "SELECT aid, show_day, ad_location, remark, category, uid, art_id, ctime, utime, status, show_hours, limit_hours, fans FROM $this->table_name $where $order $limit";
-        //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' user_list sql [' . $sql .']');
+        log_message('debug', '[*************************************]'. __METHOD__ .':'.__LINE__.' order_list sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
-        //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
+        log_message('debug', '[*************************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
         
         // 获取详情

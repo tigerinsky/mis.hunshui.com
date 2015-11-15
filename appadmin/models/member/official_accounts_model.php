@@ -12,10 +12,10 @@ class Official_accounts_model extends MY_Model {
 	}
 	
 	public function get_ofc_list_by_uid($uid) {
-		$this->dbr->select('oaid, uid, ofc_account, nick_name, head_pic, qr_pic, wx_idty, abstract');
-		$this->db->where('uid', $uid);
-		$this->db->where('status', 0);
-		$result = $this->dbr->get($this->table_name);
+		$this->dbw->select('oaid, uid, ofc_account, nick_name, head_pic, qr_pic, wx_idty, abstract');
+		$this->dbw->where('uid', $uid);
+		$this->dbw->where('status', 0);
+		$result = $this->dbw->get($this->table_name);
 		
 		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_ofc_list sql [' . $this->db->last_query() .']');
 		
@@ -32,9 +32,9 @@ class Official_accounts_model extends MY_Model {
 	
 	
 	public function get_ofc_info_by_oaid($oaid) {
-		$this->dbr->select('oaid, uid, ofc_account, nick_name, head_pic, qr_pic, wx_idty, abstract');
-		$this->db->where('oaid', $oaid);
-		$result = $this->dbr->get($this->table_name);
+		$this->dbw->select('oaid, uid, ofc_account, nick_name, head_pic, qr_pic, wx_idty, abstract');
+		$this->dbw->where('oaid', $oaid);
+		$result = $this->dbw->get($this->table_name);
 	
 		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_ofc_info_by_oaid sql [' . $this->db->last_query() .']');
 	

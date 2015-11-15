@@ -12,7 +12,7 @@ class Adv_article_model extends MY_Model {
 	
 	public function get_adv_article_info_by_art_id($art_id) {
 		$this->dbw->select('art_id, title, author, url, is_show, abstract, content, original_link, uid');
-		$this->db->where('art_id', $art_id);
+		$this->dbw->where('art_id', $art_id);
 		$result = $this->dbw->get($this->table_name);
 		
 		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_adv_article_info_by_art_id sql [' . $this->db->last_query() .']');

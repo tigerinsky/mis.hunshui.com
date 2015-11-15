@@ -12,7 +12,7 @@ class Consult_list_model extends MY_Model {
 	
 	public function get_consult_info_by_clid($clid) {
 		$this->dbw->select('clid, oaid, media_uid, consult_id, flash_sale_id, order_id, status, ctime, utime');
-		$this->db->where('clid', $clid);
+		$this->dbw->where('clid', $clid);
 		$result = $this->dbw->get($this->table_name);
 		
 		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_consult_info_by_clid sql [' . $this->db->last_query() .']');

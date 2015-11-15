@@ -10,6 +10,7 @@ class consult extends MY_Controller {
         $this->dbr = $this->load->database("dbr", TRUE);
         $this->load->config("common_config", TRUE);
         self::$common_config = $this->config->item('common_config');
+        $this->load->model("member/user_model", "user_model");
         $this->load->model("member/adv_consult_model", "adv_consult_model");
         $this->load->model("member/adv_article_model", "adv_article_model");
         $this->load->model("member/official_accounts_model", "official_accounts_model");
@@ -44,6 +45,15 @@ class consult extends MY_Controller {
         		if($search_filed['consult_status'][$consult_status_id]!=''){
         			$where_array[]=$search_filed['consult_status'][$consult_status_id];
         		}
+        	}
+        	
+        	$phone = trim($this->input->get('phone'));
+        	$search_arr['phone'] = $phone;
+        	if($phone != ''){
+        		// 通过手机号获取用户id
+        		$user_info = $this->user_model->get_user_info_by_phone($phone);
+        		$uid = $user_info['uid'];
+        		$where_array[] = "media_uid = '{$uid}' ";
         	}
         	
             $keywords = trim($this->input->get('keywords'));

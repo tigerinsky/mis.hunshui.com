@@ -12,7 +12,7 @@ class Adv_consult_model extends MY_Model {
 	
 	public function get_adv_consult_info_by_aid($aid) {
 		$this->dbw->select('aid, show_day, ad_location, remark, category, uid, art_id, ctime, utime, status, show_hours, limit_hours, fans');
-		$this->db->where('aid', $aid);
+		$this->dbw->where('aid', $aid);
 		$result = $this->dbw->get($this->table_name);
 		
 		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_adv_consult_info_by_aid sql [' . $this->db->last_query() .']');

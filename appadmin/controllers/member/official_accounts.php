@@ -10,6 +10,7 @@ class official_accounts extends MY_Controller {
         $this->dbr = $this->load->database("dbr", TRUE);
         $this->load->config("common_config", TRUE);
         self::$common_config = $this->config->item('common_config');
+        $this->load->model("member/user_model", "user_model");
         $this->table_name = "official_accounts";
     }
 
@@ -40,6 +41,15 @@ class official_accounts extends MY_Controller {
         		if($search_filed['time_regular'][$time_regular_id]!=''){
         			$where_array[]=$search_filed['time_regular'][$time_regular_id];
         		}
+        	}
+        	
+        	$phone = trim($this->input->get('phone'));
+        	$search_arr['phone'] = $phone;
+        	if($phone != ''){
+        		// 通过手机号获取用户id
+        		$user_info = $this->user_model->get_user_info_by_phone($phone);
+        		$uid = $user_info['uid'];
+        		$where_array[] = "uid = '{$uid}' ";
         	}
         	
             $keywords = trim($this->input->get('keywords'));
