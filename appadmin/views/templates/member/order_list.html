@@ -2,7 +2,7 @@
 <div class="subnav">
     <div class="content-menu ib-a blue line-x">
         <!-- <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/member/user/user_add/'}>?', title:'添加会员', width:'600', height:'350', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>添加会员</em></a>  -->
-        <a href="<{site_url url='/member/order/index/'}>" class="on"><em>订单列表</em></a>    </div>
+        <a href="<{site_url url='/member/order/index/'}>" class="on"><em>投放列表</em></a>    </div>
 </div>
 <style type="text/css"> 
 	html{_overflow-y:scroll}
@@ -16,8 +16,6 @@
 		<td>
 		<div class="explain-col">
 				<{$search_arr['order_status_sel']}>
-				<{$search_arr['pay_status_sel']}>
-				<{$search_arr['plat_payed_sel']}>
 			    关键词：	
 				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
 				<input type="submit" name="search" class="button" value="搜索" />
@@ -38,19 +36,18 @@
         <thead>
             <tr>
             <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
-            <th width="30">订单id</th>
-            <th width="50">广告主id</th>
-            <th width="50">媒体主id</th>
-            <th width="50">限时抢id</th>
-            <th width="50">寻购id</th>
-            <th width="50">公众帐号id</th>
-            <th width="50">广告位置</th>
+            <th width="30">寻购id</th>
+            <th width="120">广告标题</th>
+            <th width="120">投放时间</th>
+            <th width="50">投放位置</th>
+            <th width="50">分类</th>
+            <th width="50">用户id</th>
+            <th width="50">文章id</th>
             <th width="50">状态</th>
-            <th width="50">广告费</th>
-            <th width="50">总价格</th>
-            <th width="50">广告主付款状态</th>
-            <th width="50">平台付款状态</th>
-            <th width="120">注册时间</th>
+            <th width="50">展示时间段</th>
+            <th width="50">时间是否严格限制</th>
+            <th width="50">点赞数</th>
+            <th width="120">创建时间</th>
             <th width="120">更新时间</th>
             </tr>
         </thead>
@@ -58,19 +55,18 @@
         <tbody>
         	<{foreach from=$list_data item=row}>		
             <tr>
-            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['olid']}>" type="checkbox"></td>
-            <td align="center"><{$row['olid']}></td>
-            <td align="center"><{$row['ad_uid']}></td>
-            <td align="center"><{$row['news_uid']}></td>
-            <td align="center"><{$row['fsid']}></td>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['aid']}>" type="checkbox"></td>
             <td align="center"><{$row['aid']}></td>
-            <td align="center"><{$row['oaid']}></td>
+            <td align="center"><{$row['article_title']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['show_day'])}></td>
             <td align="center"><{$row['ad_location']}></td>
-            <td align="center"><{$order_status_arr[$row['status']]}></td>
-            <td align="center"><{$row['ad_price']}></td>
-            <td align="center"><{$row['total_price']}></td>
-            <td align="center"><{$pay_status_arr[$row['pay_status']]}></td>
-            <td align="center"><{$plat_payed_arr[$row['plat_payed']]}></td>
+            <td align="center"><{$row['category']}></td>
+            <td align="center"><{$row['uid']}></td>
+            <td align="center"><{$row['art_id']}></td>
+            <td align="center"><{$order_status_list[$row['status']]}></td>
+            <td align="center"><{$row['show_hours']}></td>
+            <td align="center"><{$row['limit_hours']}></td>
+            <td align="center"><{$row['fans']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
             <!-- 
@@ -86,7 +82,7 @@
             </tr>
             <{foreachelse}>
 			<tr>
-            <td colspan="15">没有数据</td>
+            <td colspan="14">没有数据</td>
             </tr>
             <{/foreach}>
     	</tbody>
