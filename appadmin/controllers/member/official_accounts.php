@@ -69,7 +69,7 @@ class official_accounts extends MY_Controller {
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
-        $sql       = "SELECT oaid, uid, ofc_account, nick_name, fan_num, rnum_perweek, male_percent, female_percent, push_time, time_regular, single_price, frt_multi_price, multi_price, head_pic, qr_pic, wx_idty, abstract, category, status FROM $this->table_name $where $order $limit";
+        $sql       = "SELECT oaid, uid, ofc_account, nick_name, fan_num, male_percent, female_percent, push_time, time_regular, single_price, frt_multi_price, multi_price, head_pic, qr_pic, wx_idty, abstract, category, status FROM $this->table_name $where $order $limit";
         log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' official_accounts sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
         //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
