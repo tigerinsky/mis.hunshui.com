@@ -53,8 +53,8 @@ class advmgr extends MY_Controller {
         	
         	if(intval($this->input->get('order_status_id'))!=''){
         		$order_status_id=$this->input->get('order_status_id');
-        		if($search_filed['order_status'][$order_status_id]!=''){
-        			$where_array[]=$search_filed['order_status'][$order_status_id];
+        		if($search_filed['status'][$order_status_id]!=''){
+        			$where_array[]=$search_filed['status'][$order_status_id];
         		}
         	}
         	
@@ -108,21 +108,6 @@ class advmgr extends MY_Controller {
         $result    = $this->dbr->query($sql);
         log_message('debug', '[*************************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
-        
-        /*
-        // 获取详情
-        $res_content = array();
-        foreach($list_data as $item_order) {
-        	$uid = $item_order['uid'];
-        	$art_id = $item_order['art_id'];
-        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' curr uid [' . $uid .']');
-        	$adv_article_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
-        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($adv_article_info) .']');
-        	$item_order['article_title'] = $adv_article_info['title'];
-        	$res_content[] = $item_order;
-        }
-        */
-        
         
         $order_status_list=array(1=>'新增', 2=>'通过', 3=>'拒接');
         $search_arr['order_status_sel']=$this->form->select($order_status_list,$order_status_id,'name="order_status_id"','投放状态');
