@@ -106,7 +106,7 @@
 function del_one(obj,aid) {
     window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'delete_one'}, 
     function(){
-    $.get('<{site_url url='/member/user/user_del_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
+    $.get('<{site_url url='/product/advmgr/advmgr_del_one_ajax/'}>?&aid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) $(obj).parent().parent().fadeOut("slow");
             })
          },
@@ -130,7 +130,7 @@ function edit(id, name) {
 }
 function view(id, name) {
     window.top.art.dialog({id:'view'}).close();
-    window.top.art.dialog({title:'查看广告《'+name+'》',id:'view',iframe:'<{site_url url='/product/product/advmgr_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
+    window.top.art.dialog({title:'查看广告《'+name+'》',id:'view',iframe:'<{site_url url='/product/advmgr/advmgr_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
 }
 //-->
 </script>

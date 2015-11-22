@@ -140,6 +140,33 @@ class advmgr extends MY_Controller {
     }
     
     
+    public function advmgr_view() {
+    	$this->load->library('form');
+    	$aid = intval($this->input->get('id'));
+    	
+    	$where_array = array();
+    	$where_array[] = "c.uid = u.uid ";
+    	$where_array[] = "c.art_id = a.art_id ";
+    	$where_array[] = "c.aid = '{$aid}' ";
+    	 
+    	if(is_array($where_array) and count($where_array) > 0) {
+    		$where = ' WHERE '.join(' AND ',$where_array);
+    	}
+    	
+    	$sql = "SELECT u.cmpy_name, u.phone, u.wx_name, u.nick_name, u.level, a.title, a.author, a.content, a.url, a.abstract, a.original_link, c.aid, c.show_day, c.ad_location, c.remark, c.category, c.uid, c.art_id FROM adv_consult as c,adv_article as a,user as u $where";
+    	$result = $this->db->query($sql);
+    	$info = $result->row_array();
+    	$info['show_day']=date('Y-m-d h:i:s',$info['show_day']);
+    	$input_box['show_day']=$this->form->date('info[show_day]',$info['show_day'],1);
+    	
+    	$this->smarty->assign('info', $info);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/advmgr_view.html");
+    }
+    
+    
     public function advmgr_edit() {
     	$this->load->library('form');
     	$aid = intval($this->input->get('id'));
@@ -219,5 +246,19 @@ class advmgr extends MY_Controller {
     	
     }
     
-	
+    
+    public function advmgr_del_one_ajax() {
+    	$aid = intval($this->input->get('aid'));
+    	if($aid>0) {
+    		// 状态：1、新增，2、通过，3、拒接
+    		$del_query = "UPDATE {$this->table_name}  SET `status`= 3 WHERE aid={$aid}";
+    		$this->db->query($del_query);
+    		echo 1;
+    	} else {
+    		echo 0;
+    	}
+    
+    }
+    
+    
 }
