@@ -1,0 +1,137 @@
+<{include file="../common/header.html"}>
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+        <!-- <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/member/user/user_add/'}>?', title:'添加会员', width:'600', height:'350', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>添加会员</em></a>  -->
+        <a href="<{site_url url='/product/advmgr/index/'}>" class="on"><em>广告列表</em></a>    </div>
+</div>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+<div class="pad_10">
+<div id="searchid">
+<form name="searchform" action="<{site_url url='/product/advmgr/index/'}>" method="get" >
+<table width="100%" cellspacing="0" class="search-form">
+    <tbody>
+		<tr>
+		<td>
+		<div class="explain-col">
+				<{$search_arr['order_status_sel']}>
+				投放时间 <{$search_arr['time_start']}> <{$search_arr['time_end']}>
+			    手机号：	
+				<input name="phone" type="text" value="<{$search_arr['phone']}>" class="input-text" />
+			    公司名称：	
+				<input name="cmpy_name" type="text" value="<{$search_arr['cmpy_name']}>" class="input-text" />
+			    广告标题：	
+				<input name="title" type="text" value="<{$search_arr['title']}>" class="input-text" />
+				<!-- 
+			    关键词：	
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				 -->
+				<input type="submit" name="search" class="button" value="搜索" />
+		</div>
+		</td>
+		</tr>
+    </tbody>
+</table>
+<input type="hidden" value="ok" name="dosearch">
+<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+</form>
+</div>
+
+<form name="myform" id="myform" action="" method="post" >
+
+<div class="table-list">
+	<table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="30">寻购id</th>
+            <th width="50">状态</th>
+            <th width="120">广告标题</th>
+            <th width="50">联系电话</th>
+            <th width="50">公司名称/等级</th>
+            <th width="120">投放时间</th>
+            <th width="50">投放位置</th>
+            <th width="50">文章id</th>
+            <th width="50">展示时间段</th>
+            <th width="120">更新时间</th>
+            <th width="120">管理操作</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        	<{foreach from=$list_data item=row}>
+            <tr>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['aid']}>" type="checkbox"></td>
+            <td align="center"><{$row['aid']}></td>
+            <td align="center"><{$order_status_list[$row['status']]}></td>
+            <td align="center"><{$row['title']}></td>
+            <td align="center"><{$row['phone']}></td>
+            <td align="center"><{$row['cmpy_name']}>/V<{$row['level']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['show_day'])}></td>
+            <td align="center"><{$row['ad_location']}></td>
+            <td align="center"><{$row['art_id']}></td>
+            <td align="center"><{$row['show_hours']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
+            <!-- 
+            <td align="center"><{if $row['ukind']==1}><font color="#D75145">是</font><{else}><font color="#008000">否</font><{/if}></td>
+			<td align="center" id="user_status"><{if $row['status'] == 1}><font color="#008000">已通过</font><{elseif $row['status'] == 2}><font color="#D75145">未通过</font><{elseif $row['status'] == 0}>未审核<{elseif $row['status'] == -1}>已删除<{/if}></td>
+			<td align="center"><{if $row['ukind_verify'] == 1}><span style="color:green"></span><{else}><span style="color:red">未认证</span><{/if}></td>
+             -->
+            <td align="center">
+                <a href="javascript:edit(<{$row['aid']}>,'<{$row['title']}>')">修改</a> | 
+			    <a href="javascript:view(<{$row['aid']}>,'<{$row['title']}>')">查看详情</a> | 
+			    <a href="javascript:;" onclick="del_one(this,'<{$row['aid']}>')">删除</a>
+            </td>
+            </tr>
+            <{foreachelse}>
+			<tr>
+            <td colspan="12">没有数据</td>
+            </tr>
+            <{/foreach}>
+    	</tbody>
+    </table>
+    <div class="btn">
+    	<label for="check_box">全选/取消</label>
+		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+		<input type="hidden" value="1" name="dosubmit">
+	</div>
+    <div id="pages"><{$pages}></div>
+</div>
+</form>
+</div>
+<script type="text/javascript"> 
+<!--
+
+function del_one(obj,aid) {
+    window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'delete_one'}, 
+    function(){
+    $.get('<{site_url url='/member/user/user_del_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+
+function delete_more(){
+	if(confirm('确认删除吗？')) {
+		myform.action='<{site_url url='/member/user/user_delete/'}>';
+		$('#myform').submit();
+	}
+}
+
+function delete_more_like(){
+	if(confirm('确认对所选记录伪删除变更吗？')) $('#myform').submit();
+}
+
+function edit(id, name) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'编辑广告《'+name+'》',id:'edit',iframe:'<{site_url url='/product/advmgr/advmgr_edit/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+}
+function view(id, name) {
+    window.top.art.dialog({id:'view'}).close();
+    window.top.art.dialog({title:'查看广告《'+name+'》',id:'view',iframe:'<{site_url url='/product/product/advmgr_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
+}
+//-->
+</script>
+<{include file="../common/footer.html"}>

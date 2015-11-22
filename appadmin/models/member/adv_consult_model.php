@@ -29,4 +29,21 @@ class Adv_consult_model extends MY_Model {
 	}
 	
 	
+	/**
+	 * 对数据表中的单行数据进行修改
+	 * @param arr $info 需要修改的键值对
+	 * @param int $id 被修改的id编号
+	 * @return bool 是否执行成功
+	 */
+	public function update_info($info, $aid){
+		$where="aid={$aid}";
+		$update_rule=$this->dbw->update_string($this->table_name, $info, $where);
+		if($this->dbw->query($update_rule)){
+			return true;
+		}else{
+			return false;
+		}
+	}
+	
+	
 }
