@@ -10,6 +10,35 @@ class User_model extends MY_Model {
 		$this->table_name = 'user';
 	}
 	
+	
+	/**
+	 * 根据用户ID返回用户信息
+	 * @param arr
+	 */
+	public function get_user_info_by_uid($uid) {
+		$this->dbw->select('uid, wx_name, nick_name, cmpy_name, phone, email, url, type, level, zfb_account, status, ctime, utime');
+		$this->dbw->where('uid', $uid);
+		$this->dbw->where('status', 1);
+		$result = $this->dbw->get($this->table_name);
+		
+		// 获取数据库信息失败
+		if (false === $result) {
+			return false;
+		}
+		// 查询无结果
+		if (0 === $result->num_rows) {
+			return NULL;
+		}
+		
+		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_user_info_by_uid data [' . json_encode($result->result_array()) .']');
+		return $result->result_array()[0];
+	}
+	
+	
+	/**
+	 * 根据用户ID返回用户信息
+	 * @param arr
+	 */
 	public function get_user_info_by_phone($phone) {
 		$this->dbw->select('uid, wx_name, nick_name, cmpy_name, phone, email, url, type, level, zfb_account, status, ctime, utime');
 		$this->dbw->where('phone', $phone);
