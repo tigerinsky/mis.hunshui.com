@@ -1,6 +1,6 @@
 <?php
 
-class consult extends MY_Controller {
+class order extends MY_Controller {
 
     protected static $common_config;
     protected $table_name;
@@ -16,14 +16,14 @@ class consult extends MY_Controller {
         $this->load->model("member/official_accounts_model", "official_accounts_model");
         $this->load->model("member/consult_list_model", "consult_list_model");
         $this->load->model("member/order_list_model", "order_list_model");
-        $this->table_name = "consult_list";
+        $this->table_name = "order_list";
     }
 
     public function index() {
-        $this->consult_list();
+        $this->order_list();
     }
     
-    public function consult_list() {
+    public function order_list() {
     	$this->load->library('form');
         $page = $this->input->get('page');
         $page = max(intval($page),1);
@@ -35,17 +35,41 @@ class consult extends MY_Controller {
         if($dosearch == 'ok'){
         	
         	$search_filed=array(
-        		'consult_status'=>array(
+        		'order_status'=>array(
         			1=>'status=1',
         			2=>'status=2',
         			3=>'status=3',
+        			9=>'status=9',
+        			10=>'status=10',
+        		),
+        		'pay_status'=>array(
+        			1=>'pay_status=1',
+        			2=>'pay_status=2',
+        		),
+        		'plat_payed'=>array(
+        			1=>'plat_payed=1',
+        			2=>'plat_payed=2',
         		),
         	);
         	
-        	if(intval($this->input->get('consult_status_id'))!=''){
-        		$consult_status_id=$this->input->get('consult_status_id');
-        		if($search_filed['consult_status'][$consult_status_id]!=''){
-        			$where_array[]=$search_filed['consult_status'][$consult_status_id];
+        	if(intval($this->input->get('order_status_id'))!=''){
+        		$order_status_id=$this->input->get('order_status_id');
+        		if($search_filed['order_status'][$order_status_id]!=''){
+        			$where_array[]=$search_filed['order_status'][$order_status_id];
+        		}
+        	}
+        	
+        	if(intval($this->input->get('pay_status_id'))!=''){
+        		$pay_status_id=$this->input->get('pay_status_id');
+        		if($search_filed['pay_status'][$pay_status_id]!=''){
+        			$where_array[]=$search_filed['pay_status'][$pay_status_id];
+        		}
+        	}
+        	
+        	if(intval($this->input->get('plat_payed_id'))!=''){
+        		$plat_payed_id=$this->input->get('plat_payed_id');
+        		if($search_filed['plat_payed'][$plat_payed_id]!=''){
+        			$where_array[]=$search_filed['plat_payed'][$plat_payed_id];
         		}
         	}
         	
@@ -55,13 +79,13 @@ class consult extends MY_Controller {
         		// 通过手机号获取用户id
         		$user_info = $this->user_model->get_user_info_by_phone($phone);
         		$uid = $user_info['uid'];
-        		$where_array[] = "media_uid = '{$uid}' ";
+        		$where_array[] = "ad_uid = '{$uid}' or news_uid = '{$uid}' ";
         	}
         	
             $keywords = trim($this->input->get('keywords'));
             $search_arr['keywords'] = $keywords;
             if($keywords != ''){
-                $where_array[] = "oaid like '%{$keywords}%' or media_uid like '%{$keywords}%' ";
+                $where_array[] = "olid like '%{$keywords}%' or ad_location like '%{$keywords}%' ";
             }
         }
         if(is_array($where_array) and count($where_array) > 0) {
@@ -70,27 +94,25 @@ class consult extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY clid DESC";
-        $sql_ct    = "SELECT clid FROM $this->table_name $where";
+		$order     = " ORDER BY olid DESC";
+        $sql_ct    = "SELECT olid FROM $this->table_name $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
-        $sql       = "SELECT clid, oaid, media_uid, consult_id, flash_sale_id, order_id, status, ctime, utime FROM $this->table_name $where $order $limit";
-        log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' consult_list sql [' . $sql .']');
+        $sql       = "SELECT olid, ad_uid, news_uid, fsid, aid, oaid, ad_location, status, ctime, utime, ad_price, total_price, original_price, pay_status, pay_id, plat_payed FROM $this->table_name $where $order $limit";
+        log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' order_list sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
-        //log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
         
         // 获取详情
         $res_content = array();
-        foreach($list_data as $item_consult) {
-        	$oaid = $item_consult['oaid']; // 公众帐号id
-        	$consult_id = $item_consult['consult_id']; // 询购id
-        	$media_uid = $item_consult['media_uid']; // 媒体主id
-        	$order_id = $item_consult['order_id']; // 订单id
-        	//log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' curr uid [' . $uid .']');
+        foreach($list_data as $item_order) {
+        	$oaid = $item_order['oaid']; // 公众帐号id
+        	$aid = $item_order['aid']; // 询购id
+        	$fsid = $item_order['fsid']; // 限时抢id
+        	$pay_id = $item_order['pay_id']; // 此订单广告主支付id
         	// 通过询购id获取询购信息
-        	$adv_consult_info = $this->adv_consult_model->get_adv_consult_info_by_aid($consult_id);
+        	$adv_consult_info = $this->adv_consult_model->get_adv_consult_info_by_aid($aid);
         	// 通过询购id获取文章id
         	$art_id = $adv_consult_info['art_id'];
         	// 通过文章id获取文章信息
@@ -99,46 +121,32 @@ class consult extends MY_Controller {
         	// 通过公众号id获取公众号信息
         	$official_accounts_info = $this->official_accounts_model->get_ofc_info_by_oaid($oaid);
         	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($official_accounts_info) .']');
-        	// 通过媒体主id获取用户信息
-        	$user_info = $this->user_model->get_user_info_by_uid($media_uid);
-        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($user_info) .']');
-        	// 通过订单id获取订单信息
-        	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
-        	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($order_info) .']');
         	
-        	$item_consult['article_title'] = $adv_article_info['title']; // 文章标题
-        	$item_consult['ofc_nick_name'] = $official_accounts_info['nick_name']; // 公众号昵称
-        	$item_consult['user_wx_name'] = $user_info['wx_name']; // 媒体主微信号
-        	$item_consult['user_nick_name'] = $user_info['nick_name']; // 媒体主昵称
-        	$item_consult['user_phone'] = $user_info['phone']; // 媒体主手机号
-        	$item_consult['show_day'] = $adv_consult_info['show_day']; // 投放时间
-        	$item_consult['ad_location'] = $adv_consult_info['ad_location']; // 投放位置
-        	$item_consult['feedback_time'] = $order_info['ctime']; // 反馈时间
-        	$item_consult['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
-        	$item_consult['ad_price'] = $order_info['ad_price']; // 实际交易金额(含税)
-        	$item_consult['pay_status'] = $order_info['pay_status']; // 广告主付款状态1、未支付，2支付
-        	$item_consult['plat_payed'] = $order_info['plat_payed']; // 平台付款，1未支付，2支付
-        	$item_consult['order_status'] = $order_info['status']; // 订单状态，1、创建，2、划款待执行，3媒体主执行完成、9订单完成、10订单取消
-        	$res_content[] = $item_consult;
+        	$item_order['article_id'] = $adv_article_info['art_id']; // 广告id
+        	$item_order['article_title'] = $adv_article_info['title']; // 广告标题
+        	$item_order['ofc_nick_name'] = $official_accounts_info['nick_name']; // 公众号昵称
+        	$res_content[] = $item_order;
         }
         
-        $consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
-        $search_arr['consult_status_sel']=$this->form->select($consult_status_list,$consult_status_id,'name="consult_status_id"','询购状态');
+        log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' order_list [' . json_encode($res_content) .']');
+        
         
         $pay_status_list=array(1=>'未支付', 2=>'支付');
+        $search_arr['pay_status_sel']=$this->form->select($pay_status_list,$pay_status_id,'name="pay_status_id"','付款状态');
         $plat_payed_list=array(1=>'未支付', 2=>'支付');
+        $search_arr['plat_payed_sel']=$this->form->select($plat_payed_list,$plat_payed_id,'name="plat_payed_id"','垫付状态');
         $order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+        $search_arr['order_status_sel']=$this->form->select($order_status_list,$order_status_id,'name="order_status_id"','订单状态');
         
         
         $this->smarty->assign('search_arr', $search_arr);
-        $this->smarty->assign('consult_status_list', $consult_status_list);
         $this->smarty->assign('pay_status_list', $pay_status_list);
         $this->smarty->assign('plat_payed_list', $plat_payed_list);
         $this->smarty->assign('order_status_list', $order_status_list);
         $this->smarty->assign('list_data', $res_content);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
-        $this->smarty->display("product/consult_list.html");
+        $this->smarty->display("product/order_list.html");
     }
     
     
@@ -161,7 +169,7 @@ class consult extends MY_Controller {
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
-    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'计单完成', 10=>'计单取消');
     	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
@@ -199,7 +207,7 @@ class consult extends MY_Controller {
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
-    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'计单完成', 10=>'计单取消');
     	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
