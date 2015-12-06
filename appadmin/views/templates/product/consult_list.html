@@ -55,6 +55,7 @@
             <th width="50">订单状态</th>
             <th width="50">流程状态</th>
             <th width="120">更新时间</th>
+            <th width="120">管理操作</th>
             </tr>
         </thead>
         
@@ -84,15 +85,15 @@
 			<td align="center" id="user_status"><{if $row['status'] == 1}><font color="#008000">已通过</font><{elseif $row['status'] == 2}><font color="#D75145">未通过</font><{elseif $row['status'] == 0}>未审核<{elseif $row['status'] == -1}>已删除<{/if}></td>
 			<td align="center"><{if $row['ukind_verify'] == 1}><span style="color:green"></span><{else}><span style="color:red">未认证</span><{/if}></td>
              -->
-            <!-- 
             <td align="center">
-                <a href="javascript:edit(<{$row['olid']}>,'<{$row['oaid']}>')">修改</a>
+                <a href="javascript:edit(<{$row['clid']}>,'<{$row['media_uid']}>')">修改</a> | 
+			    <a href="javascript:view(<{$row['clid']}>,'<{$row['media_uid']}>')">查看</a> | 
+			    <a href="javascript:;" onclick="del_one(this,'<{$row['clid']}>')">取消</a>
             </td>
-             -->
             </tr>
             <{foreachelse}>
 			<tr>
-            <td colspan="10">没有数据</td>
+            <td colspan="19">没有数据</td>
             </tr>
             <{/foreach}>
     	</tbody>
@@ -130,9 +131,14 @@ function delete_more_like(){
 	if(confirm('确认对所选记录伪删除变更吗？')) $('#myform').submit();
 }
 
+
 function edit(id, name) {
 	window.top.art.dialog({id:'edit'}).close();
-	window.top.art.dialog({title:'编辑订单《'+name+'》',id:'edit',iframe:'<{site_url url='/member/order/order_edit/'}>?id='+id,width:'600',height:'350'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+	window.top.art.dialog({title:'编辑询购《'+name+'》',id:'edit',iframe:'<{site_url url='/product/consult/consult_edit/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+}
+function view(id, name) {
+    window.top.art.dialog({id:'view'}).close();
+    window.top.art.dialog({title:'查看询购《'+name+'》',id:'view',iframe:'<{site_url url='/product/consult/consult_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
 }
 //-->
 </script>

@@ -14,6 +14,7 @@ class consult extends MY_Controller {
         $this->load->model("member/adv_consult_model", "adv_consult_model");
         $this->load->model("member/adv_article_model", "adv_article_model");
         $this->load->model("member/official_accounts_model", "official_accounts_model");
+        $this->load->model("member/consult_list_model", "consult_list_model");
         $this->load->model("member/order_list_model", "order_list_model");
         $this->table_name = "consult_list";
     }
@@ -139,6 +140,98 @@ class consult extends MY_Controller {
         $this->smarty->assign('show_dialog', 'true'); 
         $this->smarty->display("product/consult_list.html");
     }
+    
+    
+    public function consult_edit() {
+    	$this->load->library('form');
+    	$clid = intval($this->input->get('id'));
+    	
+    	$consult_info = $this->consult_list_model->get_consult_info_by_clid($clid);
+    	
+    	$consult_id = $consult_info['consult_id'];
+    	$adv_consult_info = $this->adv_consult_model->get_adv_consult_info_by_aid($consult_id);
+    	$art_id = $adv_consult_info['art_id'];
+    	$adv_article_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
+    	$adv_consult_info['show_day']=date('Y-m-d h:i:s',$adv_consult_info['show_day']);
+    	$input_box['show_day']=$this->form->date('info[show_day]',$adv_consult_info['show_day'],1);
+    	
+    	$order_id = $consult_info['order_id'];
+    	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
+    	
+    	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
+    	$pay_status_list=array(1=>'未支付', 2=>'支付');
+    	$plat_payed_list=array(1=>'未支付', 2=>'支付');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'计单完成', 10=>'计单取消');
+    	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$adv_consult_info['status'],'name="info[consult_status]"','询购状态');
+    	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
+    	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
+    	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
+    	
+    	
+    	$this->smarty->assign('consult_info', $consult_info);
+    	$this->smarty->assign('adv_consult_info', $adv_consult_info);
+    	$this->smarty->assign('adv_article_info', $adv_article_info);
+    	$this->smarty->assign('order_info', $order_info);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/consult_edit.html");
+    }
+    
+    
+    
+    
+    public function consult_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['clid'] < 1 || $cfg['aid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$clid = $cfg['clid'];
+    		$aid = $cfg['aid'];
+    		$olid = $cfg['olid'];
+    	}
+    	$info = $this->input->post('info');
+    	
+    	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' info [' . json_encode($info) .']');
+    	
+    	$cur_time = time();
+    	
+    	// 修改adv_consult表
+    	$adv_consult_info = array(
+    			'show_day'	  => strtotime($info['show_day']),
+    			'ad_location' => $info['ad_location'],
+    			'utime'       => $cur_time,
+    	);
+    	$adv_consult_flag = $this->adv_consult_model->update_info($adv_consult_info, $aid);
+    	
+    	// 修改consult_list表
+    	$consult_info = array(
+    			'status'	  => !empty($info['consult_status']) ? $info['consult_status'] : 1,
+    			'utime'       => $cur_time,
+    	);
+    	$consult_flag = $this->consult_list_model->update_info($consult_info, $clid);
+    	
+    	if ($olid > 0) {
+	    	// 修改order_list表
+	    	$order_info = array(
+	    			'pay_status'	  => !empty($info['pay_status']) ? $info['pay_status'] : 1,
+	    			'plat_payed'	  => !empty($info['plat_payed']) ? $info['plat_payed'] : 1,
+	    			'status'	  => !empty($info['order_status']) ? $info['order_status'] : 1,
+	    			'utime'       => $cur_time,
+	    	);
+	    	$order_flag = $this->order_list_model->update_info($consult_info, $olid);
+    	}
+    	
+    	if($adv_consult_flag && $consult_flag){
+    		show_tips('操作成功','','','edit');
+    	}else{
+    		show_tips('操作异常，请检测');
+    	}
+    	
+    }
+    
+    
+    
 	
 	
 }
