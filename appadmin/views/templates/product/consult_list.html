@@ -53,7 +53,7 @@
             <th width="50">是否已付款</th>
             <th width="50">是否已垫付</th>
             <th width="50">订单状态</th>
-            <th width="50">流程状态</th>
+            <th width="50">询购状态</th>
             <th width="120">更新时间</th>
             <th width="120">管理操作</th>
             </tr>
@@ -88,7 +88,7 @@
             <td align="center">
                 <a href="javascript:edit(<{$row['clid']}>,'<{$row['media_uid']}>')">修改</a> | 
 			    <a href="javascript:view(<{$row['clid']}>,'<{$row['media_uid']}>')">查看</a> | 
-			    <a href="javascript:;" onclick="del_one(this,'<{$row['clid']}>')">取消</a>
+			    <a href="javascript:;" onclick="cancel_one(this,'<{$row['clid']}>')">取消</a>
             </td>
             </tr>
             <{foreachelse}>
@@ -115,6 +115,19 @@ function del_one(obj,aid) {
     function(){
     $.get('<{site_url url='/member/user/user_del_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+
+function cancel_one(obj,aid) {
+    window.top.art.dialog({content:'确认取消吗？', fixed:true, style:'confirm',id:'delete_one'}, 
+    function(){
+    $.get('<{site_url url='/product/consult/consult_cancel_one_ajax/'}>?&clid='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) {
+                	//$(obj).parent().parent().fadeOut("slow");
+                	console.log("cancel success");
+                }
             })
          },
     function(){});

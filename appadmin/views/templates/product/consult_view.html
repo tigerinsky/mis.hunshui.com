@@ -46,7 +46,6 @@ $(function(){
 
 <div class="pad_10">
 <div class="common-form">
-<form name="myform" enctype="multipart/form-data" action="<{site_url url='/product/consult/consult_edit_do/'}>" method="post" id="myform">
 	<table width="100%" class="table_form contentWrap">
 		<tr>
 			<td>文章标题</td>
@@ -58,17 +57,17 @@ $(function(){
 		</tr>
 		<tr>
 			<td>投放位置</td>
-			<td><input type="text" name="info[ad_location]" class="input-text" id="ad_location" value="<{$adv_consult_info['ad_location']}>" ></td>
+			<td><input type="text" name="info[ad_location]" disabled class="input-text" id="ad_location" value="<{$adv_consult_info['ad_location']}>" ></td>
 		</tr>
 		
 		
 		<tr>
 			<td>原价</td>
-			<td><input type="text" name="info[original_price]" class="input-text" id="original_price" value="<{$order_info['original_price']}>" ></td>
+			<td><input type="text" name="info[original_price]" disabled class="input-text" id="original_price" value="<{$order_info['original_price']}>" ></td>
 		</tr>
 		<tr>
 			<td>实际交易金额(含税)</td>
-			<td><input type="text" name="info[ad_price]" class="input-text" id="ad_price" value="<{$order_info['ad_price']}>" ></td>
+			<td><input type="text" name="info[ad_price]" disabled class="input-text" id="ad_price" value="<{$order_info['ad_price']}>" ></td>
 		</tr>
 		<tr>
 			<td>是否已付款</td>
@@ -83,17 +82,12 @@ $(function(){
 			<td><{$input_box['order_status_sel']}></td>
 		</tr>
 		<tr>
-			<td>询购状态</td>
+			<td>流程状态</td>
 			<td><{$input_box['consult_status_sel']}></td>
 		</tr>
 	
 	</table>
     <div class="bk15"></div>
-    <input type="hidden" value="<{$consult_info['clid']}>" name="cfg[clid]">
-    <input type="hidden" value="<{$adv_consult_info['aid']}>" name="cfg[aid]">
-    <input type="hidden" value="<{$order_info['olid']}>" name="cfg[olid]">
-    <input type="submit" class="dialog" id="dosubmit" name="dosubmit" value="提交"/>
-</form>
 </div>
 </div>
 <{include file="../common/footer.html"}>
