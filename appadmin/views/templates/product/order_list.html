@@ -73,7 +73,7 @@
              -->
             <td align="center">
 			    <a href="javascript:view(<{$row['olid']}>,'<{$row['olid']}>')">查看</a> | 
-			    <a href="javascript:;" onclick="cancel_one(this,'<{$row['olid']}>')">平台垫付</a>
+			    <a href="javascript:;" onclick="advance_one(this,'<{$row['olid']}>')">平台垫付</a>
             </td>
             </tr>
             <{foreachelse}>
@@ -105,13 +105,13 @@ function del_one(obj,aid) {
     function(){});
 }
 
-function cancel_one(obj,aid) {
-    window.top.art.dialog({content:'确认取消吗？', fixed:true, style:'confirm',id:'delete_one'}, 
+function advance_one(obj,aid) {
+    window.top.art.dialog({content:'确认由平台垫付吗？', fixed:true, style:'confirm',id:'delete_one'}, 
     function(){
-    $.get('<{site_url url='/product/consult/consult_cancel_one_ajax/'}>?&clid='+aid+'&wb_hash='+wb_hash,function(data){
+    $.get('<{site_url url='/product/order/order_advance_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) {
                 	//$(obj).parent().parent().fadeOut("slow");
-                	console.log("cancel success");
+                	console.log("advance success");
                 }
             })
          },
@@ -132,11 +132,11 @@ function delete_more_like(){
 
 function edit(id, name) {
 	window.top.art.dialog({id:'edit'}).close();
-	window.top.art.dialog({title:'编辑询购《'+name+'》',id:'edit',iframe:'<{site_url url='/product/consult/consult_edit/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+	window.top.art.dialog({title:'编辑订单《'+name+'》',id:'edit',iframe:'<{site_url url='/product/order/order_edit/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
 }
 function view(id, name) {
     window.top.art.dialog({id:'view'}).close();
-    window.top.art.dialog({title:'查看询购《'+name+'》',id:'view',iframe:'<{site_url url='/product/consult/consult_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
+    window.top.art.dialog({title:'查看订单《'+name+'》',id:'view',iframe:'<{site_url url='/product/order/order_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
 }
 //-->
 </script>

@@ -1,0 +1,97 @@
+<{include file="../common/header.html"}>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+<script type="text/javascript"> 
+<!--
+$(function(){
+	$.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+	$("#uname").formValidator({onshow:"请输入用户名",onfocus:"必须在6-20个字符之间"}).inputValidator({min:6,max:20,onerror:"姓名必须在6-20个字符之间"}).ajaxValidator({
+		type : "get",
+		url : "<{site_url url='/member/user/check_filed_have_ajax/'}>",
+		data :"field=uname&tb=A&id=<{$info['id']}>",
+		datatype : "html",
+		async:'false',
+		success : function(data){
+			if( data == "1" ){
+				return true;
+			}else{
+				return false;
+			}
+		},
+		buttons: $("#dosubmit"),
+		onerror : "用户名重复",
+		onwait : "请稍后..."
+	}).defaultPassed();
+	$("#sname").formValidator({onshow:"请用户昵称",onfocus:"用户昵称需要在6-20个字符之间"}).inputValidator({min:6,max:20,onerror:"昵称需要在6-20个字符之间"}).ajaxValidator({
+		type : "get",
+		url : "<{site_url url='/member/user/check_filed_have_ajax/'}>",
+		data :"field=sname&tb=A&id=<{$info['id']}>",
+		datatype : "html",
+		async:'false',
+		success : function(data){
+			if( data == "1" ){
+				return true;
+			}else{
+				return false;
+			}
+		},
+		buttons: $("#dosubmit"),
+		onerror : "昵称重复",
+		onwait : "请稍后..."
+	}).defaultPassed();
+})
+//-->
+</script>
+
+<div class="pad_10">
+<div class="common-form">
+	<table width="100%" class="table_form contentWrap">
+		<tr>
+			<td>订单id</td>
+			<td><input type="text" name="info[olid]" disabled class="input-text" id="olid" value="<{$order_info['olid']}>" ></td>
+			<td>订单生成时间</td>
+			<td><input type="text" name="info[ctime]" disabled class="input-text" id="ctime" value="<{date("Y-m-d H:i:s", $order_info['ctime'])}>" ></td>
+		</tr>
+		<tr>
+			<td>广告id</td>
+			<td><input type="text" name="info[art_id]" disabled class="input-text" id="art_id" value="<{$adv_article_info['art_id']}>" ></td>
+			<td>广告名称</td>
+			<td><input type="text" name="info[title]" disabled class="input-text" id="title" value="<{$adv_article_info['title']}>" ></td>
+		</tr>
+		<tr>
+			<td>广告公司名称</td>
+			<td><input type="text" name="info[cmpy_name]" disabled class="input-text" id="cmpy_name" value="<{$ad_user_info['cmpy_name']}>" ></td>
+			<td>联系电话/姓名</td>
+			<td><input type="text" name="info[ad_phone]" disabled class="input-text" id="ad_phone" value="<{$ad_user_info['phone']}>/<{$ad_user_info['nick_name']}>" ></td>
+		</tr>
+		<tr>
+			<td>公众号</td>
+			<td><input type="text" name="info[nick_name]" disabled class="input-text" id="nick_name" value="<{$official_accounts_info['nick_name']}>" ></td>
+			<td>联系电话/姓名</td>
+			<td><input type="text" name="info[news_phone]" disabled class="input-text" id="news_phone" value="<{$news_user_info['phone']}>/<{$news_user_info['nick_name']}>" ></td>
+		</tr>
+		<tr>
+			<td>投放时间</td>
+			<td><{$input_box['show_day']}></td>
+			<td>投放位置</td>
+			<td><input type="text" name="info[ad_location]" disabled class="input-text" id="ad_location" value="<{$adv_consult_info['ad_location']}>" ></td>
+		</tr>
+		<tr>
+			<td>交易金额（含税）</td>
+			<td><input type="text" name="info[ad_location]" disabled class="input-text" id="ad_location" value="<{$order_info['ad_price']}>" ></td>
+			<td>交易金额（未含税）</td>
+			<td><input type="text" name="info[ad_location]" disabled class="input-text" id="ad_location" value="<{$order_info['ad_price']}>" ></td>
+		</tr>
+		<tr>
+			<td>广告主付款状态</td>
+			<td><{$input_box['pay_status_sel']}></td>
+			<td>平台是否垫付</td>
+			<td><{$input_box['plat_payed_sel']}></td>
+		</tr>
+	
+	</table>
+    <div class="bk15"></div>
+</div>
+</div>
+<{include file="../common/footer.html"}>
