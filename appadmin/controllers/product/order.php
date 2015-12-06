@@ -13,6 +13,7 @@ class order extends MY_Controller {
         $this->load->model("member/user_model", "user_model");
         $this->load->model("member/adv_consult_model", "adv_consult_model");
         $this->load->model("member/adv_article_model", "adv_article_model");
+        $this->load->model("member/adv_pay_model", "adv_pay_model");
         $this->load->model("member/official_accounts_model", "official_accounts_model");
         $this->load->model("member/consult_list_model", "consult_list_model");
         $this->load->model("member/order_list_model", "order_list_model");
