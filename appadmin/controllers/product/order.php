@@ -124,7 +124,7 @@ class order extends MY_Controller {
         	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($official_accounts_info) .']');
         	
         	$item_order['article_id'] = $adv_article_info['art_id']; // 广告id
-        	$item_order['article_title'] = $adv_article_info['title']; // 广告标题
+        	$item_order['article_title'] = $adv_article_info['title']; // 广告名称
         	$item_order['ofc_nick_name'] = $official_accounts_info['nick_name']; // 公众号昵称
         	$res_content[] = $item_order;
         }
