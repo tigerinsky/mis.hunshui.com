@@ -30,6 +30,29 @@ class Adv_article_model extends MY_Model {
 	
 	
 	/**
+	 * 根据广告标题返回匹配到的广告id列表
+	 * @param arr
+	 */
+	public function get_art_id_list_by_title($title) {
+		$this->dbw->select('art_id');
+		$this->dbw->like('title', $title, 'both');
+		$result = $this->dbw->get($this->table_name);
+	
+		// 获取数据库信息失败
+		if (false === $result) {
+			return false;
+		}
+		// 查询无结果
+		if (0 === $result->num_rows) {
+			return NULL;
+		}
+	
+		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' get_art_id_list_by_title data [' . json_encode($result->result_array()) .']');
+		return $result->result_array();
+	}
+	
+	
+	/**
 	 * 对数据表中的单行数据进行修改
 	 * @param arr $info 需要修改的键值对
 	 * @param int $id 被修改的id编号

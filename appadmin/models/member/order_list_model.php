@@ -46,4 +46,27 @@ class Order_list_model extends MY_Model {
 	}
 	
 	
+	/**
+	 * 获取所有的订单id
+	 * @param arr $info 需要修改的键值对
+	 * @param int $id 被修改的id编号
+	 * @return bool 是否执行成功
+	 */
+	public function get_all_order_list() {
+		$this->dbw->select('olid');
+		//$this->dbw->where('status', 9);
+		$result = $this->dbw->get($this->table_name);
+	
+		// 获取数据库信息失败
+		if (false === $result) {
+			return false;
+		}
+		// 查询无结果
+		if (0 === $result->num_rows) {
+			return NULL;
+		}
+		return $result->result_array();
+	}
+	
+	
 }
