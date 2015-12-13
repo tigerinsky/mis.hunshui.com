@@ -166,6 +166,10 @@ class order extends MY_Controller {
     	$adv_consult_info['show_day']=date('Y-m-d h:i:s',$adv_consult_info['show_day']);
     	$input_box['show_day']=$this->form->date('info[show_day]',$adv_consult_info['show_day'],1);
     	
+    	// 支付id
+    	$pay_id = $order_info['pay_id'];
+    	$adv_pay_info = $this->adv_pay_model->get_adv_pay_info_by_pay_id($pay_id);
+    	
     	// 公众帐号id
     	$oaid = $order_info['oaid'];
     	// 通过公众号id获取公众号信息
@@ -184,13 +188,18 @@ class order extends MY_Controller {
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	$pay_method_list=array(1=>'网银', 2=>'支付宝');
     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
     	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
+    	$input_box['pay_method_sel']=$this->form->select($pay_method_list,$adv_pay_info['pay_method'],'name="info[pay_method]"','付款方式');
     	
+    	// 媒体主优惠金额
+    	$order_info['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
     	
     	$this->smarty->assign('adv_consult_info', $adv_consult_info);
     	$this->smarty->assign('adv_article_info', $adv_article_info);
+    	$this->smarty->assign('adv_pay_info', $adv_pay_info);
     	$this->smarty->assign('order_info', $order_info);
     	$this->smarty->assign('official_accounts_info', $official_accounts_info);
     	$this->smarty->assign('ad_user_info', $ad_user_info);

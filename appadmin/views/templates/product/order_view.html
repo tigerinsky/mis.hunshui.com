@@ -48,6 +48,12 @@ $(function(){
 <div class="common-form">
 	<table width="100%" class="table_form contentWrap">
 		<tr>
+			<td>广告主付款金额（含税）</td>
+			<td><input type="text" name="info[olid]" disabled class="input-text" id="olid" value="<{$order_info['total_price']}>" ></td>
+			<td>平台付款金额（含税）</td>
+			<td><input type="text" name="info[olid]" disabled class="input-text" id="olid" value="<{$order_info['total_price']}>" ></td>
+		</tr>
+		<tr>
 			<td>订单id</td>
 			<td><input type="text" name="info[olid]" disabled class="input-text" id="olid" value="<{$order_info['olid']}>" ></td>
 			<td>订单生成时间</td>
@@ -86,8 +92,32 @@ $(function(){
 		<tr>
 			<td>广告主付款状态</td>
 			<td><{$input_box['pay_status_sel']}></td>
+			<td>付款时间</td>
+			<td><input type="text" name="info[create_time]" disabled class="input-text" id="create_time" value="<{date("Y-m-d H:i:s", $adv_pay_info['create_time'])}>" ></td>
+		</tr>
+		<tr>
+			<td>广告主付款方式</td>
+			<td><{$input_box['pay_method_sel']}></td>
+			<td>流水号</td>
+			<td><input type="text" name="info[pay_sn]" disabled class="input-text" id="pay_sn" value="<{$adv_pay_info['pay_sn']}>" ></td>
+		</tr>
+		<tr>
+			<td>媒体主优惠金额</td>
+			<td><input type="text" name="info[discount_price]" disabled class="input-text" id="discount_price" value="<{$order_info['discount_price']}>" ></td>
+			<td>实际交易金额（含税）</td>
+			<td><input type="text" name="info[total_price]" disabled class="input-text" id="total_price" value="<{$order_info['total_price']}>" ></td>
+		</tr>
+		<tr>
+			<td>实际交易金额（未含税）</td>
+			<td><input type="text" name="info[ad_price]" disabled class="input-text" id="ad_price" value="<{$order_info['ad_price']}>" ></td>
+			<td>广告主付款金额（含税）</td>
+			<td><input type="text" name="info[total_price]" disabled class="input-text" id="total_price" value="<{$order_info['total_price']}>" ></td>
+		</tr>
+		<tr>
 			<td>平台是否垫付</td>
 			<td><{$input_box['plat_payed_sel']}></td>
+			<td>操作人</td>
+			<td><input type="text" name="info[ad_price]" disabled class="input-text" id="ad_price" value="<{$order_info['ad_price']}>" ></td>
 		</tr>
 	
 	</table>
