@@ -224,77 +224,65 @@ class drawback extends MY_Controller {
     
     
     
-    public function order_view() {
+    public function drawback_view() {
     	$this->load->library('form');
-    	$olid = intval($this->input->get('id'));
+    	$dbid = intval($this->input->get('id'));
+    	// 退款信息
+    	$drawback_info = $this->drawback_list_model->get_drawback_info_by_dbid($dbid);
+    	
     	// 订单信息
-    	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
+    	$order_id = $drawback_info['order_id'];
+    	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
     	
-    	// 询购id
-    	$aid = $order_info['aid'];
-    	$adv_consult_info = $this->adv_consult_model->get_adv_consult_info_by_aid($aid);
-    	$art_id = $adv_consult_info['art_id'];
-    	
+    	// 广告信息
+    	$art_id = $drawback_info['art_id'];
     	$adv_article_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
-    	$adv_consult_info['show_day']=date('Y-m-d h:i:s',$adv_consult_info['show_day']);
-    	$input_box['show_day']=$this->form->date('info[show_day]',$adv_consult_info['show_day'],1);
+//     	$adv_consult_info['show_day']=date('Y-m-d h:i:s',$adv_consult_info['show_day']);
+//     	$input_box['show_day']=$this->form->date('info[show_day]',$adv_consult_info['show_day'],1);
     	
-    	// 支付id
-    	$pay_id = $order_info['pay_id'];
-    	$adv_pay_info = $this->adv_pay_model->get_adv_pay_info_by_pay_id($pay_id);
-    	
-    	// 公众帐号id
-    	$oaid = $order_info['oaid'];
-    	// 通过公众号id获取公众号信息
-    	$official_accounts_info = $this->official_accounts_model->get_ofc_info_by_oaid($oaid);
     	
     	// 广告主信息
-    	$ad_uid = $order_info['ad_uid'];
+    	$ad_uid = $drawback_info['ad_uid'];
     	$ad_user_info = $this->user_model->get_user_info_by_uid($ad_uid);
     	
     	// 媒体主信息
-    	$news_uid = $order_info['news_uid'];
+    	$news_uid = $drawback_info['news_uid'];
     	$news_user_info = $this->user_model->get_user_info_by_uid($news_uid);
     	
-    	 
-    	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
-    	$pay_status_list=array(1=>'未支付', 2=>'支付');
-    	$plat_payed_list=array(1=>'未支付', 2=>'支付');
-    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
-    	$pay_method_list=array(1=>'网银', 2=>'支付宝');
-    	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
-    	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
-    	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
-    	$input_box['pay_method_sel']=$this->form->select($pay_method_list,$adv_pay_info['pay_method'],'name="info[pay_method]"','付款方式');
     	
-    	// 媒体主优惠金额
-    	$order_info['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
+//     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
+//     	$pay_status_list=array(1=>'未支付', 2=>'支付');
+//     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
+//     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+//     	$pay_method_list=array(1=>'网银', 2=>'支付宝');
+//     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
+//     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
+//     	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
+//     	$input_box['pay_method_sel']=$this->form->select($pay_method_list,$adv_pay_info['pay_method'],'name="info[pay_method]"','付款方式');
     	
-    	$this->smarty->assign('adv_consult_info', $adv_consult_info);
+    	$this->smarty->assign('drawback_info', $drawback_info);
     	$this->smarty->assign('adv_article_info', $adv_article_info);
-    	$this->smarty->assign('adv_pay_info', $adv_pay_info);
     	$this->smarty->assign('order_info', $order_info);
-    	$this->smarty->assign('official_accounts_info', $official_accounts_info);
     	$this->smarty->assign('ad_user_info', $ad_user_info);
     	$this->smarty->assign('news_user_info', $news_user_info);
     	$this->smarty->assign('input_box',$input_box);
     	$this->smarty->assign('show_dialog','true');
     	$this->smarty->assign('show_validator','true');
-    	$this->smarty->display("product/order_view.html");
+    	$this->smarty->display("product/drawback_view.html");
     }
     
     
-    public function order_advance_one_ajax() {
-    	$olid = intval($this->input->get('olid'));
-    	if($olid>0) {
+    public function drawback_del_one_ajax() {
+    	$dbid = intval($this->input->get('dbid'));
+    	if($dbid>0) {
     		$cur_time = time();
     		
-    		// 修改order_list表, 平台付款，1未支付，2支付
+    		// 修改drawback_list表, 是否删除：1、未删除，2、已删除
     		$order_info = array(
-    				'plat_payed' => 2,
+    				'is_deleted' => 2,
     				'utime'  => $cur_time,
     		);
-    		$order_flag = $this->order_list_model->update_info($order_info, $olid);
+    		$drawback_flag = $this->drawback_list_model->update_info($order_info, $olid);
     		echo 1;
     	} else {
     		echo 0;
