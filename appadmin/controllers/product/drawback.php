@@ -339,11 +339,11 @@ class drawback extends MY_Controller {
     		$cur_time = time();
     		
     		// 修改drawback_list表, 是否删除：1、未删除，2、已删除
-    		$order_info = array(
+    		$drawback_info = array(
     				'is_deleted' => 2,
     				'utime'  => $cur_time,
     		);
-    		$drawback_flag = $this->drawback_list_model->update_info($order_info, $olid);
+    		$drawback_flag = $this->drawback_list_model->update_info($drawback_info, $dbid);
     		echo 1;
     	} else {
     		echo 0;
