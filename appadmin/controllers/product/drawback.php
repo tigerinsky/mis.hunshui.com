@@ -230,6 +230,10 @@ class drawback extends MY_Controller {
     	// 退款信息
     	$drawback_info = $this->drawback_list_model->get_drawback_info_by_dbid($dbid);
     	
+    	$drawback_info['drawback_time']=date('Y-m-d h:i:s',$drawback_info['drawback_time']);
+    	$input_box['drawback_time']=$this->form->date('info[drawback_time]',$drawback_info['drawback_time'],1);
+    	
+    	
     	// 订单信息
     	$order_id = $drawback_info['order_id'];
     	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
@@ -237,8 +241,8 @@ class drawback extends MY_Controller {
     	// 广告信息
     	$art_id = $drawback_info['art_id'];
     	$adv_article_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
-//     	$adv_consult_info['show_day']=date('Y-m-d h:i:s',$adv_consult_info['show_day']);
-//     	$input_box['show_day']=$this->form->date('info[show_day]',$adv_consult_info['show_day'],1);
+    	$adv_consult_info['show_day']=date('Y-m-d h:i:s',$adv_consult_info['show_day']);
+    	$input_box['show_day']=$this->form->date('info[show_day]',$adv_consult_info['show_day'],1);
     	
     	
     	// 广告主信息
@@ -249,16 +253,15 @@ class drawback extends MY_Controller {
     	$news_uid = $drawback_info['news_uid'];
     	$news_user_info = $this->user_model->get_user_info_by_uid($news_uid);
     	
+    	$pay_status_list=array(1=>'未支付', 2=>'支付');
+    	$plat_payed_list=array(1=>'未支付', 2=>'支付');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
+    	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
+    	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
     	
-//     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
-//     	$pay_status_list=array(1=>'未支付', 2=>'支付');
-//     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
-//     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
-//     	$pay_method_list=array(1=>'网银', 2=>'支付宝');
-//     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
-//     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
-//     	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
-//     	$input_box['pay_method_sel']=$this->form->select($pay_method_list,$adv_pay_info['pay_method'],'name="info[pay_method]"','付款方式');
+    	$status_list=array(1=>'已退款', 2=>'待退款');
+    	$input_box['status_sel']=$this->form->select($status_list,$drawback_info['status'],'name="info[status]"','退款状态');
     	
     	$this->smarty->assign('drawback_info', $drawback_info);
     	$this->smarty->assign('adv_article_info', $adv_article_info);
@@ -270,6 +273,64 @@ class drawback extends MY_Controller {
     	$this->smarty->assign('show_validator','true');
     	$this->smarty->display("product/drawback_view.html");
     }
+    
+    
+    
+    public function drawback_edit() {
+    	$this->load->library('form');
+    	$dbid = intval($this->input->get('id'));
+    	
+    	// 退款信息
+    	$drawback_info = $this->drawback_list_model->get_drawback_info_by_dbid($dbid);
+    	
+    	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' info [' . json_encode($drawback_info) .']');
+    	
+    	$drawback_info['drawback_time']=date('Y-m-d h:i:s',$drawback_info['drawback_time']);
+    	$input_box['drawback_time']=$this->form->date('info[drawback_time]',$drawback_info['drawback_time'],1);
+    	
+    	 
+    	$status_list=array(1=>'已退款', 2=>'待退款');
+    	$input_box['status_sel']=$this->form->select($status_list,$drawback_info['status'],'name="info[status]"','退款状态');
+		
+    	$this->smarty->assign('drawback_info', $drawback_info);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/drawback_edit.html");
+    }
+    
+    
+    
+    public function drawback_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['dbid'] < 1 || $cfg['dbid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$dbid = $cfg['dbid'];
+    	}
+    	$info = $this->input->post('info');
+    	
+    	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' info [' . json_encode($info) .']');
+    	
+    	$cur_time = time();
+    	// 修改drawback_list表
+    	$drawback_info = array(
+    			'drawback_price' => $info['drawback_price'],
+    			'drawback_time'	  => strtotime($info['drawback_time']),
+    			'status' => !empty($info['status']) ? $info['status'] : 1,
+    			'reason' => $info['reason'],
+    			'utime'       => $cur_time,
+    	);
+    	$drawback_flag = $this->drawback_list_model->update_info($drawback_info, $dbid);
+    	 
+    	if($drawback_flag){
+    		show_tips('操作成功','','','edit');
+    	}else{
+    		show_tips('操作异常，请检测');
+    	}
+    	 
+    }
+    
     
     
     public function drawback_del_one_ajax() {

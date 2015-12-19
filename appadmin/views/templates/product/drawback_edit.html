@@ -46,48 +46,11 @@ $(function(){
 
 <div class="pad_10">
 <div class="common-form">
+<form name="myform" enctype="multipart/form-data" action="<{site_url url='/product/drawback/drawback_edit_do/'}>" method="post" id="myform">
 	<table width="100%" class="table_form contentWrap">
 		<tr>
-			<td>文章标题</td>
-			<td><input type="text" name="info[title]" disabled class="input-text" id="title" value="<{$adv_article_info['title']}>" ></td>
-		</tr>
-		<tr>
-			<td>投放时间</td>
-			<td><{$input_box['show_day']}></td>
-		</tr>
-		<tr>
-			<td>原价</td>
-			<td><input type="text" name="info[original_price]" disabled class="input-text" id="original_price" value="<{$order_info['original_price']}>" ></td>
-		</tr>
-		<tr>
-			<td>实际交易金额(含税)</td>
-			<td><input type="text" name="info[total_price]" disabled class="input-text" id="total_price" value="<{$order_info['total_price']}>" ></td>
-		</tr>
-		<!-- 
-		<tr>
-			<td>是否已付款</td>
-			<td><{$input_box['pay_status_sel']}></td>
-		</tr>
-		<tr>
-			<td>是否已垫付</td>
-			<td><{$input_box['plat_payed_sel']}></td>
-		</tr>
-		<tr>
-			<td>订单状态</td>
-			<td><{$input_box['order_status_sel']}></td>
-		</tr>
-		 -->
-		<tr>
-			<td>广告主联系电话/姓名</td>
-			<td><input type="text" name="info[ad_phone]" disabled class="input-text" id="ad_phone" value="<{$ad_user_info['phone']}>/<{$ad_user_info['nick_name']}>" ></td>
-		</tr>
-		<tr>
-			<td>媒体主联系电话/姓名</td>
-			<td><input type="text" name="info[news_phone]" disabled class="input-text" id="news_phone" value="<{$news_user_info['phone']}>/<{$news_user_info['nick_name']}>" ></td>
-		</tr>
-		<tr>
 			<td width="80">退款金额</td>
-			<td><input type="text" name="info[drawback_price]" disabled class="input-text wid300" id="drawback_price" value="<{$drawback_info['drawback_price']}>"></td>
+			<td><input type="text" name="info[drawback_price]"  class="input-text wid300" id="drawback_price" value="<{$drawback_info['drawback_price']}>"></td>
 		</tr>
 		<tr>
 			<td width="80">退款时间</td>
@@ -99,13 +62,13 @@ $(function(){
 		</tr>
 		<tr>
 			<td width="80">退款原因</td>
-			<td><input type="text" name="info[reason]" disabled class="input-text wid300" id="reason" value="<{$drawback_info['reason']}>"></td>
+			<td><input type="text" name="info[reason]"  class="input-text wid300" id="reason" value="<{$drawback_info['reason']}>"></td>
 		</tr>
-		
-		
-	
 	</table>
     <div class="bk15"></div>
+    <input type="hidden" value="<{$drawback_info['dbid']}>" name="cfg[dbid]">
+    <input type="submit" class="dialog" id="dosubmit" name="dosubmit" value="提交"/>
+</form>
 </div>
 </div>
 <{include file="../common/footer.html"}>

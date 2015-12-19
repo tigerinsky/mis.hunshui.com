@@ -107,7 +107,7 @@
 <script type="text/javascript"> 
 <!--
 
-function del_one(obj,aid) {
+function delete_one(obj,aid) {
     window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'delete_one'}, 
     function(){
     $.get('<{site_url url='/product/drawback/drawback_del_one_ajax/'}>?&dbid='+aid+'&wb_hash='+wb_hash,function(data){
