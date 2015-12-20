@@ -55,6 +55,13 @@ class procedure extends MY_Controller {
         		$where_array[] = "order_id = '{$order_id}' ";
         	}
         	
+        	// 退款id
+        	$drawback_id = trim($this->input->get('drawback_id'));
+        	$search_arr['drawback_id'] = $drawback_id;
+        	if($drawback_id != ''){
+        		$where_array[] = "drawback_id = '{$drawback_id}' ";
+        	}
+        	
         	// mis用户名
         	$operator = trim($this->input->get('operator'));
         	$search_arr['operator'] = $operator;
@@ -80,7 +87,7 @@ class procedure extends MY_Controller {
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
-        $sql       = "SELECT procedure_id, art_id, consult_id, order_id, content, operator, ctime FROM $this->table_name $where $order $limit";
+        $sql       = "SELECT procedure_id, art_id, consult_id, order_id, drawback_id, content, operator, ctime FROM $this->table_name $where $order $limit";
         log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' order_list sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
         $list_data = $result->result_array();

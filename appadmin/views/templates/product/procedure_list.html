@@ -16,15 +16,17 @@
 		<td>
 		<div class="explain-col">
 				广告ID：	
-				<input name="art_id" type="text" value="<{$search_arr['art_id']}>" class="input-text" />
+				<input name="art_id" type="text" value="<{$search_arr['art_id']}>" class="input-text" style="width:80px;" />
 			    询购ID：	
-				<input name="consult_id" type="text" value="<{$search_arr['consult_id']}>" class="input-text" />
+				<input name="consult_id" type="text" value="<{$search_arr['consult_id']}>" class="input-text" style="width:80px;" />
 			    订单ID：	
-				<input name="order_id" type="text" value="<{$search_arr['order_id']}>" class="input-text" />
+				<input name="order_id" type="text" value="<{$search_arr['order_id']}>" class="input-text" style="width:80px;" />
+			    退款ID：	
+				<input name="drawback_id" type="text" value="<{$search_arr['drawback_id']}>" class="input-text" style="width:80px;" />
 			    操作用户：	
-				<input name="operator" type="text" value="<{$search_arr['operator']}>" class="input-text" />
+				<input name="operator" type="text" value="<{$search_arr['operator']}>" class="input-text" style="width:80px;" />
 			    关键词：	
-				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" style="width:80px;" />
 				<input type="submit" name="search" class="button" value="搜索" />
 		</div>
 		</td>
@@ -47,6 +49,7 @@
             <th width="30">广告id</th>
             <th width="30">询购id</th>
             <th width="30">订单id</th>
+            <th width="30">退款id</th>
             <th width="256">操作内容</th>
             <th width="50">操作人</th>
             <th width="120">操作时间</th>
@@ -61,6 +64,7 @@
             <td align="center"><{$row['art_id']}></td>
             <td align="center"><{$row['consult_id']}></td>
             <td align="center"><{$row['order_id']}></td>
+            <td align="center"><{$row['drawback_id']}></td>
             <td align="center"><{$row['content']}></td>
             <td align="center"><{$row['operator']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>

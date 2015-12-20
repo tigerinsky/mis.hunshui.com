@@ -16,6 +16,7 @@ class consult extends MY_Controller {
         $this->load->model("member/official_accounts_model", "official_accounts_model");
         $this->load->model("member/consult_list_model", "consult_list_model");
         $this->load->model("member/order_list_model", "order_list_model");
+        $this->load->model("member/procedure_log_model", "procedure_log_model");
         $this->table_name = "consult_list";
     }
 
@@ -227,6 +228,8 @@ class consult extends MY_Controller {
     		$clid = $cfg['clid'];
     		$aid = $cfg['aid'];
     		$olid = $cfg['olid'];
+    		// old
+    		$old_info = $this->consult_list_model->get_consult_info_by_clid($clid);
     	}
     	$info = $this->input->post('info');
     	
@@ -259,6 +262,25 @@ class consult extends MY_Controller {
 	    	);
 	    	$order_flag = $this->order_list_model->update_info($order_info, $olid);
     	}
+    	
+    	// 记入流程表
+    	// new
+    	$new_info = $this->consult_list_model->get_consult_info_by_clid($clid);
+    	$content_array = array();
+    	if ($old_info['status'] != $new_info['status']) {
+    		$content_array[] = 'status(' . $old_info['status'] . ' => ' . $new_info['status'] . ')';
+    	}
+    	 
+    	$procedure_log_info = array(
+    			'art_id'		=> 0,
+    			'consult_id'	=> $clid,
+    			'order_id' 		=> 0,
+    			'drawback_id' 	=> 0,
+    			'content'      	=> join(';', $content_array),
+    			'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    			'ctime'       	=> $cur_time,
+    	);
+    	$this->procedure_log_model->create_info($procedure_log_info);
     	
     	if($adv_consult_flag && $consult_flag){
     		show_tips('操作成功','','','edit');

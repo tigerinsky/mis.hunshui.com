@@ -18,6 +18,7 @@ class drawback extends MY_Controller {
         $this->load->model("member/consult_list_model", "consult_list_model");
         $this->load->model("member/order_list_model", "order_list_model");
         $this->load->model("member/drawback_list_model", "drawback_list_model");
+        $this->load->model("member/procedure_log_model", "procedure_log_model");
         $this->table_name = "drawback_list";
     }
 
@@ -205,7 +206,7 @@ class drawback extends MY_Controller {
     			'reason'	  		=> $info['reason'],
     			'drawback_price'	=> $info['drawback_price'],
     			'drawback_time'	  	=> strtotime($info['drawback_time']),
-    			'mis_name' 			=> 'test',
+    			'mis_name' 			=> $this->session->userdata('mis_user'),
     			'ctime'      		=> $cur_time,
     			'utime'       		=> $cur_time,
     			'is_deleted'       	=> 1,
@@ -307,6 +308,8 @@ class drawback extends MY_Controller {
     		show_tips('参数异常，请检测');
     	} else {
     		$dbid = $cfg['dbid'];
+    		// old
+    		$old_info = $this->drawback_list_model->get_drawback_info_by_dbid($dbid);
     	}
     	$info = $this->input->post('info');
     	
@@ -322,6 +325,34 @@ class drawback extends MY_Controller {
     			'utime'       => $cur_time,
     	);
     	$drawback_flag = $this->drawback_list_model->update_info($drawback_info, $dbid);
+    	
+    	// 记入流程表
+    	// new
+    	$new_info = $this->drawback_list_model->get_drawback_info_by_dbid($dbid);
+    	$content_array = array();
+    	if ($old_info['drawback_price'] != $new_info['drawback_price']) {
+    		$content_array[] = 'drawback_price(' . $old_info['drawback_price'] . ' => ' . $new_info['drawback_price'] . ')';
+    	}
+    	if ($old_info['drawback_time'] != $new_info['drawback_time']) {
+    		$content_array[] = 'drawback_time(' . $old_info['drawback_time'] . ' => ' . $new_info['drawback_time'] . ')';
+    	}
+    	if ($old_info['status'] != $new_info['status']) {
+    		$content_array[] = 'status(' . $old_info['status'] . ' => ' . $new_info['status'] . ')';
+    	}
+    	if ($old_info['reason'] != $new_info['reason']) {
+    		$content_array[] = 'reason(' . $old_info['reason'] . ' => ' . $new_info['reason'] . ')';
+    	}
+    	 
+    	$procedure_log_info = array(
+    			'art_id'		=> 0,
+    			'consult_id'	=> 0,
+    			'order_id' 		=> 0,
+    			'drawback_id' 	=> $dbid,
+    			'content'      	=> join(';', $content_array),
+    			'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    			'ctime'       	=> $cur_time,
+    	);
+    	$this->procedure_log_model->create_info($procedure_log_info);
     	 
     	if($drawback_flag){
     		show_tips('操作成功','','','edit');

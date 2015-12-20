@@ -13,6 +13,7 @@ class advmgr extends MY_Controller {
         $this->load->model("member/adv_consult_model", "adv_consult_model");
         $this->load->model("member/adv_article_model", "adv_article_model");
         $this->load->model("member/user_model", "user_model");
+        $this->load->model("member/procedure_log_model", "procedure_log_model");
         $this->table_name = "adv_consult";
     }
 
@@ -186,6 +187,8 @@ class advmgr extends MY_Controller {
     	} else {
     		$aid = $cfg['aid'];
     		$art_id = $cfg['art_id'];
+    		// old
+    		$old_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
     	}
     	$info = $this->input->post('info');
     	/*
@@ -200,10 +203,6 @@ class advmgr extends MY_Controller {
     	*/
     	
     	$cur_time = time();
-    	
-    	// 获取mis用户
-    	$mis_user=$this->session->userdata('mis_user');
-    	log_message('debug', '[*******************mis user******************]'. __METHOD__ .':'.__LINE__.' result [' . $mis_user .']');
     	
     	
     	// 修改adv_consult表
@@ -227,6 +226,40 @@ class advmgr extends MY_Controller {
     		'utime'       	=> $cur_time,
     	);
     	$article_flag = $this->adv_article_model->update_info($article_info, $art_id);
+    	
+    	// 记入流程表
+    	// new
+    	$new_info = $this->adv_article_model->get_adv_article_info_by_art_id($art_id);
+    	$content_array = array();
+    	if ($old_info['title'] != $new_info['title']) {
+    		$content_array[] = 'title(' . $old_info['title'] . ' => ' . $new_info['title'] . ')';
+    	}
+    	if ($old_info['author'] != $new_info['author']) {
+    		$content_array[] = 'author(' . $old_info['author'] . ' => ' . $new_info['author'] . ')';
+    	}
+    	if ($old_info['content'] != $new_info['content']) {
+    		$content_array[] = 'content(' . $old_info['content'] . ' => ' . $new_info['content'] . ')';
+    	}
+    	if ($old_info['url'] != $new_info['url']) {
+    		$content_array[] = 'url(' . $old_info['url'] . ' => ' . $new_info['url'] . ')';
+    	}
+    	if ($old_info['abstract'] != $new_info['abstract']) {
+    		$content_array[] = 'abstract(' . $old_info['abstract'] . ' => ' . $new_info['abstract'] . ')';
+    	}
+    	if ($old_info['original_link'] != $new_info['original_link']) {
+    		$content_array[] = 'original_link(' . $old_info['original_link'] . ' => ' . $new_info['original_link'] . ')';
+    	}
+    	
+    	$procedure_log_info = array(
+    			'art_id'		=> $art_id,
+    			'consult_id'	=> 0,
+    			'order_id' 		=> 0,
+    			'drawback_id' 	=> 0,
+    			'content'      	=> join(';', $content_array),
+    			'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    			'ctime'       	=> $cur_time,
+    	);
+    	$this->procedure_log_model->create_info($procedure_log_info);
     	
     	if($consult_flag && $article_flag){
     		show_tips('操作成功','','','edit');
