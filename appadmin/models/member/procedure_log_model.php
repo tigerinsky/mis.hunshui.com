@@ -33,7 +33,7 @@ class Procedure_log_model extends MY_Model {
 	public function get_procedure_log_by_art_id($art_id) {
 		$this->dbw->select('procedure_id, art_id, consult_id, order_id, content, operator, ctime');
 		$this->dbw->where('art_id', $art_id);
-		$this->dbw->orderby("ctime", "desc");
+		$this->dbw->order_by("ctime", "desc");
 		$this->dbw->limit(1);
 		$result = $this->dbw->get($this->table_name);
 		// 获取数据库信息失败
@@ -54,7 +54,7 @@ class Procedure_log_model extends MY_Model {
 	public function get_procedure_log_by_consult_id($consult_id) {
 		$this->dbw->select('procedure_id, art_id, consult_id, order_id, content, operator, ctime');
 		$this->dbw->where('consult_id', $consult_id);
-		$this->dbw->orderby("ctime", "desc");
+		$this->dbw->order_by("ctime", "desc");
 		$this->dbw->limit(1);
 		$result = $this->dbw->get($this->table_name);
 		// 获取数据库信息失败
@@ -75,7 +75,7 @@ class Procedure_log_model extends MY_Model {
 	public function get_procedure_log_by_order_id($order_id) {
 		$this->dbw->select('procedure_id, art_id, consult_id, order_id, content, operator, ctime');
 		$this->dbw->where('order_id', $order_id);
-		$this->dbw->orderby("ctime", "desc");
+		$this->dbw->order_by("ctime", "desc");
 		$this->dbw->limit(1);
 		$result = $this->dbw->get($this->table_name);
 		// 获取数据库信息失败

@@ -110,6 +110,15 @@ class advmgr extends MY_Controller {
         log_message('debug', '[*************************************]'. __METHOD__ .':'.__LINE__.' result [' . json_encode($result) .']');
         $list_data = $result->result_array();
         
+        // 获取详情
+        $res_content = array();
+        foreach($list_data as $item) {
+        	$art_id = $item['art_id'];
+        	$procedure_log_info = $this->procedure_log_model->get_procedure_log_by_art_id($art_id);
+        	$item['operator'] = isset($procedure_log_info['operator']) ? $procedure_log_info['operator'] : '';
+        	$res_content[] = $item;
+        }
+        
         $order_status_list=array(1=>'新增', 2=>'通过', 3=>'拒接');
         $search_arr['order_status_sel']=$this->form->select($order_status_list,$order_status_id,'name="order_status_id"','投放状态');
         
@@ -118,8 +127,8 @@ class advmgr extends MY_Controller {
         
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('order_status_list', $order_status_list);
-        //$this->smarty->assign('list_data', $res_content);
-        $this->smarty->assign('list_data', $list_data);
+        $this->smarty->assign('list_data', $res_content);
+        //$this->smarty->assign('list_data', $list_data);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
         $this->smarty->display("product/advmgr_list.html");
