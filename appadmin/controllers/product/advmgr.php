@@ -201,6 +201,11 @@ class advmgr extends MY_Controller {
     	
     	$cur_time = time();
     	
+    	// 获取mis用户
+    	$mis_user=$this->session->userdata('mis_user');
+    	log_message('debug', '[*******************mis user******************]'. __METHOD__ .':'.__LINE__.' result [' . $mis_user .']');
+    	
+    	
     	// 修改adv_consult表
     	$consult_info = array(
     		'category'	  => $info['category'],

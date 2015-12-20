@@ -70,6 +70,7 @@ class user extends CI_Controller{
                 );
                 $this->session->set_userdata($this->rbac_config['rbac_admin_auth_key'],$user_login);
                 $this->session->set_userdata('wb_hash',$hash);
+                $this->session->set_userdata('mis_user',$login_user['uname']);
                 show_tips('登录成功',site_url('/admin/main/'));
             }else{
                 $this->session->sess_destroy();
