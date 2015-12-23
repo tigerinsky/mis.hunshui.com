@@ -61,7 +61,7 @@ class Invite_model extends CI_Model {
      */
     public function create_info_batch($uid,$nums){
         $info_batch=$this->set_invite($uid,$nums);
-        if($this->db->insert_batch('user_invite_code',$info_batch)){
+        if($this->db->insert_batch('ci_user_invite_code',$info_batch)){
             return true;
         }else{
             return false;
