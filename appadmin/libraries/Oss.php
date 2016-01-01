@@ -36,7 +36,7 @@ class Oss {
     const OSS_ACCESS_ID      = "k1NFgARR9nSJLt1j";
     const OSS_ACCESS_KEY     = "dTl556vZWeBftux4urqBvdNyjAOn4n";
     const OSS_DEFAULT_BUCKET = "hunshui";
-    const OSS_IMG_URL        = "http://img2.tigerinsky.com/';";
+    const OSS_IMG_URL        = "http://img2.tigerinsky.com/";
 
     public function __construct($config = array()){
         $this->CI =& get_instance();
