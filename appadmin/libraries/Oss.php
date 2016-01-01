@@ -14,7 +14,7 @@ class Oss {
     private $CI;
     private $oss_service;
     private $file_ext = array('jpg', 'png', 'gif', 'JPG', 'PNG', 'GIF');
-    private $project_arr = array('meiyuanbangapp','myb-img','jinglietou','hongzuan','lanjinger','lanjingshandong','lanjinghenan', 'lanjingapp');
+    private $project_arr = array('hunshui','myb-img','jinglietou','hongzuan','lanjinger','lanjingshandong','lanjinghenan', 'lanjingapp');
     private $file_size   = 409600; //1024*400;
 
     //这些样式需在Ossbucket定义
@@ -33,10 +33,10 @@ class Oss {
         "watermark_110_31"   => "common/201410281810_544f6bad55dba.png",   
     );
 
-    const OSS_ACCESS_ID      = "z2BPrGgOY9gFKEjx";
-    const OSS_ACCESS_KEY     = "BI2egA7gIRaSgBiBUMef4gsNgmZabK";
-    const OSS_DEFAULT_BUCKET = "myb-img";
-    const OSS_IMG_URL        = "http://img.tianyi2000.com/";
+    const OSS_ACCESS_ID      = "k1NFgARR9nSJLt1j";
+    const OSS_ACCESS_KEY     = "dTl556vZWeBftux4urqBvdNyjAOn4n";
+    const OSS_DEFAULT_BUCKET = "hunshui";
+    const OSS_IMG_URL        = "http://img2.tigerinsky.com/';";
 
     public function __construct($config = array()){
         $this->CI =& get_instance();

@@ -6,7 +6,7 @@
 |
 */
 //
-$config['appname']='meiyuanbangapp'; //array('lanjingtmt','lanjinger','cailianpress','jinglietou','hongzuan');
+$config['appname']='hunshui'; //array('lanjingtmt','lanjinger','cailianpress','jinglietou','hongzuan');
 /*$config['auth_key']='PAMHVz6B8fYAUzcR';
 //上传文件大小
 $config['upload_maxsize'] = 2048;

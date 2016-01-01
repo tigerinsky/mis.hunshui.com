@@ -59,5 +59,5 @@ define('TIPS_MATERIAL_POSITION', 4);
 define('TIPS_FOCUS_STAGE',       5);
 /* End of file constants.php */
 /* Location: ./application/config/constants.php */
-define('ULR_PROX',       'http://mis.meiyuanbang.com');
+define('ULR_PROX',       'http://mis.hunshui.com');
 
