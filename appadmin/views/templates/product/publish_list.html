@@ -1,0 +1,111 @@
+<{include file="../common/header.html"}>
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+        <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/product/publish/publish_add/'}>?', title:'新建发布', width:'600', height:'350', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>新建发布</em></a>
+        <a href="<{site_url url='/product/publish/index/'}>" class="on"><em>发布列表</em></a>    </div>
+</div>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+<div class="pad_10">
+<div id="searchid">
+<form name="searchform" action="<{site_url url='/product/publish/index/'}>" method="get" >
+<table width="100%" cellspacing="0" class="search-form">
+    <tbody>
+		<tr>
+		<td>
+		<div class="explain-col">
+				<{$search_arr['type_sel']}>
+				发布时间 <{$search_arr['time_start']}> <{$search_arr['time_end']}>
+			    关键词：	
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				<input type="submit" name="search" class="button" value="搜索" />
+		</div>
+		</td>
+		</tr>
+    </tbody>
+</table>
+<input type="hidden" value="ok" name="dosearch">
+<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+</form>
+</div>
+
+<form name="myform" id="myform" action="" method="post" >
+
+<div class="table-list">
+	<table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="30">发布id</th>
+            <th width="30">发布类型</th>
+            <th width="50">标题</th>
+            <th width="50">内容</th>
+            <th width="50">发布人</th>
+            <th width="120">发布时间</th>
+            <th width="120">管理操作</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        	<{foreach from=$list_data item=row}>
+            <tr>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['dbid']}>" type="checkbox"></td>
+            <td align="center"><{$row['plid']}></td>
+            <td align="center"><{$type_list[$row['type']]}></td>
+            <td align="center"><{$row['title']}></td>
+            <td align="center"><{$row['content']}></td>
+            <td align="center"><{$row['operator']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
+            <td align="center">
+			    <a href="javascript:view(<{$row['plid']}>,'<{$row['title']}>')">查看详情</a> | 
+			    <a href="javascript:edit(<{$row['plid']}>,'<{$row['title']}>')">编辑</a> | 
+			    <a href="javascript:;" onclick="delete_one(this,'<{$row['plid']}>')">删除</a>
+            </td>
+            </tr>
+            <{foreachelse}>
+			<tr>
+            <td colspan="8">没有数据</td>
+            </tr>
+            <{/foreach}>
+    	</tbody>
+    </table>
+    <div class="btn">
+    	<label for="check_box">全选/取消</label>
+		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+		<input type="hidden" value="1" name="dosubmit">
+	</div>
+    <div id="pages"><{$pages}></div>
+</div>
+</form>
+</div>
+<script type="text/javascript"> 
+<!--
+
+function delete_one(obj,aid) {
+    window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'delete_one'}, 
+    function(){
+    $.get('<{site_url url='/product/publish/publish_del_one_ajax/'}>?&plid='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+
+
+function delete_more_like(){
+	if(confirm('确认对所选记录伪删除变更吗？')) $('#myform').submit();
+}
+
+
+function edit(id, name) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'编辑发布信息《'+name+'》',id:'edit',iframe:'<{site_url url='/product/publish/publish_edit/'}>?id='+id,width:'650',height:'400'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+}
+function view(id, name) {
+    window.top.art.dialog({id:'view'}).close();
+    window.top.art.dialog({title:'查看发布信息《'+name+'》',id:'view',iframe:'<{site_url url='/product/publish/publish_view/'}>?id='+id,width:'650',height:'400',cancelVal:'关闭',cancel:true}); 
+}
+//-->
+</script>
+<{include file="../common/footer.html"}>
