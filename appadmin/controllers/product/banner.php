@@ -159,18 +159,38 @@ class banner extends MY_Controller {
     
     
     
-    public function publish_del_one_ajax() {
-    	$plid = intval($this->input->get('plid'));
-    	if($plid>0) {
+    public function banner_del_one_ajax() {
+    	$bid = intval($this->input->get('bid'));
+    	if($bid>0) {
     		$cur_time = time();
     		
-    		// 修改publish_list表, 是否删除：1、未删除，2、已删除
-    		$publish_info = array(
+    		// 修改banner表, 是否删除：1、未删除，2、已删除
+    		$banner_info = array(
     				'is_deleted' => 2,
     				'utime'  => $cur_time,
     		);
-    		$publish_flag = $this->publish_list_model->update_info($publish_info, $plid);
+    		$publish_flag = $this->banner_model->update_info($banner_info, $bid);
     		echo 1;
+    	} else {
+    		echo 0;
+    	}
+    }
+    
+    
+    public function banner_top_one_ajax() {
+    	$bid = intval($this->input->get('bid'));
+    	if($bid>0) {
+    		$cur_time = time();
+    		
+    		$item = $this->banner_model->get_max_rank();
+    		$rank = intval($item['rank']) + 1;
+    		// 修改banner表, 置顶操作
+    		$banner_info = array(
+    				'rank'	=> $rank,
+    				'utime' => $cur_time,
+    		);
+    		$publish_flag = $this->banner_model->update_info($banner_info, $bid);
+    		echo $rank;
     	} else {
     		echo 0;
     	}
