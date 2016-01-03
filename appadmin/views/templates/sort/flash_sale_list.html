@@ -1,0 +1,112 @@
+<{include file="../common/header.html"}>
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+        <a href="<{site_url url='/sort/flash_sale/index/'}>" class="on"><em>限时抢列表</em></a>    </div>
+</div>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+<div class="pad_10">
+<div id="searchid">
+<form name="searchform" action="<{site_url url='/sort/flash_sale/index/'}>" method="get" >
+<table width="100%" cellspacing="0" class="search-form">
+    <tbody>
+		<tr>
+		<td>
+		<div class="explain-col">
+			    关键词：	
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				<input type="submit" name="search" class="button" value="搜索" />
+		</div>
+		</td>
+		</tr>
+    </tbody>
+</table>
+<input type="hidden" value="ok" name="dosearch">
+<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+</form>
+</div>
+
+<form name="myform" id="myform" action="" method="post" >
+
+<div class="table-list">
+	<table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="30">限时抢id</th>
+            <th width="30">公众号id</th>
+            <th width="30">用户id</th>
+            <th width="50">广告位置</th>
+            <th width="120">抢购日期</th>
+            <th width="120">发布时间段</th>
+            <th width="120">创建时间</th>
+            <th width="120">修改时间</th>
+            <th width="50">首个订单耗时(s)</th>
+            <th width="50">单图文原价</th>
+            <th width="50">多图文头条原价</th>
+            <th width="50">多图文价格</th>
+            <th width="50">优惠多图文价格</th>
+            <th width="50">状态</th>
+            <th width="50">排名</th>
+            <th width="120">管理操作</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        	<{foreach from=$list_data item=row}>
+            <tr>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['fsid']}>" type="checkbox"></td>
+            <td align="center"><{$row['fsid']}></td>
+            <td align="center"><{$row['oaid']}></td>
+            <td align="center"><{$row['uid']}></td>
+            <td align="center"><{$row['ad_location']}></td>
+            <td align="center"><{$row['show_day']}></td>
+            <td align="center"><{$row['show_hours']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
+            <td align="center"><{$row['first_order_cost']}></td>
+            <td align="center"><{$row['single_price']}></td>
+            <td align="center"><{$row['frt_multi_price']}></td>
+            <td align="center"><{$row['multi_price']}></td>
+            <td align="center"><{$row['promo_multi_price']}></td>
+            <td align="center"><{$row['status']}></td>
+            <td align="center"><{$row['rank']}></td>
+            <td align="center">
+			    <a href="javascript:;" onclick="top_one(this,'<{$row['fsid']}>')">置顶</a>
+            </td>
+            </tr>
+            <{foreachelse}>
+			<tr>
+            <td colspan="17">没有数据</td>
+            </tr>
+            <{/foreach}>
+    	</tbody>
+    </table>
+    <div class="btn">
+    	<label for="check_box">全选/取消</label>
+		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+		<input type="hidden" value="1" name="dosubmit">
+	</div>
+    <div id="pages"><{$pages}></div>
+</div>
+</form>
+</div>
+<script type="text/javascript"> 
+<!--
+
+function top_one(obj,aid) {
+    window.top.art.dialog({content:'确认执行此操作吗？', fixed:true, style:'confirm',id:'top_one'}, 
+    function(){
+    $.get('<{site_url url='/sort/flash_sale/top_one_ajax/'}>?&fsid='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data > 0) {
+                	$(obj).parent().parent().children().eq(15).html(data);
+                }
+            })
+         },
+    function(){});
+}
+
+//-->
+</script>
+<{include file="../common/footer.html"}>

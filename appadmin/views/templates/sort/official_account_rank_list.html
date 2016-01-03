@@ -1,0 +1,100 @@
+<{include file="../common/header.html"}>
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+        <a href="<{site_url url='/sort/official_account_rank/index/'}>" class="on"><em>商业价值排行榜列表</em></a>    </div>
+</div>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+<div class="pad_10">
+<div id="searchid">
+<form name="searchform" action="<{site_url url='/sort/official_account_rank/index/'}>" method="get" >
+<table width="100%" cellspacing="0" class="search-form">
+    <tbody>
+		<tr>
+		<td>
+		<div class="explain-col">
+			    关键词：	
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				<input type="submit" name="search" class="button" value="搜索" />
+		</div>
+		</td>
+		</tr>
+    </tbody>
+</table>
+<input type="hidden" value="ok" name="dosearch">
+<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+</form>
+</div>
+
+<form name="myform" id="myform" action="" method="post" >
+
+<div class="table-list">
+	<table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="30">排序id</th>
+            <th width="30">数据日期</th>
+            <th width="30">公众号id</th>
+            <th width="50">rank</th>
+            <th width="50">总成交额</th>
+            <th width="50">订单数量</th>
+            <th width="50">趋势</th>
+            <th width="120">写入时间</th>
+            <th width="50">worth</th>
+            <th width="120">管理操作</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        	<{foreach from=$list_data item=row}>
+            <tr>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['rank_id']}>" type="checkbox"></td>
+            <td align="center"><{$row['rank_id']}></td>
+            <td align="center"><{$row['idx_day']}></td>
+            <td align="center"><{$row['oaid']}></td>
+            <td align="center"><{$row['rank']}></td>
+            <td align="center"><{$row['price']}></td>
+            <td align="center"><{$row['order_num']}></td>
+            <td align="center"><{$row['trend']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
+            <td align="center"><{$row['worth']}></td>
+            <td align="center">
+			    <a href="javascript:;" onclick="top_one(this,'<{$row['rank_id']}>')">置顶</a>
+            </td>
+            </tr>
+            <{foreachelse}>
+			<tr>
+            <td colspan="11">没有数据</td>
+            </tr>
+            <{/foreach}>
+    	</tbody>
+    </table>
+    <div class="btn">
+    	<label for="check_box">全选/取消</label>
+		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+		<input type="hidden" value="1" name="dosubmit">
+	</div>
+    <div id="pages"><{$pages}></div>
+</div>
+</form>
+</div>
+<script type="text/javascript"> 
+<!--
+
+function top_one(obj,aid) {
+    window.top.art.dialog({content:'确认执行此操作吗？', fixed:true, style:'confirm',id:'top_one'}, 
+    function(){
+    $.get('<{site_url url='/sort/official_account_rank/top_one_ajax/'}>?&rank_id='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data > 0) {
+                	$(obj).parent().parent().children().eq(9).html(data);
+                }
+            })
+         },
+    function(){});
+}
+
+//-->
+</script>
+<{include file="../common/footer.html"}>

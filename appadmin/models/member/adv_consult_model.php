@@ -46,4 +46,23 @@ class Adv_consult_model extends MY_Model {
 	}
 	
 	
+	/**
+	 * 获取最多的rank值
+	 */
+	public function get_max_rank() {
+		$this->dbw->select_max('rank');
+		$result = $this->dbw->get($this->table_name);
+	
+		// 获取数据库信息失败
+		if (false === $result) {
+			return false;
+		}
+		// 查询无结果
+		if (0 === $result->num_rows) {
+			return NULL;
+		}
+		return $result->result_array()[0];
+	}
+	
+	
 }

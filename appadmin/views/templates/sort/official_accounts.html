@@ -1,0 +1,118 @@
+<{include file="../common/header.html"}>
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+        <!-- <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/member/user/user_add/'}>?', title:'添加会员', width:'600', height:'350', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>添加会员</em></a>  -->
+        <a href="<{site_url url='/member/official_accounts/index/'}>" class="on"><em>媒体主公众号列表</em></a>    </div>
+</div>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+<div class="pad_10">
+<div id="searchid">
+<form name="searchform" action="<{site_url url='/member/official_accounts/index/'}>" method="get" >
+<table width="100%" cellspacing="0" class="search-form">
+    <tbody>
+		<tr>
+		<td>
+		<div class="explain-col">
+				<{$search_arr['time_regular_sel']}>
+			    所属用户手机号：	
+				<input name="phone" type="text" value="<{$search_arr['phone']}>" class="input-text" />
+			    关键词：	
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				<input type="submit" name="search" class="button" value="搜索" />
+		</div>
+		</td>
+		</tr>
+    </tbody>
+</table>
+<input type="hidden" value="ok" name="dosearch">
+<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+</form>
+</div>
+
+<form name="myform" id="myform" action="" method="post" >
+
+<div class="table-list">
+	<table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="30">公众号id</th>
+            <th width="50">所属浑水用户</th>
+            <th width="50">公众号</th>
+            <th width="50">昵称</th>
+            <th width="50">粉丝数</th>
+            <th width="50">粉丝男占比</th>
+            <th width="50">粉丝女占比</th>
+            <th width="50">每日发布时间</th>
+            <th width="50">是否固定发布时间</th>
+            <th width="50">单图文价格</th>
+            <th width="50">多图文头条价格(分)</th>
+            <th width="50">多图文价格</th>
+            <th width="50">微信认证公司</th>
+            <th width="50">公众号简介</th>
+            <th width="50">分类</th>
+            <th width="50">排名</th>
+            <th width="60">管理操作</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        	<{foreach from=$list_data item=row}>		
+            <tr>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['oaid']}>" type="checkbox"></td>
+            <td align="center"><{$row['oaid']}></td>
+            <td align="center"><{$row['uid']}></td>
+            <td align="center"><{$row['ofc_account']}></td>
+            <td align="center"><{$row['nick_name']}></td>
+            <td align="center"><{$row['fan_num']}></td>
+            <td align="center"><{$row['male_percent']}></td>
+            <td align="center"><{$row['female_percent']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['push_time'])}></td>
+            <td align="center"><{$time_regular_list[$row['time_regular']]}></td>
+            <td align="center"><{$row['single_price']}></td>
+            <td align="center"><{$row['frt_multi_price']}></td>
+            <td align="center"><{$row['multi_price']}></td>
+            <td align="center"><{$row['wx_idty']}></td>
+            <td align="center"><{$row['abstract']}></td>
+            <td align="center"><{$row['category']}></td>
+            <td align="center"><{$row['rank']}></td>
+            <td align="center">
+			    <a href="javascript:;" onclick="top_one(this,'<{$row['oaid']}>')">置顶</a>
+            </td>
+            </tr>
+            <{foreachelse}>
+			<tr>
+            <td colspan="18">没有数据</td>
+            </tr>
+            <{/foreach}>
+    	</tbody>
+    </table>
+    <div class="btn">
+    	<label for="check_box">全选/取消</label>
+		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+		<input type="hidden" value="1" name="dosubmit">
+	</div>
+    <div id="pages"><{$pages}></div>
+</div>
+</form>
+</div>
+<script type="text/javascript"> 
+<!--
+
+function top_one(obj,aid) {
+    window.top.art.dialog({content:'确认执行此操作吗？', fixed:true, style:'confirm',id:'top_one'}, 
+    function(){
+    $.get('<{site_url url='/sort/official_accounts/top_one_ajax/'}>?&oaid='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data > 0) {
+                	$(obj).parent().parent().children().eq(16).html(data);
+                }
+            })
+         },
+    function(){});
+}
+
+//-->
+</script>
+<{include file="../common/footer.html"}>
