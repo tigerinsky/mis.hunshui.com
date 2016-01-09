@@ -39,8 +39,8 @@ class invite extends CI_Controller{
                 $search_arr['valid']=1;
                 $where_array[]="valid=1";
             }else{
-                $search_arr['valid']=0;
-                $where_array[]="valid=0";
+                $search_arr['valid']=2;
+                $where_array[]="valid=2";
             }
             
         }else{

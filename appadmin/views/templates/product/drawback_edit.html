@@ -49,19 +49,19 @@ $(function(){
 <form name="myform" enctype="multipart/form-data" action="<{site_url url='/product/drawback/drawback_edit_do/'}>" method="post" id="myform">
 	<table width="100%" class="table_form contentWrap">
 		<tr>
-			<td width="80">退款金额</td>
+			<td>退款金额</td>
 			<td><input type="text" name="info[drawback_price]"  class="input-text wid300" id="drawback_price" value="<{$drawback_info['drawback_price']}>"></td>
 		</tr>
 		<tr>
-			<td width="80">退款时间</td>
+			<td>退款时间</td>
 			<td><{$input_box['drawback_time']}></td>
 		</tr>
 		<tr>
-			<td width="80">退款状态</td>
+			<td>退款状态</td>
 			<td><{$input_box['status_sel']}></td>
 		</tr>
 		<tr>
-			<td width="80">退款原因</td>
+			<td>退款原因</td>
 			<td><input type="text" name="info[reason]"  class="input-text wid300" id="reason" value="<{$drawback_info['reason']}>"></td>
 		</tr>
 	</table>

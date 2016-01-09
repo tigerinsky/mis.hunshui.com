@@ -134,7 +134,7 @@ class order extends MY_Controller {
         
         $pay_status_list=array(1=>'未支付', 2=>'支付');
         $search_arr['pay_status_sel']=$this->form->select($pay_status_list,$pay_status_id,'name="pay_status_id"','付款状态');
-        $plat_payed_list=array(1=>'未支付', 2=>'支付');
+        $plat_payed_list=array(1=>'未支付', 2=>'已垫付');
         $search_arr['plat_payed_sel']=$this->form->select($plat_payed_list,$plat_payed_id,'name="plat_payed_id"','垫付状态');
         $order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
         $search_arr['order_status_sel']=$this->form->select($order_status_list,$order_status_id,'name="order_status_id"','订单状态');
@@ -186,7 +186,7 @@ class order extends MY_Controller {
     	 
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
-    	$plat_payed_list=array(1=>'未支付', 2=>'支付');
+    	$plat_payed_list=array(1=>'未支付', 2=>'已垫付');
     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
     	$pay_method_list=array(1=>'网银', 2=>'支付宝');
     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
@@ -216,7 +216,7 @@ class order extends MY_Controller {
     	if($olid>0) {
     		$cur_time = time();
     		
-    		// 修改order_list表, 平台付款，1未支付，2支付
+    		// 修改order_list表, 平台付款，1未支付，2已垫付
     		$order_info = array(
     				'plat_payed' => 2,
     				'utime'  => $cur_time,

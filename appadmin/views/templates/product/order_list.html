@@ -114,8 +114,7 @@ function advance_one(obj,aid) {
     function(){
     $.get('<{site_url url='/product/order/order_advance_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) {
-                	//$(obj).parent().parent().fadeOut("slow");
-                	console.log("advance success");
+                	$(obj).parent().parent().children().eq(8).html("已垫付");
                 }
             })
          },

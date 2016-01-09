@@ -129,6 +129,7 @@ class consult extends MY_Controller {
         $pay_status_list=array(1=>'未支付', 2=>'支付');
         $plat_payed_list=array(1=>'未支付', 2=>'支付');
         $order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+        $ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
         
         
         $this->smarty->assign('search_arr', $search_arr);
@@ -136,6 +137,7 @@ class consult extends MY_Controller {
         $this->smarty->assign('pay_status_list', $pay_status_list);
         $this->smarty->assign('plat_payed_list', $plat_payed_list);
         $this->smarty->assign('order_status_list', $order_status_list);
+        $this->smarty->assign('ad_location_list', $ad_location_list);
         $this->smarty->assign('list_data', $res_content);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
@@ -163,10 +165,12 @@ class consult extends MY_Controller {
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
     	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
     	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
+    	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$adv_consult_info['ad_location'],'name="info[ad_location]"','投放位置');
     	 
     	 
     	$this->smarty->assign('consult_info', $consult_info);
@@ -201,10 +205,12 @@ class consult extends MY_Controller {
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'支付');
     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
     	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
     	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
     	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
     	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
+    	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$adv_consult_info['ad_location'],'name="info[ad_location]"','投放位置');
     	
     	
     	$this->smarty->assign('consult_info', $consult_info);
