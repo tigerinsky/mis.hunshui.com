@@ -37,7 +37,9 @@
             <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
             <th width="30">bannerid</th>
             <th width="120">图片地址</th>
+            <th width="120">跳转地址</th>
             <th width="120">描述</th>
+            <th width="50">类型</th>
             <th width="50">排名</th>
             <th width="120">发布时间</th>
             <th width="120">管理操作</th>
@@ -50,7 +52,9 @@
             <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['bid']}>" type="checkbox"></td>
             <td align="center"><{$row['bid']}></td>
             <td align="center"><a target="_blank" href="<{$row['url']}>" ><{if $row['url']}><{$row['url']}><{else}>[无图片]<{/if}></a></td>
+            <td align="center"><a target="_blank" href="<{$row['redirect_url']}>" ><{$row['redirect_url']}></a></td>
             <td align="center"><{$row['description']}></td>
+            <td align="center"><{$banner_type_list[$row['type']]}></td>
             <td align="center"><{$row['rank']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center">
@@ -93,7 +97,7 @@ function top_one(obj,aid) {
     function(){
     $.get('<{site_url url='/product/banner/banner_top_one_ajax/'}>?&bid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data > 0) {
-                	$(obj).parent().parent().children().eq(4).html(data);
+                	$(obj).parent().parent().children().eq(6).html(data);
                 }
             })
          },

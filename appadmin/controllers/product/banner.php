@@ -58,15 +58,18 @@ class banner extends MY_Controller {
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
-        $sql       = "SELECT bid, url, description, ctime, utime, rank, is_deleted FROM $this->table_name $where $order $limit";
+        $sql       = "SELECT bid, url, redirect_url, description, ctime, utime, type, rank, is_deleted FROM $this->table_name $where $order $limit";
         log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' banner_list sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
         $list_data = $result->result_array();
         
         log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' banner_list [' . json_encode($list_data) .']');
         
+        $banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+        
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('list_data', $list_data);
+        $this->smarty->assign('banner_type_list', $banner_type_list);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
         $this->smarty->display("product/banner_list.html");
@@ -77,6 +80,10 @@ class banner extends MY_Controller {
     function banner_add(){
     	$this->load->library('form');
     	
+    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+    	$input_box['banner_type_sel']=$this->form->select($banner_type_list,1,'name="info[type]"','选择类型');
+		
+    	$this->smarty->assign('input_box',$input_box);
     	$this->smarty->assign('random_version', rand(100,999));
     	$this->smarty->assign('show_dialog','true');
     	$this->smarty->assign('show_validator','true');
@@ -93,13 +100,15 @@ class banner extends MY_Controller {
     	
     	$cur_time = time();
     	$banner_info = array(
+    			'type'	  		=> $info['type'],
     			'url'	  		=> $url,
+    			'redirect_url'	=> $info['redirect_url'],
     			'description'	=> $info['description'],
     			'ctime'     	=> $cur_time,
     			'utime'     	=> $cur_time,
     	);
     
-    	if( $url != ''){
+    	if( $url != '' && $info['type'] > 0){
     		if($this->banner_model->create_info($banner_info)){
     			show_tips('操作成功','','','add');
     		}else{
@@ -119,7 +128,11 @@ class banner extends MY_Controller {
     	// banner信息
     	$banner_info = $this->banner_model->get_banner_info_by_bid($bid);
     	
+    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+    	$input_box['banner_type_sel']=$this->form->select($banner_type_list,$banner_info['type'],'name="info[type]"','选择类型');
+    	
     	$this->smarty->assign('banner_info', $banner_info);
+    	$this->smarty->assign('input_box',$input_box);
     	$this->smarty->assign('random_version', rand(100,999));
     	$this->smarty->assign('show_dialog','true');
     	$this->smarty->assign('show_validator','true');
@@ -139,11 +152,16 @@ class banner extends MY_Controller {
     	$pic = $this->input->post('pic');
     	
     	$url = $pic[0];
+    	if( $url == '' || $info['type'] < 1){
+    		show_tips('参数异常，请检测');
+    	}
     	
     	$cur_time = time();
     	// 修改banner表
     	$banner_info = array(
+    		'type'	  		=> $info['type'],
     		'url' 			=> $url,
+    		'redirect_url'	=> $info['redirect_url'],
     		'description' 	=> $info['description'],
     		'utime'     	=> $cur_time,
     	);

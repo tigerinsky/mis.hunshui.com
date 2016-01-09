@@ -11,7 +11,7 @@ class Banner_model extends MY_Model {
 	}
 	
 	public function get_banner_info_by_bid($bid) {
-		$this->dbw->select('bid, url, description, ctime, utime, rank, is_deleted');
+		$this->dbw->select('bid, url, redirect_url, description, ctime, utime, type, rank, is_deleted');
 		$this->dbw->where('bid', $bid);
 		$this->dbw->where('is_deleted', 1);
 		$result = $this->dbw->get($this->table_name);

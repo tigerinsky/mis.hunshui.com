@@ -50,6 +50,10 @@
 		<form name="myform" action="<{site_url url='/product/banner/banner_edit_do/'}>" enctype="multipart/form-data"  method="post" id="myform">
 			<table width="100%" class="table_form contentWrap">
 				<tr>
+					<td>类型</td>
+					<td><{$input_box['banner_type_sel']}></td>
+				</tr>
+				<tr>
 					<td width="80">描述信息</td>
 					<td><input type="text" name="info[description]"  class="input-text wid300" id="description" value="<{$banner_info['description']}>"></td>
 				</tr>
@@ -70,6 +74,10 @@
 						</ul>
 					</fieldset>
 					</td>
+				</tr>
+				<tr>
+					<td width="80">跳转地址</td>
+					<td><input type="text" name="info[redirect_url]"  class="input-text wid300" id="redirect_url" value="<{$banner_info['redirect_url']}>"></td>
 				</tr>
 			</table>
 		    <div class="bk15"></div>
