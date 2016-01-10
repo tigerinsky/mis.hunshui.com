@@ -39,7 +39,8 @@
 	}
     
     function link_edit() {
-        var content = UE.getEditor('editor').getPlainTxt();
+        //var content = UE.getEditor('editor').getPlainTxt();
+        var content = UE.getEditor('editor').getContent();
         content = encodeHTML(content);
         $("#bug_content").val(content);
     }

@@ -41,7 +41,8 @@
     
     
     function link_edit() {
-        var content = UE.getEditor('editor').getPlainTxt();
+        //var content = UE.getEditor('editor').getPlainTxt();
+        var content = UE.getEditor('editor').getContent();
         console.log(content);
         content = encodeHTML(content);
         console.log(content);
