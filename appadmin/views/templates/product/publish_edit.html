@@ -2,66 +2,69 @@
 <style type="text/css"> 
 	html{_overflow-y:scroll}
 </style>
-<script src="<{$sys_config['exten_pub_path']}>js/uploadify/jquery.uploadify.min.js?ver=<{$random_version}>" type="text/javascript"></script>
-<link href="<{$sys_config['exten_pub_path']}>js/swfupload/swfupload.css" rel="stylesheet" type="text/css" />
-<link href="<{$sys_config['exten_pub_path']}>css/uploadify.css" rel="stylesheet" type="text/css" />
+
+<link href="<{$sys_config['exten_pub_path']}>plugin/ueditor/themes/default/css/ueditor.css" rel="stylesheet" type="text/css" />
+<script src="<{$sys_config['exten_pub_path']}>plugin/ueditor/ueditor.config.js" type="text/javascript"></script>
+<script src="<{$sys_config['exten_pub_path']}>plugin/ueditor/ueditor.all.min.js" type="text/javascript"></script>
+<script src="<{$sys_config['exten_pub_path']}>plugin/ueditor/lang/zh-cn/zh-cn.js" type="text/javascript"></script>
+
+       
 <script type="text/javascript"> 
 <!--
 	$(function(){
 		$.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
-		$("#img_type").formValidator({onshow:"请选择图片类型",onfocus:"图片类型不能为空",empty:false}).inputValidator({min:1,onerror:"图片类型不能为空"});
-		$("#img_title").formValidator({onshow:"请选择图片二级分类",onfocus:"图片二级分类不能为空",empty:false}).inputValidator({min:1,onerror:"图片二级分类不能为空"});
-	})
-    
-    $(document).ready(function() {
-		
-		$("#img_type").change(function() {
-		 	var img_type = $("#img_type").val();
-			var url = "<{site_url url='/imgmgr/imgmgr/get_img_title_list_ajax/'}>";
-			var data = {'img_type':img_type}
-		    jQuery.ajax({
-				type: 'GET',
-				url: url,
-				data: data,
-				success: imgTypeOnSuccess,
-				error: imgTypeOnError,
-				dataType: 'json',
-				async:false
-			});
-		});
-		
-		// 触发上面注册的函数,这样就不用执行最上面的初始化函数了
-		$("#img_type").change();
-		
-		// 服务器类型发生改变时触发此函数
-		function imgTypeOnSuccess(data) {
-			console.log(data["errno"]);
-			var img_title_json = data["data"]["content"];
-			$("#img_title").html("<option value='-1'>请选择</option>");
-			for(var i in img_title_json) {
-				console.log(i);
-				console.log(img_title_json[i]);
-				var t = $("<option></option>");
-				t.html(img_title_json[i]);
-				//t.val(i);
-				t.val(img_title_json[i]);
-				$("#img_title").append(t);
-			}
-		}
-		
-		function imgTypeOnError() {
-			console.log("发生错误!");
-		}
-		 
+		$("#handle_user").formValidator({onshow:"请选择处理人",onfocus:"处理人不能为空",empty:false}).inputValidator({min:1,onerror:"处理人不能为空"});
 	});
+	//实例化编辑器
+    //建议使用工厂方法getEditor创建和引用编辑器实例，如果在某个闭包下引用该编辑器，直接调用UE.getEditor('editor')就能拿到相关的实例
+    var ue = UE.getEditor('editor');
     
+    function decodeHTML(source){
+		var str = String(source)
+		.replace(/&quot;/g, '"')
+		.replace(/&lt;/g, '<')
+		.replace(/&gt;/g, '>')
+		.replace(/&amp;/g, '&')
+		.replace(/&#39;/g, "'");
+		return str;
+	}
+	
+	function encodeHTML(source){
+		var str = String(source)
+		.replace(/&/g, '&amp;')
+		.replace(/</g, '&lt;')
+		.replace(/>/g, '&gt;')
+		.replace(/"/g, '&quot;')
+		.replace(/'/g, '&#39;');
+		return str;
+	}
     
+    function link_edit() {
+        //var content = UE.getEditor('editor').getPlainTxt();
+        var content = UE.getEditor('editor').getContent();
+        content = encodeHTML(content);
+        $("#tmp_content").val(content);
+    }
+	
+	function content_init() {
+		//UE.getEditor('editor').setContent('欢迎使用ueditor', true);
+		var content = $("#tmp_content").val();
+		UE.getEditor('editor').setContent(content, true);
+	}
+	
+	var interval_timer = 1000; //1s
+	var interval = setTimeout(function() {
+        content_init();
+    }, interval_timer);
+	
+	
 //-->
 </script>
 
+
 <div class="pad_10">
 	<div class="common-form">
-		<form name="myform" action="<{site_url url='/product/publish/publish_edit_do/'}>" method="post" id="myform">
+		<form name="myform" onsubmit="return link_edit();" action="<{site_url url='/product/publish/publish_edit_do/'}>" method="post" id="myform">
 			<table width="100%" class="table_form contentWrap">
 				<tr>
 					<td>发布类型</td>
@@ -75,12 +78,17 @@
 				</tr>
 				<tr>
 					<td>内容</td>
-					<td><textarea name="info[content]" cols="45" rows="5" id="content"><{$publish_info['content']}></textarea></td>
+					<td>
+						<div>
+					    	<script id="editor" type="text/plain" style="width:600px;height:400px;"></script>
+						</div>
+					</td>
 				</tr>
 				
 			</table>
 		    <div class="bk15"></div>
 		    <input type="hidden" value="<{$publish_info['plid']}>" name="cfg[plid]">
+		    <input type="hidden" id="tmp_content" name="info[content]" value="<{$publish_info['content']}>"/>
 		    <input type="submit" class="dialog" id="dosubmit" name="dosubmit" value="提交"/>
 		</form>
 	</div>

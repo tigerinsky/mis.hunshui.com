@@ -1,7 +1,7 @@
 <{include file="../common/header.html"}>
 <div class="subnav">
     <div class="content-menu ib-a blue line-x">
-        <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/product/publish/publish_add/'}>?', title:'新建发布', width:'600', height:'350', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>新建发布</em></a>
+        <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/product/publish/publish_add/'}>?', title:'新建发布', width:'800', height:'600', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>新建发布</em></a>
         <a href="<{site_url url='/product/publish/index/'}>" class="on"><em>发布列表</em></a>    </div>
 </div>
 <style type="text/css"> 
@@ -54,7 +54,7 @@
             <td align="center"><{$row['plid']}></td>
             <td align="center"><{$type_list[$row['type']]}></td>
             <td align="center"><{$row['title']}></td>
-            <td align="center"><{$row['content']}></td>
+            <td align="center"><{$row['content']|escape|truncate:10:"...":true}></td>
             <td align="center"><{$row['operator']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center">
@@ -100,11 +100,11 @@ function delete_more_like(){
 
 function edit(id, name) {
 	window.top.art.dialog({id:'edit'}).close();
-	window.top.art.dialog({title:'编辑发布信息《'+name+'》',id:'edit',iframe:'<{site_url url='/product/publish/publish_edit/'}>?id='+id,width:'650',height:'400'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+	window.top.art.dialog({title:'编辑发布信息《'+name+'》',id:'edit',iframe:'<{site_url url='/product/publish/publish_edit/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
 }
 function view(id, name) {
     window.top.art.dialog({id:'view'}).close();
-    window.top.art.dialog({title:'查看发布信息《'+name+'》',id:'view',iframe:'<{site_url url='/product/publish/publish_view/'}>?id='+id,width:'650',height:'400',cancelVal:'关闭',cancel:true}); 
+    window.top.art.dialog({title:'查看发布信息《'+name+'》',id:'view',iframe:'<{site_url url='/product/publish/publish_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
 }
 //-->
 </script>
