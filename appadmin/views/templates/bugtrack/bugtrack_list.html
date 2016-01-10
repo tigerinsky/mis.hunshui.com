@@ -1,0 +1,194 @@
+<{include file="../common/header.html"}>
+<div class="subnav">
+    <div class="content-menu ib-a blue line-x">
+    <a class="add fb" href="javascript:window.top.art.dialog({id:'add',iframe:'<{site_url url='/bugtrack/bugtrack/bugtrack_add/'}>?', title:'添加BUG', width:'800', height:'600', lock:true}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;var form = d.document.getElementById('dosubmit');form.click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});void(0);"><em>添加BUG</em></a> <a href="<{site_url url='/bugtrack/bugtrack/index/'}>" class="on"><em>bug列表</em></a></div>
+</div>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+	.RedBox , .GreenBox , .BlueBox ,.OrangeBox{
+		padding:3px;
+		color:#fff;
+		display:inline-block;
+		line-height:16px;
+		font-size:12px;
+	}
+	.RedBox{
+		background:#cc3300;
+	}
+	.GreenBox{
+		background:#339900;
+	}
+	
+</style>
+<div class="pad_10">
+<div id="searchid">
+<form name="searchform" action="<{site_url url='/bugtrack/bugtrack/index/'}>" method="get" >
+<table width="100%" cellspacing="0" class="search-form">
+    <tbody>
+		<tr>
+		<td>
+		<div class="explain-col">
+                <{$search_arr['status_sel']}>
+                <{$search_arr['type_sel']}>
+                <{$search_arr['handle_user_sel']}>
+                <{$search_arr['priority_sel']}>
+				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				<input type="submit" name="search" class="button" value="搜索" />
+		</div>
+		</td>
+		</tr>
+    </tbody>
+</table>
+<input type="hidden" value="1" name="show">
+<input type="hidden" value="ok" name="dosearch">
+<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+</form>
+</div>
+
+<form name="myform" id="myform" action="" method="post" >
+
+<div class="table-list">
+	<table width="100%" cellspacing="0">
+        <thead>
+            <tr>
+            <th width="16"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
+            <th width="40">ID</th>
+            <th width="60">BUG类型</th>
+            <th width="120">BUG标题</th>
+            <th width="60">BUG内容</th>
+            <th width="40">处理人</th>
+            <th width="60">优先级</th>
+            <th width="60">状态</th>
+            <th width="120">更新时间</th>
+            <th width="40">创建人</th>
+            <th width="120">创建时间</th>
+            <th width="60">停留时间</th>
+            <th width="100">管理操作</th>
+            </tr>
+        </thead>
+        
+        <tbody>
+        	<{foreach from=$list_data item=row}>		
+            <tr>
+            <td align="center"><input class="inputcheckbox " name="ids[]" value="<{$row['id']}>" type="checkbox"></td>
+            <td width="60" align="center"><{$row['id']}></td>
+            <td width="60" align="center">
+            	<{if $row['type'] == '1'}>
+            		<img src="<{$sys_config['exten_pub_path']}>images/bugtype/android_32.png"  alt="android" />
+            	<{/if}>
+            	<{if $row['type'] == '2'}>
+            		<img src="<{$sys_config['exten_pub_path']}>images/bugtype/ios_32.png"  alt="ios" />
+            	<{/if}>
+            	<{if $row['type'] == '3'}>
+            		<img src="<{$sys_config['exten_pub_path']}>images/bugtype/server_32.png"  alt="server" />
+            	<{/if}>
+            	<{if $row['type'] == '4'}>
+            		<img src="<{$sys_config['exten_pub_path']}>images/bugtype/fe_32.jpg"  alt="fe" />
+            	<{/if}>
+            </td>
+            <td><a href="javascript:detail(<{$row['id']}>,'<{$row['title']}>')"><{$row['title']}></a></td>
+            <td align="center"><{$row['content']|escape|truncate:10:"...":true}></td>
+			<td align="center"><{$handle_user_list[$row['handle_user']]}></td>
+			<td align="center"><{$priority_list[$row['priority']]}></td>
+			<td align="center"><{if $row['status'] == '1'}><span class="RedBox"><{$status_list[$row['status']]}></span><{else}><span class="RedBox GreenBox"><{$status_list[$row['status']]}></span><{/if}></td>
+            <td align="center"><{$row['resolve_time']|date_format:'%Y-%m-%d %H:%M:%S'}></td>
+			<td align="center"><{$handle_user_list[$row['create_user']]}></td>
+            <td align="center"><{$row['publish_time']|date_format:'%Y-%m-%d %H:%M:%S'}></td>
+            <td align="center"><{$row['format_time']}></td>
+            <td align="center">
+                <a href="javascript:edit(<{$row['id']}>,'<{$row['title']}>')">修改</a> | 
+			    <a href="javascript:;" onclick="del_one(this,'<{$row['id']}>')">删除</a>
+            </td>
+            </tr>
+            <{foreachelse}>
+			<tr>
+            <td colspan="10">没有数据</td>
+            </tr>
+            <{/foreach}>
+    	</tbody>
+    </table>
+    <div class="btn">
+    	<label for="check_box">全选/取消</label>
+		<input type="hidden" value="<{$admin_session['wb_hash']}>" name="wb_hash">
+		<input type="hidden" value="1" name="dosubmit">
+		<!--
+		<input type="button" class="button" value="推荐" onclick="myform.action='<{site_url url='/mis/tweet/tweet_sug/'}>';return change_more_sug();"/>
+		<input type="button" class="button" value="删除" onclick="myform.action='<{site_url url='/mis/tweet/tweet_del/'}>';return change_more_del()"/>
+        <input type="button" class="button" value="取消推荐" onclick="myform.action='<{site_url url='/mis/tweet/tweet_clear_sug/'}>';return change_more_clear_sug();"/>
+        <input type="button" class="button" value="审核" onclick="myform.action='<{site_url url='/weibo/news/news_status/'}>';return change_more_status();"/> 
+        <input type="button" class="button" value="取消删除" onclick="myform.action='<{site_url url='/mis/tweet/tweet_clear_del/'}>';return change_more_clear_del()"/>
+		-->
+	</div>
+    <div id="pages"><{$pages}></div>
+</div>
+</form>
+</div>
+<script type="text/javascript"> 
+<!--
+
+function change_more_sug(){
+	if(confirm('确认推荐所选信息吗？')) $('#myform').submit();
+}
+
+function change_more_del(){
+	if(confirm('确认删除所选信息吗？')) $('#myform').submit();
+}
+
+function change_more_clear_sug(){
+    if(confirm('确认取消推荐所选信息吗？')) $('#myform').submit();
+}
+
+function change_more_clear_del(){
+    if(confirm('确认取消删除所选信息吗？')) $('#myform').submit();
+}
+
+function edit(id, img_type) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'编辑信息',id:'edit',iframe:'<{site_url url='/bugtrack/bugtrack/bugtrack_edit/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+}
+
+function detail(id, img_type) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'查看详情',id:'edit',iframe:'<{site_url url='/bugtrack/bugtrack/bugtrack_detail/'}>?id='+id,width:'800',height:'600'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+}
+
+function sug_one(obj,aid) {
+	window.top.art.dialog({content:'确认推荐吗？', fixed:true, style:'confirm',id:'sug_one'}, 
+    function(){
+    $.get('<{site_url url='/mis/tweet/sug_one_ajax/'}>?&id='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+function sug_one_cancel(obj,aid) {
+    window.top.art.dialog({content:'确认推荐吗？', fixed:true, style:'confirm',id:'sug_one'}, 
+    function(){
+    $.get('<{site_url url='/mis/tweet/sug_one_cancel_ajax/'}>?&id='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+function del_one(obj,aid) {
+    window.top.art.dialog({content:'确认删除吗？', fixed:true, style:'confirm',id:'sug_one'}, 
+    function(){
+    $.get('<{site_url url='/bugtrack/bugtrack/del_one_ajax/'}>?&id='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+function del_one_cancel(obj,aid) {
+    window.top.art.dialog({content:'确认推荐吗？', fixed:true, style:'confirm',id:'sug_one'}, 
+    function(){
+    $.get('<{site_url url='/mis/tweet/del_one_cancel_ajax/'}>?&id='+aid+'&wb_hash='+wb_hash,function(data){
+                if(data == 1) $(obj).parent().parent().fadeOut("slow");
+            })
+         },
+    function(){});
+}
+
+//-->
+</script>
+<{include file="../common/footer.html"}>
