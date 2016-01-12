@@ -39,8 +39,10 @@ class Uploader
         "ERROR_UNKNOWN" => "未知错误",
         "ERROR_DEAD_LINK" => "链接不可用",
         "ERROR_HTTP_LINK" => "链接不是http链接",
-        "ERROR_HTTP_CONTENTTYPE" => "链接contentType不正确"
+        "ERROR_HTTP_CONTENTTYPE" => "链接contentType不正确",
+        "ERROR_UPLOAD_ALIYUN" => "上传阿里云错误"
     );
+
 
     /**
      * 构造函数
@@ -106,6 +108,21 @@ class Uploader
             return;
         }
 
+        require_once dirname(__FILE__).'/oss/Oss.php';
+
+        $oss = new OSS();
+        $ret = $oss->upload_user_pic($file['tmp_name'], $file['tmp_name']);
+
+        if (!$ret) {
+            $this->stateInfo = $this->getStateInfo("ERROR_UPLOAD_ALIYUN");
+            return true;
+        }
+
+        $this->fullName = $ret['n']['url'];
+        $this->stateInfo = $this->stateMap[0];
+        return true;
+
+        /*
         //创建目录失败
         if (!file_exists($dirname) && !mkdir($dirname, 0777, true)) {
             $this->stateInfo = $this->getStateInfo("ERROR_CREATE_DIR");
@@ -121,6 +138,7 @@ class Uploader
         } else { //移动成功
             $this->stateInfo = $this->stateMap[0];
         }
+        */
     }
 
     /**
