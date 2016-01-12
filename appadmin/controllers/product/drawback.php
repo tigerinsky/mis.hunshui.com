@@ -160,6 +160,7 @@ class drawback extends MY_Controller {
     // 新建退款
     function drawback_add(){
     	$this->load->library('form');
+    	$olid = intval($this->input->get('id'));
     	
     	// 所有的订单id
     	$all_order_list = $this->order_list_model->get_all_order_list();
@@ -167,7 +168,7 @@ class drawback extends MY_Controller {
     	foreach($all_order_list as $order) {
     		$order_id_list[$order['olid']] = $order['olid'];
     	}
-    	$order_id_sel=Form::select($order_id_list,$info['order_id'],'id="order_id" name="info[order_id]"','请选择');
+    	$order_id_sel=Form::select($order_id_list,$olid,'id="order_id" name="info[order_id]"','请选择');
     	
     	$drawback_time = date("Y-m-d H:i:s", time());
     	$input_box['drawback_time'] = $this->form->date('info[drawback_time]', $drawback_time, 1);
