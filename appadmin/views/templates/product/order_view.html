@@ -122,6 +122,47 @@ $(function(){
 	
 	</table>
     <div class="bk15"></div>
+    
+    
+    <div class="content-menu ib-a blue line-x"><em>操作记录</em></div>
+    <div class="table-list">
+		<table width="100%" cellspacing="0">
+	        <thead>
+	            <tr>
+	            <th width="30">日志id</th>
+	            <th width="30">订单id</th>
+	            <th width="180">内容</th>
+	            <th width="50">operator</th>
+	            <th width="50">type</th>
+	            <th width="50">clid</th>
+	            <th width="120">创建时间</th>
+	            </tr>
+	        </thead>
+	        
+	        <tbody>
+	        	<{foreach from=$list_data item=row}>
+	            <tr>
+	            <td align="center"><{$row['action_id']}></td>
+	            <td align="center"><{$row['order_id']}></td>
+	            <td align="center"><{$row['content']}></td>
+	            <td align="center"><{$row['operator']}></td>
+	            <td align="center"><{$row['type']}></td>
+	            <td align="center"><{$row['clid']}></td>
+	            <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
+	            <!-- 
+	            <td align="center"><{if $row['ukind']==1}><font color="#D75145">是</font><{else}><font color="#008000">否</font><{/if}></td>
+				<td align="center" id="user_status"><{if $row['status'] == 1}><font color="#008000">已通过</font><{elseif $row['status'] == 2}><font color="#D75145">未通过</font><{elseif $row['status'] == 0}>未审核<{elseif $row['status'] == -1}>已删除<{/if}></td>
+				<td align="center"><{if $row['ukind_verify'] == 1}><span style="color:green"></span><{else}><span style="color:red">未认证</span><{/if}></td>
+	             -->
+	            </tr>
+	            <{foreachelse}>
+				<tr>
+	            <td colspan="7">没有数据</td>
+	            </tr>
+	            <{/foreach}>
+	    	</tbody>
+	    </table>
+	</div>
 </div>
 </div>
 <{include file="../common/footer.html"}>
