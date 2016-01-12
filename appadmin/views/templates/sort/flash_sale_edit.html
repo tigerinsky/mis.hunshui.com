@@ -1,0 +1,30 @@
+<{include file="../common/header.html"}>
+<style type="text/css"> 
+	html{_overflow-y:scroll}
+</style>
+
+<script type="text/javascript"> 
+<!--
+	$(function(){
+		$.formValidator.initConfig({autotip:true,formid:"myform",onerror:function(msg){}});
+		$("#handle_user").formValidator({onshow:"请选择处理人",onfocus:"处理人不能为空",empty:false}).inputValidator({min:1,onerror:"处理人不能为空"});
+	});
+	
+//-->
+</script>
+
+<div class="pad_10">
+<div class="common-form">
+<form name="myform" enctype="multipart/form-data" action="<{site_url url='/sort/flash_sale/flash_sale_edit_do/'}>" method="post" id="myform">
+	<table width="100%" class="table_form contentWrap">
+		<tr>
+			<td>确认执行此操作吗？</td> 
+		</tr>
+	</table>
+    <div class="bk15"></div>
+    <input type="hidden" value="<{$fsid}>" name="cfg[fsid]">
+    <input type="submit" class="dialog" id="dosubmit" name="dosubmit" value="提交"/>
+</form>
+</div>
+</div>
+<{include file="../common/footer.html"}>
