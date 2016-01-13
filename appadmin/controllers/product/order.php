@@ -127,6 +127,9 @@ class order extends MY_Controller {
         	$item_order['article_id'] = $adv_article_info['art_id']; // 广告id
         	$item_order['article_title'] = $adv_article_info['title']; // 广告名称
         	$item_order['ofc_nick_name'] = $official_accounts_info['nick_name']; // 公众号昵称
+        	$item_order['total_price'] = number_format($item_order['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
+        	$item_order['ad_price'] = number_format($item_order['ad_price']/100, 2, '.', ''); // 广告费
+        	$item_order['original_price'] = number_format($item_order['original_price']/100, 2, '.', ''); // 原价
         	$res_content[] = $item_order;
         }
         
@@ -150,6 +153,77 @@ class order extends MY_Controller {
         $this->smarty->assign('show_dialog', 'true'); 
         $this->smarty->display("product/order_list.html");
     }
+    
+    
+    
+    public function order_edit() {
+    	$this->load->library('form');
+    	$olid = intval($this->input->get('id'));
+    	// 订单信息
+    	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
+    	
+    	$pay_status_list=array(1=>'未支付', 2=>'支付');
+    	$plat_payed_list=array(1=>'未支付', 2=>'已垫付');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
+    	
+    	$this->smarty->assign('pay_status_list', $pay_status_list);
+    	$this->smarty->assign('plat_payed_list', $plat_payed_list);
+    	$this->smarty->assign('order_status_list', $order_status_list);
+    	$this->smarty->assign('order_info', $order_info);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/order_edit.html");
+    }
+	    
+    public function order_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['olid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$olid = $cfg['olid'];
+    		// old
+    		$old_info = $this->order_list_model->get_order_info_by_olid($olid);
+    	}
+    	$info = $this->input->post('info');
+    	 
+    	$cur_time = time();
+    	if ($olid > 0) {
+    		// 修改order_list表
+    		$order_info = array(
+    				'ad_price'	=> $info['ad_price'],
+    				'utime'		=> $cur_time,
+    		);
+    		$order_flag = $this->order_list_model->update_info($order_info, $olid);
+    	}
+    	 
+    	// 记入流程表
+    	$new_info = $this->order_list_model->get_order_info_by_olid($olid);
+    	$content_array = array();
+    	if ($old_info['ad_price'] != $new_info['ad_price']) {
+    		$content_array[] = 'ad_price(' . $old_info['ad_price'] . ' => ' . $new_info['ad_price'] . ')';
+    	}
+    
+    	$procedure_log_info = array(
+    			'art_id'		=> 0,
+    			'consult_id'	=> 0,
+    			'order_id' 		=> $olid,
+    			'drawback_id' 	=> 0,
+    			'content'      	=> join(';', $content_array),
+    			'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    			'ctime'       	=> $cur_time,
+    	);
+    	$this->procedure_log_model->create_info($procedure_log_info);
+    	 
+    	if($order_flag){
+    		show_tips('操作成功','','','edit');
+    	}else{
+    		show_tips('操作异常，请检测');
+    	}
+    	 
+    }
+    
+    
     
     
     public function order_view() {

@@ -77,6 +77,7 @@
              -->
             <td align="center">
 			    <a href="javascript:view(<{$row['olid']}>,'<{$row['olid']}>')">查看</a> | 
+			    <a href="javascript:edit(<{$row['olid']}>,'<{$row['olid']}>')">修改</a> | 
 			    <a href="javascript:;" onclick="advance_one(this,'<{$row['olid']}>')">平台垫付</a> | 
 			    <a href="javascript:;" onclick="pay_one(this,'<{$row['olid']}>')">给媒体主打款</a> | 
 			    <a href="javascript:;" onclick="cancel_one(this,'<{$row['olid']}>')">取消</a> | 
@@ -166,7 +167,7 @@ function edit(id, name) {
 }
 function view(id, name) {
     window.top.art.dialog({id:'view'}).close();
-    window.top.art.dialog({title:'查看订单《'+name+'》',id:'view',iframe:'<{site_url url='/product/order/order_view/'}>?id='+id,width:'800',height:'600',cancelVal:'关闭',cancel:true}); 
+    window.top.art.dialog({title:'查看订单《'+name+'》',id:'view',iframe:'<{site_url url='/product/order/order_view/'}>?id='+id,width:'650',height:'400',cancelVal:'关闭',cancel:true}); 
 }
 
 
