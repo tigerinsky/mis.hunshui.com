@@ -115,8 +115,8 @@ class consult extends MY_Controller {
         	$item_consult['show_day'] = $adv_consult_info['show_day']; // 投放时间
         	$item_consult['ad_location'] = $adv_consult_info['ad_location']; // 投放位置
         	$item_consult['feedback_time'] = $order_info['ctime']; // 反馈时间
-        	$item_consult['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
-        	$item_consult['total_price'] = $order_info['total_price']; // 实际交易金额(含税)
+        	$item_consult['discount_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 优惠金额
+        	$item_consult['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
         	$item_consult['pay_status'] = $order_info['pay_status']; // 广告主付款状态1、未支付，2支付
         	$item_consult['plat_payed'] = $order_info['plat_payed']; // 平台付款，1未支付，2支付
         	$item_consult['order_status'] = $order_info['status']; // 订单状态，1、创建，2、划款待执行，3媒体主执行完成、9订单完成、10订单取消
