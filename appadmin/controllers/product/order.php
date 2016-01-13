@@ -219,8 +219,9 @@ class order extends MY_Controller {
     	$this->smarty->display("product/order_view.html");
     }
     
-    
+    // 垫付操作
     public function order_advance_one_ajax() {
+    	// 订单id
     	$olid = intval($this->input->get('olid'));
     	if($olid>0) {
     		$cur_time = time();
@@ -231,6 +232,36 @@ class order extends MY_Controller {
     				'utime'  => $cur_time,
     		);
     		$order_flag = $this->order_list_model->update_info($order_info, $olid);
+    		echo 1;
+    	} else {
+    		echo 0;
+    	}
+    }
+    
+    // 给媒体主打款操作
+    public function order_pay_one_ajax() {
+    	// 订单id
+    	$olid = intval($this->input->get('olid'));
+    	if($olid>0) {
+    		/****************调用PC接口****************/
+    		// todo
+    		
+    		/****************************************/
+    		echo 1;
+    	} else {
+    		echo 0;
+    	}
+    }
+    
+    // 取消操作
+    public function order_cancel_one_ajax() {
+    	// 订单id
+    	$olid = intval($this->input->get('olid'));
+    	if($olid>0) {
+    		/****************调用PC接口****************/
+    		// todo
+    		
+    		/****************************************/
     		echo 1;
     	} else {
     		echo 0;

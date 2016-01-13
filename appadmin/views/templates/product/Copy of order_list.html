@@ -42,16 +42,16 @@
             <th width="10"><input type="checkbox" value="" id="check_box" onclick="selectall('ids[]');"></th>
             <th width="30">订单id</th>
             <th width="30">广告id</th>
-            <th width="40">广告名称</th>
-            <th width="40">公众帐号</th>
-            <th width="40">实际交易金额(含税)</th>
-            <th width="40">广告主付款状态</th>
-            <th width="40">广告主实付金额(含税)</th>
-            <th width="40">是否已垫付</th>
-            <th width="40">平台实付金额(含税)</th>
-            <th width="40">订单状态</th>
-            <th width="80">更新时间</th>
-            <th width="180">管理操作</th>
+            <th width="50">广告名称</th>
+            <th width="50">公众帐号</th>
+            <th width="50">实际交易金额(含税)</th>
+            <th width="50">广告主付款状态</th>
+            <th width="50">广告主实付金额(含税)</th>
+            <th width="50">是否已垫付</th>
+            <th width="50">平台实付金额(含税)</th>
+            <th width="50">订单状态</th>
+            <th width="120">更新时间</th>
+            <th width="120">管理操作</th>
             </tr>
         </thead>
         
@@ -78,8 +78,6 @@
             <td align="center">
 			    <a href="javascript:view(<{$row['olid']}>,'<{$row['olid']}>')">查看</a> | 
 			    <a href="javascript:;" onclick="advance_one(this,'<{$row['olid']}>')">平台垫付</a> | 
-			    <a href="javascript:;" onclick="pay_one(this,'<{$row['olid']}>')">给媒体主打款</a> | 
-			    <a href="javascript:;" onclick="cancel_one(this,'<{$row['olid']}>')">取消</a> | 
 			    <a href="javascript:add(<{$row['olid']}>,'<{$row['olid']}>')">退款</a>
             </td>
             </tr>
@@ -118,30 +116,6 @@ function advance_one(obj,aid) {
     $.get('<{site_url url='/product/order/order_advance_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) {
                 	$(obj).parent().parent().children().eq(8).html("已垫付");
-                }
-            })
-         },
-    function(){});
-}
-
-function pay_one(obj,aid) {
-    window.top.art.dialog({content:'确认要向媒体主打款吗？', fixed:true, style:'confirm',id:'delete_one'}, 
-    function(){
-    $.get('<{site_url url='/product/order/order_pay_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
-                if(data == 1) {
-                	$(obj).parent().parent().children().eq(10).html("媒体主执行完成");
-                }
-            })
-         },
-    function(){});
-}
-
-function cancel_one(obj,aid) {
-    window.top.art.dialog({content:'确认要执行取消操作吗？', fixed:true, style:'confirm',id:'delete_one'}, 
-    function(){
-    $.get('<{site_url url='/product/order/order_cancel_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
-                if(data == 1) {
-                	$(obj).parent().parent().children().eq(10).html("订单取消");
                 }
             })
          },
