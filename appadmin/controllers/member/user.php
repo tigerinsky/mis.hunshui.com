@@ -208,7 +208,8 @@ class user extends MY_Controller {
     }
 
 	private static function get_user_key() {
-		return 'user_';
+        return 'hunshui::user::info::';
+		//return 'user_';
 	}
 
     public function user_locked() {
