@@ -17,6 +17,7 @@ class order extends MY_Controller {
         $this->load->model("member/official_accounts_model", "official_accounts_model");
         $this->load->model("member/consult_list_model", "consult_list_model");
         $this->load->model("member/order_list_model", "order_list_model");
+        $this->load->model("member/procedure_log_model", "procedure_log_model");
         $this->table_name = "order_list";
     }
 
@@ -232,6 +233,18 @@ class order extends MY_Controller {
     				'utime'  => $cur_time,
     		);
     		$order_flag = $this->order_list_model->update_info($order_info, $olid);
+    		
+    		// 记入流程表
+    		$procedure_log_info = array(
+    				'art_id'		=> 0,
+    				'consult_id'	=> 0,
+    				'order_id' 		=> $olid,
+    				'drawback_id' 	=> 0,
+    				'content'      	=> '垫付',
+    				'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    				'ctime'       	=> time(),
+    		);
+    		$this->procedure_log_model->create_info($procedure_log_info);
     		echo 1;
     	} else {
     		echo 0;
@@ -246,7 +259,23 @@ class order extends MY_Controller {
     		/****************调用PC接口****************/
     		// todo
     		
+    		
+    		
+    		
+    		
+    		
     		/****************************************/
+    		// 记入流程表
+    		$procedure_log_info = array(
+    				'art_id'		=> 0,
+    				'consult_id'	=> 0,
+    				'order_id' 		=> $olid,
+    				'drawback_id' 	=> 0,
+    				'content'      	=> '给媒体主打款',
+    				'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    				'ctime'       	=> time(),
+    		);
+    		$this->procedure_log_model->create_info($procedure_log_info);
     		echo 1;
     	} else {
     		echo 0;
@@ -261,7 +290,24 @@ class order extends MY_Controller {
     		/****************调用PC接口****************/
     		// todo
     		
+    		
+    		
+    		
+    		
+    		
+    		
     		/****************************************/
+    		// 记入流程表
+    		$procedure_log_info = array(
+    				'art_id'		=> 0,
+    				'consult_id'	=> 0,
+    				'order_id' 		=> $olid,
+    				'drawback_id' 	=> 0,
+    				'content'      	=> '取消订单',
+    				'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
+    				'ctime'       	=> time(),
+    		);
+    		$this->procedure_log_model->create_info($procedure_log_info);
     		echo 1;
     	} else {
     		echo 0;
