@@ -117,17 +117,26 @@ class consult extends MY_Controller {
         	$item_consult['feedback_time'] = $order_info['ctime']; // 反馈时间
         	$item_consult['discount_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 优惠金额
         	$item_consult['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
+        	$item_consult['pay_status'] = $order_info['pay_status']; // 广告主付款状态1、未支付，2支付
+        	$item_consult['plat_payed'] = $order_info['plat_payed']; // 平台付款，1未支付，2支付
+        	$item_consult['order_status'] = $order_info['status']; // 订单状态，1、创建，2、划款待执行，3媒体主执行完成、9订单完成、10订单取消
         	$res_content[] = $item_consult;
         }
         
         $consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
         $search_arr['consult_status_sel']=$this->form->select($consult_status_list,$consult_status_id,'name="consult_status_id"','询购状态');
         
+        $pay_status_list=array(1=>'未支付', 2=>'支付');
+        $plat_payed_list=array(1=>'未支付', 2=>'支付');
+        $order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
         $ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
         
         
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('consult_status_list', $consult_status_list);
+        $this->smarty->assign('pay_status_list', $pay_status_list);
+        $this->smarty->assign('plat_payed_list', $plat_payed_list);
+        $this->smarty->assign('order_status_list', $order_status_list);
         $this->smarty->assign('ad_location_list', $ad_location_list);
         $this->smarty->assign('list_data', $res_content);
         $this->smarty->assign('pages', $pages);
@@ -153,8 +162,14 @@ class consult extends MY_Controller {
     	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
     	 
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
+    	$pay_status_list=array(1=>'未支付', 2=>'支付');
+    	$plat_payed_list=array(1=>'未支付', 2=>'支付');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
     	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
+    	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
+    	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
+    	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
     	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$adv_consult_info['ad_location'],'name="info[ad_location]"','投放位置');
     	 
     	 
@@ -187,8 +202,14 @@ class consult extends MY_Controller {
     	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
     	
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
+    	$pay_status_list=array(1=>'未支付', 2=>'支付');
+    	$plat_payed_list=array(1=>'未支付', 2=>'支付');
+    	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
     	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
+    	$input_box['pay_status_sel']=$this->form->select($pay_status_list,$order_info['pay_status'],'name="info[pay_status]"','付款状态');
+    	$input_box['plat_payed_sel']=$this->form->select($plat_payed_list,$order_info['plat_payed'],'name="info[plat_payed]"','垫付状态');
+    	$input_box['order_status_sel']=$this->form->select($order_status_list,$order_info['status'],'name="info[order_status]"','订单状态');
     	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$adv_consult_info['ad_location'],'name="info[ad_location]"','投放位置');
     	
     	
@@ -237,6 +258,16 @@ class consult extends MY_Controller {
     	);
     	$consult_flag = $this->consult_list_model->update_info($consult_info, $clid);
     	
+    	if ($olid > 0) {
+	    	// 修改order_list表
+	    	$order_info = array(
+	    			'pay_status'	  => !empty($info['pay_status']) ? $info['pay_status'] : 1,
+	    			'plat_payed'	  => !empty($info['plat_payed']) ? $info['plat_payed'] : 1,
+	    			'status'	  => !empty($info['order_status']) ? $info['order_status'] : 1,
+	    			'utime'       => $cur_time,
+	    	);
+	    	$order_flag = $this->order_list_model->update_info($order_info, $olid);
+    	}
     	
     	// 记入流程表
     	// new

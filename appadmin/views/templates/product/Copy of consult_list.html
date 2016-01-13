@@ -50,6 +50,9 @@
             <th width="50">投放位置</th>
             <th width="50">媒体主优惠金额</th>
             <th width="50">实际交易金额(含税)</th>
+            <th width="50">是否已付款</th>
+            <th width="50">是否已垫付</th>
+            <th width="50">订单状态</th>
             <th width="50">询购状态</th>
             <th width="120">更新时间</th>
             <th width="120">管理操作</th>
@@ -72,6 +75,9 @@
             <td align="center"><{$ad_location_list[$row['ad_location']]}></td>
             <td align="center"><{$row['discount_price']}></td>
             <td align="center"><{$row['total_price']}></td>
+            <td align="center"><{$pay_status_list[$row['pay_status']]}></td>
+            <td align="center"><{$plat_payed_list[$row['plat_payed']]}></td>
+            <td align="center"><{$order_status_list[$row['order_status']]}></td>
             <td align="center"><{$consult_status_list[$row['status']]}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
             <!-- 
