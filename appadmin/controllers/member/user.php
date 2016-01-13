@@ -172,7 +172,7 @@ class user extends MY_Controller {
         $result = $this->db->query($sql);
         $info = $result->row_array();
         
-        $type_radio = Form::radio(self::$common_config['user_type'], $info['type'],'name="info[type]" id="type"');
+        $type_radio = Form::radio(self::$common_config['user_type'], $info['type'],'name="info[type]" id="type" disabled');
         $level_radio = Form::radio(self::$common_config['user_level'], $info['level'],'name="info[level]" id="level"');
         $this->smarty->assign('type_radio', $type_radio);
         $this->smarty->assign('level_radio', $level_radio);
