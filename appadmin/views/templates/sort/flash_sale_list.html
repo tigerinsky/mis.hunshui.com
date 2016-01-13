@@ -48,7 +48,6 @@
             <th width="50">多图文价格</th>
             <th width="50">优惠多图文价格</th>
             <th width="50">状态</th>
-            <th width="50">排名</th>
             <th width="120">管理操作</th>
             </tr>
         </thead>
@@ -61,7 +60,7 @@
             <td align="center"><{$row['oaid']}></td>
             <td align="center"><{$row['uid']}></td>
             <td align="center"><{$row['ad_location']}></td>
-            <td align="center"><{$row['show_day']}></td>
+            <td align="center"><{date("Y-m-d H:i:s", $row['show_day'])}></td>
             <td align="center"><{$row['show_hours']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
@@ -71,9 +70,8 @@
             <td align="center"><{$row['multi_price']}></td>
             <td align="center"><{$row['promo_multi_price']}></td>
             <td align="center"><{$row['status']}></td>
-            <td align="center"><{$row['rank']}></td>
             <td align="center">
-			    <a href="javascript:;" onclick="top_one(this,'<{$row['fsid']}>')">置顶</a>
+			    <a href="javascript:edit(<{$row['fsid']}>,'<{$row['oaid']}>')">置顶</a>
             </td>
             </tr>
             <{foreachelse}>
@@ -95,16 +93,9 @@
 <script type="text/javascript"> 
 <!--
 
-function top_one(obj,aid) {
-    window.top.art.dialog({content:'确认执行此操作吗？', fixed:true, style:'confirm',id:'top_one'}, 
-    function(){
-    $.get('<{site_url url='/sort/flash_sale/top_one_ajax/'}>?&fsid='+aid+'&wb_hash='+wb_hash,function(data){
-                if(data > 0) {
-                	$(obj).parent().parent().children().eq(15).html(data);
-                }
-            })
-         },
-    function(){});
+function edit(id, name) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'置顶操作',id:'edit',iframe:'<{site_url url='/sort/flash_sale/flash_sale_edit/'}>?id='+id,width:'200',height:'60'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
 }
 
 //-->

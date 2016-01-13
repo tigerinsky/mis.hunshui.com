@@ -197,6 +197,14 @@ class order extends MY_Controller {
     	// 媒体主优惠金额
     	$order_info['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
     	
+    	$where_array = array();
+    	$where_array[] = "order_id = '{$olid}' ";
+    	$where = ' WHERE '.join(' AND ',$where_array);
+    	$order = " ORDER BY ctime ASC";
+    	$sql       = "SELECT action_id, order_id, content, operator, type, ctime, clid FROM order_action_log $where $order";
+    	$result    = $this->dbr->query($sql);
+    	$list_data = $result->result_array();
+    	
     	$this->smarty->assign('adv_consult_info', $adv_consult_info);
     	$this->smarty->assign('adv_article_info', $adv_article_info);
     	$this->smarty->assign('adv_pay_info', $adv_pay_info);
@@ -205,6 +213,7 @@ class order extends MY_Controller {
     	$this->smarty->assign('ad_user_info', $ad_user_info);
     	$this->smarty->assign('news_user_info', $news_user_info);
     	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('list_data', $list_data);
     	$this->smarty->assign('show_dialog','true');
     	$this->smarty->assign('show_validator','true');
     	$this->smarty->display("product/order_view.html");

@@ -53,7 +53,7 @@ class flash_sale extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY fsid DESC";
+		$order     = " ORDER BY rank DESC";
         $sql_ct    = "SELECT fsid FROM $this->table_name $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
@@ -70,6 +70,48 @@ class flash_sale extends MY_Controller {
         $this->smarty->assign('show_dialog', 'true');
         $this->smarty->display("sort/flash_sale_list.html");
     }
+    
+    
+    
+    public function flash_sale_edit() {
+    	$this->load->library('form');
+    	$fsid = intval($this->input->get('id'));
+    
+    	$this->smarty->assign('fsid', $fsid);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("sort/flash_sale_edit.html");
+    }
+    
+    
+    public function flash_sale_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['fsid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$fsid = intval($cfg['fsid']);
+    	}
+    	
+    	if($fsid>0) {
+    		$cur_time = time();
+    	
+    		$item = $this->falsh_sale_model->get_max_rank();
+    		$rank = intval($item['rank']) + 1;
+    		log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' top_one_ajax [' . $rank .']');
+    		// 置顶操作
+    		$info = array(
+    				'rank'	=> $rank,
+    				'utime' => $cur_time,
+    		);
+    		$this->falsh_sale_model->update_info($info, $fsid);
+    		show_tips('操作成功','','','edit');
+    	} else {
+    		show_tips('操作异常，请检测');
+    	}
+    	
+    }
+    
     
     
     public function top_one_ajax() {

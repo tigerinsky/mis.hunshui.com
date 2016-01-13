@@ -43,7 +43,7 @@ class official_account_rank extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY rank_id DESC";
+		$order     = " ORDER BY worth DESC";
         $sql_ct    = "SELECT rank_id FROM $this->table_name $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
@@ -60,6 +60,42 @@ class official_account_rank extends MY_Controller {
         $this->smarty->assign('show_dialog', 'true');
         $this->smarty->display("sort/official_account_rank_list.html");
     }
+    
+    public function official_account_rank_edit() {
+    	$this->load->library('form');
+    	$rank_id = intval($this->input->get('id'));
+    
+    	$this->smarty->assign('rank_id', $rank_id);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("sort/official_account_rank_edit.html");
+    }
+    
+    
+    public function official_account_rank_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['rank_id'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$rank_id = intval($cfg['rank_id']);
+    	}
+    	
+    	if($rank_id>0) {
+    		$item = $this->official_account_rank_model->get_max_rank();
+    		$worth = intval($item['worth']) + 1;
+    		// 置顶操作
+    		$info = array(
+    				'worth'	=> $worth,
+    		);
+    		$this->official_account_rank_model->update_info($info, $rank_id);
+    		show_tips('操作成功','','','edit');
+    	} else {
+    		show_tips('操作异常，请检测');
+    	}
+    	
+    }
+    
     
     
     public function top_one_ajax() {

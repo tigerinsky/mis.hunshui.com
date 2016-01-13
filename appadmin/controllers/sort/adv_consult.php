@@ -85,7 +85,7 @@ class adv_consult extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);                                                                                     
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY aid DESC";
+		$order     = " ORDER BY rank DESC";
         $sql_ct    = "SELECT aid FROM adv_consult as c,adv_article as a,user as u $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
@@ -121,6 +121,58 @@ class adv_consult extends MY_Controller {
     }
     
     
+    public function adv_consult_edit() {
+    	$this->load->library('form');
+    	$aid = intval($this->input->get('id'));
+    	 
+    	$where_array = array();
+    	$where_array[] = "c.uid = u.uid ";
+    	$where_array[] = "c.art_id = a.art_id ";
+    	$where_array[] = "c.aid = '{$aid}' ";
+    	 
+    	if(is_array($where_array) and count($where_array) > 0) {
+    		$where = ' WHERE '.join(' AND ',$where_array);
+    	}
+    	 
+    	$sql = "SELECT u.cmpy_name, u.phone, u.wx_name, u.nick_name, u.level, a.title, a.author, a.content, a.url, a.abstract, a.original_link, c.aid, c.show_day, c.ad_location, c.remark, c.category, c.uid, c.art_id FROM adv_consult as c,adv_article as a,user as u $where";
+    	$result = $this->db->query($sql);
+    	$info = $result->row_array();
+    	$info['show_day']=date('Y-m-d h:i:s',$info['show_day']);
+    	$input_box['show_day']=$this->form->date('info[show_day]',$info['show_day'],1);
+    	 
+    	$this->smarty->assign('info', $info);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("sort/adv_consult_edit.html");
+    }
+    
+    
+    public function adv_consult_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['aid'] < 1 || $cfg['art_id'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$aid = intval($cfg['aid']);
+    	}
+    	if($aid>0) {
+    		$cur_time = time();
+    	
+    		$item = $this->adv_consult_model->get_max_rank();
+    		$rank = intval($item['rank']) + 1;
+    		// 置顶操作
+    		$info = array(
+    				'rank'	=> $rank,
+    				'utime' => $cur_time,
+    		);
+    		$this->adv_consult_model->update_info($info, $aid);
+    		show_tips('操作成功','','','edit');
+    	} else {
+    		show_tips('操作异常，请检测');
+    	}
+    }
+    
+    
     public function top_one_ajax() {
     	$aid = intval($this->input->get('aid'));
     	if($aid>0) {
@@ -134,9 +186,11 @@ class adv_consult extends MY_Controller {
     				'utime' => $cur_time,
     		);
     		$this->adv_consult_model->update_info($info, $aid);
-    		echo $rank;
+    		show_tips('操作成功','','','edit');
+    		//echo $rank;
     	} else {
-    		echo 0;
+    		show_tips('操作异常，请检测');
+    		//echo 0;
     	}
     }
     

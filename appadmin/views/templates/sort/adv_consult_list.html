@@ -56,7 +56,6 @@
             <th width="50">展示时间段</th>
             <th width="50">操作人</th>
             <th width="120">更新时间</th>
-            <th width="50">排名</th>
             <th width="120">管理操作</th>
             </tr>
         </thead>
@@ -76,9 +75,8 @@
             <td align="center"><{$row['show_hours']}></td>
             <td align="center"><{$row['operator']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['utime'])}></td>
-            <td align="center"><{$row['rank']}></td>
             <td align="center">
-			    <a href="javascript:;" onclick="top_one(this,'<{$row['aid']}>')">置顶</a>
+			    <a href="javascript:edit(<{$row['aid']}>,'<{$row['title']}>')">置顶</a>
             </td>
             </tr>
             <{foreachelse}>
@@ -100,16 +98,9 @@
 <script type="text/javascript"> 
 <!--
 
-function top_one(obj,aid) {
-    window.top.art.dialog({content:'确认执行此操作吗？', fixed:true, style:'confirm',id:'top_one'}, 
-    function(){
-    $.get('<{site_url url='/sort/adv_consult/top_one_ajax/'}>?&aid='+aid+'&wb_hash='+wb_hash,function(data){
-                if(data > 0) {
-                	$(obj).parent().parent().children().eq(12).html(data);
-                }
-            })
-         },
-    function(){});
+function edit(id, name) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'置顶操作',id:'edit',iframe:'<{site_url url='/sort/adv_consult/adv_consult_edit/'}>?id='+id,width:'200',height:'60'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
 }
 
 //-->

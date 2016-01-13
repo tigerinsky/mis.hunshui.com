@@ -65,7 +65,7 @@ class official_accounts extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY oaid DESC";
+		$order     = " ORDER BY rank DESC";
         $sql_ct    = "SELECT oaid FROM $this->table_name $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
@@ -84,9 +84,47 @@ class official_accounts extends MY_Controller {
         $this->smarty->assign('list_data', $list_data);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true'); 
-        $this->smarty->display("sort/official_accounts.html");
+        $this->smarty->display("sort/official_accounts_list.html");
     }
     
+    
+    public function official_accounts_edit() {
+    	$this->load->library('form');
+    	$oaid = intval($this->input->get('id'));
+    
+    	$this->smarty->assign('oaid', $oaid);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("sort/official_accounts_edit.html");
+    }
+    
+    
+    public function official_accounts_edit_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['oaid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$oaid = intval($cfg['oaid']);
+    	}
+    	
+    	if($oaid>0) {
+    		$cur_time = time();
+    	
+    		$item = $this->official_accounts_model->get_max_rank();
+    		$rank = intval($item['rank']) + 1;
+    		// 置顶操作
+    		$info = array(
+    				'rank'	=> $rank,
+    				'utime' => $cur_time,
+    		);
+    		$this->official_accounts_model->update_info($info, $oaid);
+    		show_tips('操作成功','','','edit');
+    	} else {
+    		show_tips('操作异常，请检测');
+    	}
+    	
+    }
     
     public function top_one_ajax() {
     	$oaid = intval($this->input->get('oaid'));
