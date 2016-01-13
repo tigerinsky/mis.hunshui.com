@@ -110,7 +110,7 @@ class drawback extends MY_Controller {
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
         $pages     = pages($log_num, $page, $pagesize);
-        $sql       = "SELECT dbid, art_id, ad_uid, news_uid, order_id, status, reason, drawback_price, drawback_time, mis_name, ctime, utime FROM $this->table_name $where $order $limit";
+        $sql       = "SELECT dbid, art_id, ad_uid, news_uid, order_id, status, account, reason, drawback_price, drawback_time, mis_name, ctime, utime FROM $this->table_name $where $order $limit";
         log_message('debug', '[******]'. __METHOD__ .':'.__LINE__.' drawback_list sql [' . $sql .']');
         $result    = $this->dbr->query($sql);
         $list_data = $result->result_array();
@@ -204,6 +204,7 @@ class drawback extends MY_Controller {
     			'news_uid'	  		=> $order_info['news_uid'],
     			'order_id'	  		=> $info['order_id'],
     			'status'	  		=> $info['status'],
+    			'account'	  		=> $info['account'],
     			'reason'	  		=> $info['reason'],
     			'drawback_price'	=> $info['drawback_price'],
     			'drawback_time'	  	=> strtotime($info['drawback_time']),
@@ -322,6 +323,7 @@ class drawback extends MY_Controller {
     			'drawback_price' => $info['drawback_price'],
     			'drawback_time'	  => strtotime($info['drawback_time']),
     			'status' => !empty($info['status']) ? $info['status'] : 1,
+    			'account' => $info['account'],
     			'reason' => $info['reason'],
     			'utime'       => $cur_time,
     	);

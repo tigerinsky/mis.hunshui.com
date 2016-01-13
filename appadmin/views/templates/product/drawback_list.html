@@ -50,6 +50,7 @@
             <th width="30">退款id</th>
             <th width="30">广告id</th>
             <th width="50">广告名称</th>
+            <th width="50">退款账号</th>
             <th width="50">退款金额</th>
             <th width="120">退款时间</th>
             <th width="50">退款状态</th>
@@ -70,6 +71,7 @@
             <td align="center"><{$row['dbid']}></td>
             <td align="center"><{$row['art_id']}></td>
             <td align="center"><{$row['article_title']}></td>
+            <td align="center"><{$row['account']}></td>
             <td align="center"><{$row['drawback_price']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['drawback_time'])}></td>
             <td align="center"><{$status_list[$row['status']]}></td>

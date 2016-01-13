@@ -11,7 +11,7 @@ class Drawback_list_model extends MY_Model {
 	}
 	
 	public function get_drawback_info_by_dbid($dbid) {
-		$this->dbw->select('dbid, art_id, ad_uid, news_uid, order_id, status, reason, drawback_price, drawback_time, mis_name, ctime, utime');
+		$this->dbw->select('dbid, art_id, ad_uid, news_uid, order_id, status, account, reason, drawback_price, drawback_time, mis_name, ctime, utime');
 		$this->dbw->where('dbid', $dbid);
 		$this->dbw->where('is_deleted', 1);
 		$result = $this->dbw->get($this->table_name);

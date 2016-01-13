@@ -80,7 +80,9 @@
              -->
             <td align="center">
                 <a href="javascript:edit(<{$row['uid']}>,'<{$row['wx_name']}>')">修改</a> | 
+                <!-- 
 			    <a href="javascript:view(<{$row['uid']}>,'<{$row['wx_name']}>')">查看详情</a> | 
+			     -->
 			    <a href="javascript:;" onclick="del_one(this,'<{$row['uid']}>')">删除</a>
             	<{if $row['type']==1}>
             		<a href="javascript:;" onclick="upgrade_one(this,'<{$row['uid']}>')" id="upgrade_<{$row['uid']}>" <{if $row['level']==1}>style="display:block;"<{else}>style="display:none;"<{/if}> >升级V2</a>
