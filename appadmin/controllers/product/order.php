@@ -370,17 +370,16 @@ class order extends MY_Controller {
     //媒体主大款
     public function order_pay_do() {
     	// 订单id
-    	$olid = intval($this->input->post('olid'));
-        $accout = trim($this->input->post('account'));    
-        $content = trim($this->input->post('content'));    
+    	$cfg = $this->input->post('cfg');
+    	$info = $this->input->post('info');
+
+        $olid = intval($cfg['olid']);
     	if($olid>0) {
-            $data['olid'] = $olid;
-            $data['user'] = $this->session->userdata('mis_user');
-            $data['accout'] = $accout;
-            $data['content'] = $content;
+            $info['olid'] = $olid;
+            $info['user'] = $this->session->userdata('mis_user');
             $url = $this->orderRequest['plat_pay'];
             $this->load->library('curl');
-            $this->curl->post($url, $data);
+            $this->curl->post($url, $info);
             $res = $this->curl->response;
             $ret = @json_decode($res, true);
             if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
