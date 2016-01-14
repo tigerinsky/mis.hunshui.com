@@ -79,7 +79,7 @@
 			    <a href="javascript:view(<{$row['olid']}>,'<{$row['olid']}>')">查看</a> | 
 			    <a href="javascript:edit(<{$row['olid']}>,'<{$row['olid']}>')">修改</a> | 
 			    <a href="javascript:;" onclick="advance_one(this,'<{$row['olid']}>')">平台垫付</a> | 
-			    <a href="javascript:;" onclick="pay_one(this,'<{$row['olid']}>')">打款</a> | 
+			    <a href="javascript:pay(<{$row['olid']}>,'<{$row['olid']}>')">打款</a> | 
 			    <a href="javascript:;" onclick="cancel_one(this,'<{$row['olid']}>')">取消</a> | 
 			    <a href="javascript:add(<{$row['olid']}>,'<{$row['olid']}>')">退款</a>
             </td>
@@ -174,6 +174,11 @@ function view(id, name) {
 function add(id, name) {
 	window.top.art.dialog({id:'add'}).close();
 	window.top.art.dialog({title:'添加退款信息',id:'add',iframe:'<{site_url url='/product/drawback/drawback_add/'}>?id='+id,width:'650',height:'400'}, function(){var d = window.top.art.dialog({id:'add'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'add'}).close()});
+}
+
+function pay(id, name) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'给媒体主打款',id:'edit',iframe:'<{site_url url='/product/order/order_pay/'}>?id='+id,width:'650',height:'400'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
 }
 
 

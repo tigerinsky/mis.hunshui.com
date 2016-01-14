@@ -351,6 +351,56 @@ class order extends MY_Controller {
     }
     
     // 给媒体主打款操作
+    public function order_pay() {
+    	$this->load->library('form');
+    	$olid = intval($this->input->get('id'));
+    	
+    	// 订单信息
+    	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
+    
+    
+    	$this->smarty->assign('order_info', $order_info);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/order_pay.html");
+    }
+    
+    
+    
+    public function order_pay_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['olid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$olid = $cfg['olid'];
+    	}
+    	$info = $this->input->post('info');
+    	if(empty($info['account'])) {
+    		show_tips('参数异常，请检测');
+    	}
+    	
+    	/****************调用PC接口****************/
+    	
+    	
+    	
+    	
+    	
+    	
+    	
+    	/****************************************/
+    
+    	show_tips('操作成功','','','edit');
+    
+    }
+    
+    
+    
+    
+    
+    
+    
+    
+    
     public function order_pay_one_ajax() {
     	// 订单id
     	$olid = intval($this->input->get('olid'));
