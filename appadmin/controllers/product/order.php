@@ -199,7 +199,7 @@ class order extends MY_Controller {
 
             $data = array(
                 'olid'  => $olid,
-                'ad_price' => $info['ad_price']
+                'ad_price' => $info['ad_price'],
                 'user' => $this->session->userdata('mis_user'),
 
             );
