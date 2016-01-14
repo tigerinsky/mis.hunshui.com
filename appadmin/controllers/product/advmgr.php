@@ -166,6 +166,32 @@ class advmgr extends MY_Controller {
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
     	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$info['ad_location'],'name="info[ad_location]"','投放位置');
     	
+    	$category_list = array(
+    			pow(2,0) => '财经',
+    			pow(2,1) => '时事',
+    			pow(2,2) => '民生',
+    			pow(2,3) => '科技',
+    			pow(2,4) => '创业',
+    			pow(2,5) => '汽车',
+    			pow(2,6) => '楼市',
+    			pow(2,7) => '职场',
+    			pow(2,8) => '教育',
+    			pow(2,9) => '学术',
+    			pow(2,10) => '文化',
+    			pow(2,11) => '健康',
+    			pow(2,12) => '时尚',
+    			pow(2,13) => '美食',
+    			pow(2,14) => '乐活',
+    			pow(2,15) => '旅行',
+    			pow(2,16) => '幽默',
+    			pow(2,17) => '情感',
+    			pow(2,18) => '体娱',
+    			pow(2,19) => '美体',
+    			pow(2,20) => '百科',
+    			pow(2,21) => '文摘'
+    	);
+    	$input_box['category_sel']=$this->form->select($category_list,$info['category'],'name="info[category]"','投放位置');
+    	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
     	$this->smarty->assign('show_dialog','true');
@@ -201,6 +227,32 @@ class advmgr extends MY_Controller {
     	
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
     	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$info['ad_location'],'name="info[ad_location]"','投放位置');
+    	
+    	$category_list = array(
+    			pow(2,0) => '财经',
+    			pow(2,1) => '时事',
+    			pow(2,2) => '民生',
+    			pow(2,3) => '科技',
+    			pow(2,4) => '创业',
+    			pow(2,5) => '汽车',
+    			pow(2,6) => '楼市',
+    			pow(2,7) => '职场',
+    			pow(2,8) => '教育',
+    			pow(2,9) => '学术',
+    			pow(2,10) => '文化',
+    			pow(2,11) => '健康',
+    			pow(2,12) => '时尚',
+    			pow(2,13) => '美食',
+    			pow(2,14) => '乐活',
+    			pow(2,15) => '旅行',
+    			pow(2,16) => '幽默',
+    			pow(2,17) => '情感',
+    			pow(2,18) => '体娱',
+    			pow(2,19) => '美体',
+    			pow(2,20) => '百科',
+    			pow(2,21) => '文摘'
+    	);
+    	$input_box['category_sel']=$this->form->select($category_list,$info['category'],'name="info[category]"','投放位置');
     	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
