@@ -148,6 +148,12 @@ class publish extends MY_Controller {
     	// 发布信息
     	$publish_info = $this->publish_list_model->get_publish_info_by_plid($plid);
     	
+    	$publish_info['content'] = str_replace('&','&amp;',$publish_info['content']);
+    	$publish_info['content'] = str_replace('<','&lt;',$publish_info['content']);
+    	$publish_info['content'] = str_replace('>','&gt;',$publish_info['content']);
+    	$publish_info['content'] = str_replace('"','&quot;',$publish_info['content']);
+    	$publish_info['content'] = str_replace("'",'&#39;',$publish_info['content']);
+    	
     	$publish_info['ctime']=date('Y-m-d h:i:s',$publish_info['ctime']);
     	$input_box['ctime']=$this->form->date('info[ctime]',$publish_info['ctime'],1);
     	
@@ -169,6 +175,12 @@ class publish extends MY_Controller {
     	
     	// 发布信息
     	$publish_info = $this->publish_list_model->get_publish_info_by_plid($plid);
+    	
+    	$publish_info['content'] = str_replace('&','&amp;',$publish_info['content']);
+    	$publish_info['content'] = str_replace('<','&lt;',$publish_info['content']);
+    	$publish_info['content'] = str_replace('>','&gt;',$publish_info['content']);
+    	$publish_info['content'] = str_replace('"','&quot;',$publish_info['content']);
+    	$publish_info['content'] = str_replace("'",'&#39;',$publish_info['content']);
     	
     	log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' info [' . json_encode($publish_info) .']');
     	
