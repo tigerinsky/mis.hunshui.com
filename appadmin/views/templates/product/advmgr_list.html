@@ -79,11 +79,15 @@
             <td align="center"><{if $row['ukind']==1}><font color="#D75145">是</font><{else}><font color="#008000">否</font><{/if}></td>
 			<td align="center" id="user_status"><{if $row['status'] == 1}><font color="#008000">已通过</font><{elseif $row['status'] == 2}><font color="#D75145">未通过</font><{elseif $row['status'] == 0}>未审核<{elseif $row['status'] == -1}>已删除<{/if}></td>
 			<td align="center"><{if $row['ukind_verify'] == 1}><span style="color:green"></span><{else}><span style="color:red">未认证</span><{/if}></td>
-             -->
             <td align="center">
                 <a href="javascript:edit(<{$row['aid']}>,'<{$row['title']}>')">修改</a> | 
 			    <a href="javascript:view(<{$row['aid']}>,'<{$row['title']}>')">查看详情</a> | 
 			    <a href="javascript:;" onclick="del_one(this,'<{$row['aid']}>')">删除</a>
+            </td>
+             -->
+            <td align="center">
+                <a href="javascript:edit(<{$row['aid']}>,'<{$row['title']}>')">修改</a> | 
+			    <a href="javascript:view(<{$row['aid']}>,'<{$row['title']}>')">查看详情</a>
             </td>
             </tr>
             <{foreachelse}>
