@@ -351,7 +351,7 @@ class order extends MY_Controller {
     }
     
     // 给媒体主打款操作
-    public function order_pay_one_ajax() {
+    public function order_pay_do() {
     	// 订单id
     	$olid = intval($this->input->get('olid'));
     	if($olid>0) {
@@ -371,18 +371,6 @@ class order extends MY_Controller {
                 echo 0;
             } 
     		
-    		/****************************************/
-    		// 记入流程表
-    		$procedure_log_info = array(
-    				'art_id'		=> 0,
-    				'consult_id'	=> 0,
-    				'order_id' 		=> $olid,
-    				'drawback_id' 	=> 0,
-    				'content'      	=> '给媒体主打款',
-    				'operator'      => $this->session->userdata('mis_user'), // 获取mis用户
-    				'ctime'       	=> time(),
-    		);
-    		$this->procedure_log_model->create_info($procedure_log_info);
     		echo 1;
     	} else {
     		echo 0;
