@@ -163,6 +163,9 @@ class advmgr extends MY_Controller {
     	$info['content'] = str_replace('"','&quot;',$info['content']);
     	$info['content'] = str_replace("'",'&#39;',$info['content']);
     	
+    	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+    	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$info['ad_location'],'name="info[ad_location]"','投放位置');
+    	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
     	$this->smarty->assign('show_dialog','true');
@@ -196,6 +199,8 @@ class advmgr extends MY_Controller {
     	$info['content'] = str_replace('"','&quot;',$info['content']);
     	$info['content'] = str_replace("'",'&#39;',$info['content']);
     	
+    	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+    	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$info['ad_location'],'name="info[ad_location]"','投放位置');
     	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
