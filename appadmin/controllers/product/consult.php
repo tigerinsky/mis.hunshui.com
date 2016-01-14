@@ -155,9 +155,9 @@ class consult extends MY_Controller {
     	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
     	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
     	 
-    	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
+    	//$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
-    	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
+    	//$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
     	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$adv_consult_info['ad_location'],'name="info[ad_location]"','投放位置');
     	 
     	 
@@ -192,9 +192,9 @@ class consult extends MY_Controller {
     	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
     	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
     	
-    	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
+    	//$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
-    	$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
+    	//$input_box['consult_status_sel']=$this->form->select($consult_status_list,$consult_info['status'],'name="info[consult_status]"','询购状态');
     	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$adv_consult_info['ad_location'],'name="info[ad_location]"','投放位置');
     	
     	
@@ -236,13 +236,14 @@ class consult extends MY_Controller {
     	);
     	$adv_consult_flag = $this->adv_consult_model->update_info($adv_consult_info, $aid);
     	
+    	/*
     	// 修改consult_list表
     	$consult_info = array(
     			'status'	  => !empty($info['consult_status']) ? $info['consult_status'] : 1,
     			'utime'       => $cur_time,
     	);
     	$consult_flag = $this->consult_list_model->update_info($consult_info, $clid);
-    	
+    	*/
     	
     	// 记入流程表
     	// new
@@ -263,7 +264,7 @@ class consult extends MY_Controller {
     	);
     	$this->procedure_log_model->create_info($procedure_log_info);
     	
-    	if($adv_consult_flag && $consult_flag){
+    	if($adv_consult_flag){
     		show_tips('操作成功','','','edit');
     	}else{
     		show_tips('操作异常，请检测');

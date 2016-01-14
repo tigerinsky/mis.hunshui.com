@@ -166,7 +166,7 @@ class order extends MY_Controller {
     	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
     	
     	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
-    	//$order_info['ad_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 广告费
+    	$order_info['ad_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 广告费
     	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
     	
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
@@ -203,7 +203,7 @@ class order extends MY_Controller {
 
             $data = array(
                 'olid'  => $olid,
-                'ad_price' => $info['ad_price'],
+                'ad_price' => $info['ad_price']*100,
                 'user' => $this->session->userdata('mis_user'),
 
             );
