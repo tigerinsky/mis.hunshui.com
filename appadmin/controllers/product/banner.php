@@ -53,7 +53,7 @@ class banner extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY bid DESC";
+		$order     = " ORDER BY type ASC, rank DESC";
         $sql_ct    = "SELECT bid FROM $this->table_name $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
@@ -65,7 +65,7 @@ class banner extends MY_Controller {
         
         log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' banner_list [' . json_encode($list_data) .']');
         
-        $banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+        $banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC首页', 3=>'PC广告广场');
         
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('list_data', $list_data);
@@ -80,7 +80,7 @@ class banner extends MY_Controller {
     function banner_add(){
     	$this->load->library('form');
     	
-    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC首页', 3=>'PC广告广场');
     	$input_box['banner_type_sel']=$this->form->select($banner_type_list,1,'name="info[type]"','选择类型');
 		
     	$this->smarty->assign('input_box',$input_box);
@@ -128,7 +128,7 @@ class banner extends MY_Controller {
     	// banner信息
     	$banner_info = $this->banner_model->get_banner_info_by_bid($bid);
     	
-    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC首页', 3=>'PC广告广场');
     	$input_box['banner_type_sel']=$this->form->select($banner_type_list,$banner_info['type'],'name="info[type]"','选择类型');
     	
     	$this->smarty->assign('banner_info', $banner_info);

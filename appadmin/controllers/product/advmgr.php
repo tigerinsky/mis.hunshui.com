@@ -125,8 +125,11 @@ class advmgr extends MY_Controller {
         $search_arr['time_start']=$this->form->date('time_start',$time_start,1);
         $search_arr['time_end']=$this->form->date('time_end',$time_end,1);
         
+        $ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+        
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('order_status_list', $order_status_list);
+        $this->smarty->assign('ad_location_list', $ad_location_list);
         $this->smarty->assign('list_data', $res_content);
         //$this->smarty->assign('list_data', $list_data);
         $this->smarty->assign('pages', $pages);
@@ -159,6 +162,35 @@ class advmgr extends MY_Controller {
     	$info['content'] = str_replace('>','&gt;',$info['content']);
     	$info['content'] = str_replace('"','&quot;',$info['content']);
     	$info['content'] = str_replace("'",'&#39;',$info['content']);
+    	
+    	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+    	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$info['ad_location'],'name="info[ad_location]"','投放位置');
+    	
+    	$category_list = array(
+    			pow(2,0) => '财经',
+    			pow(2,1) => '时事',
+    			pow(2,2) => '民生',
+    			pow(2,3) => '科技',
+    			pow(2,4) => '创业',
+    			pow(2,5) => '汽车',
+    			pow(2,6) => '楼市',
+    			pow(2,7) => '职场',
+    			pow(2,8) => '教育',
+    			pow(2,9) => '学术',
+    			pow(2,10) => '文化',
+    			pow(2,11) => '健康',
+    			pow(2,12) => '时尚',
+    			pow(2,13) => '美食',
+    			pow(2,14) => '乐活',
+    			pow(2,15) => '旅行',
+    			pow(2,16) => '幽默',
+    			pow(2,17) => '情感',
+    			pow(2,18) => '体娱',
+    			pow(2,19) => '美体',
+    			pow(2,20) => '百科',
+    			pow(2,21) => '文摘'
+    	);
+    	$input_box['category_sel']=$this->form->select($category_list,$info['category'],'name="info[category]"','投放位置');
     	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
@@ -193,6 +225,34 @@ class advmgr extends MY_Controller {
     	$info['content'] = str_replace('"','&quot;',$info['content']);
     	$info['content'] = str_replace("'",'&#39;',$info['content']);
     	
+    	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+    	$input_box['ad_location_sel']=$this->form->select($ad_location_list,$info['ad_location'],'name="info[ad_location]"','投放位置');
+    	
+    	$category_list = array(
+    			pow(2,0) => '财经',
+    			pow(2,1) => '时事',
+    			pow(2,2) => '民生',
+    			pow(2,3) => '科技',
+    			pow(2,4) => '创业',
+    			pow(2,5) => '汽车',
+    			pow(2,6) => '楼市',
+    			pow(2,7) => '职场',
+    			pow(2,8) => '教育',
+    			pow(2,9) => '学术',
+    			pow(2,10) => '文化',
+    			pow(2,11) => '健康',
+    			pow(2,12) => '时尚',
+    			pow(2,13) => '美食',
+    			pow(2,14) => '乐活',
+    			pow(2,15) => '旅行',
+    			pow(2,16) => '幽默',
+    			pow(2,17) => '情感',
+    			pow(2,18) => '体娱',
+    			pow(2,19) => '美体',
+    			pow(2,20) => '百科',
+    			pow(2,21) => '文摘'
+    	);
+    	$input_box['category_sel']=$this->form->select($category_list,$info['category'],'name="info[category]"','投放位置');
     	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
