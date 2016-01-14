@@ -207,8 +207,10 @@ class order extends MY_Controller {
             $this->load->library('curl');
             $this->curl->post($url, $data);
             $res = $this->curl->response;
-            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
-                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
+
+            $ret = @json_decode($res, true);
+            if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
                 show_tips($res['errmsg']);
                 echo 0;
             } 
@@ -324,9 +326,10 @@ class order extends MY_Controller {
             $this->load->library('curl');
             $this->curl->post($url, $data);
             $res = $this->curl->response;
-            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
-                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
-                show_tips($res['errmsg']);
+            $ret = @json_decode($res, true);
+            if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
+                show_tips($ret['errmsg']);
                 echo 0;
             } 
             
@@ -361,9 +364,10 @@ class order extends MY_Controller {
             $this->load->library('curl');
             $this->curl->post($url, $data);
             $res = $this->curl->response;
-            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
-                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
-                show_tips($res['errmsg']);
+            $ret = json_decode($res, true);
+            if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
+                show_tips($ret['errmsg']);
                 echo 0;
             } 
     		
@@ -400,9 +404,10 @@ class order extends MY_Controller {
             $this->load->library('curl');
             $this->curl->post($url, $data);
             $res = $this->curl->response;
-            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
-                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
-                show_tips($res['errmsg']);
+            $ret = @json_decode($res, true);
+            if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
+                show_tips($ret['errmsg']);
                 echo 0;
             } 
     		
