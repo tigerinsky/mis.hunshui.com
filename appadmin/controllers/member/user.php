@@ -277,7 +277,12 @@ class user extends MY_Controller {
 		$aid = intval($this->input->get('uid'));
         if($aid>0) {
             $del_query = "UPDATE {$this->table_name}  SET `level`= 2 WHERE uid={$aid}";
-            $this->db->query($del_query);
+            if ($this->db->query($del_query)) {
+			        $pre = self::get_user_key();
+			        $key = $pre.$aid;
+                    $info = array('level' => 2);
+			        $this->hMset($key, $info);
+            }
             echo 1;
         } else {
             echo 0;
@@ -289,7 +294,12 @@ class user extends MY_Controller {
 		$aid = intval($this->input->get('uid'));
         if($aid>0) {
             $del_query = "UPDATE {$this->table_name}  SET `level`= 1 WHERE uid={$aid}";
-            $this->db->query($del_query);
+            if ($this->db->query($del_query)) {
+			        $pre = self::get_user_key();
+			        $key = $pre.$aid;
+                    $info = array('level' => 1);
+			        $this->hMset($key, $info);
+            }
             echo 1;
         } else {
             echo 0;

@@ -151,7 +151,7 @@ function upgrade_one(obj,aid) {
     $.get('<{site_url url='/member/user/user_upgrade_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
                 //if(data == 1) $(obj).parent().parent().fadeOut("slow");
                 if(data == 1) {
-                	$(obj).parent().parent().children().eq(9).html("V2");
+                	$(obj).parent().parent().children().eq(10).html("V2");
                 	document.getElementById('upgrade_' + aid).style.display="none";
                 	document.getElementById('degrade_' + aid).style.display="block";
                 }
@@ -167,7 +167,7 @@ function degrade_one(obj,aid) {
     $.get('<{site_url url='/member/user/user_degrade_one_ajax/'}>?&uid='+aid+'&wb_hash='+wb_hash,function(data){
                 //if(data == 1) $(obj).parent().parent().fadeOut("slow");
                 if(data == 1) {
-                	$(obj).parent().parent().children().eq(9).html("V1");
+                	$(obj).parent().parent().children().eq(10).html("V1");
                 	document.getElementById('upgrade_' + aid).style.display="block";
                 	document.getElementById('degrade_' + aid).style.display="none";
                 }
