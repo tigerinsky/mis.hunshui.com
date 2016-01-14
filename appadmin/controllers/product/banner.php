@@ -176,12 +176,11 @@ class banner extends MY_Controller {
     }
     
     
-    
     public function banner_del_one_ajax() {
     	$bid = intval($this->input->get('bid'));
     	if($bid>0) {
     		$cur_time = time();
-    		
+    
     		// 修改banner表, 是否删除：1、未删除，2、已删除
     		$banner_info = array(
     				'is_deleted' => 2,
@@ -193,6 +192,50 @@ class banner extends MY_Controller {
     		echo 0;
     	}
     }
+    
+    
+    
+    
+    
+    public function banner_top() {
+    	$this->load->library('form');
+    	$bid = intval($this->input->get('id'));
+    
+    	$this->smarty->assign('bid', $bid);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/banner_top.html");
+    }
+    
+    
+    public function banner_top_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['bid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$bid = intval($cfg['bid']);
+    	}
+    	 
+    	if($bid>0) {
+    		$cur_time = time();
+    		
+    		$item = $this->banner_model->get_max_rank();
+    		$rank = intval($item['rank']) + 1;
+    		// 修改banner表, 置顶操作
+    		$banner_info = array(
+    				'rank'	=> $rank,
+    				'utime' => $cur_time,
+    		);
+    		$this->banner_model->update_info($banner_info, $bid);
+    		show_tips('操作成功','','','edit');
+    	} else {
+    		show_tips('操作异常，请检测');
+    	}
+    	 
+    }
+    
+    
     
     
     public function banner_top_one_ajax() {
