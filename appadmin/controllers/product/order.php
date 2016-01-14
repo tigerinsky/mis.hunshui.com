@@ -87,11 +87,29 @@ class order extends MY_Controller {
         		$where_array[] = "ad_uid = '{$uid}' or news_uid = '{$uid}' ";
         	}
         	
-            $keywords = trim($this->input->get('keywords'));
-            $search_arr['keywords'] = $keywords;
-            if($keywords != ''){
-                $where_array[] = "olid like '%{$keywords}%' or ad_location like '%{$keywords}%' ";
-            }
+        	
+        	$title = trim($this->input->get('title'));
+        	$search_arr['title'] = $title;
+        	if($title != ''){
+        		// 通过文章标题模糊搜索符合条件的询购id
+        		$tmp_sql = "select aid from adv_consult as c, adv_article as a where c.art_id = a.art_id and title like '%{$title}%' ";
+        		$tmp_result = $this->dbr->query($tmp_sql);
+        		$tmp_list_data = $tmp_result->result_array();
+        		if (count($tmp_list_data) > 0) {
+        			$aid_list = array();
+        			foreach($tmp_list_data as $item) {
+        				$aid_list[] = $item['aid'];
+        			}
+        			$aid_list_str = implode(',', $aid_list);
+	        		$where_array[] = "aid in ({$aid_list_str}) ";
+        		}
+        	}
+        	
+//             $keywords = trim($this->input->get('keywords'));
+//             $search_arr['keywords'] = $keywords;
+//             if($keywords != ''){
+//                 $where_array[] = "olid like '%{$keywords}%' or ad_location like '%{$keywords}%' ";
+//             }
         }
         if(is_array($where_array) and count($where_array) > 0) {
             $where = ' WHERE '.join(' AND ',$where_array);
