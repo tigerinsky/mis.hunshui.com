@@ -256,11 +256,7 @@ class order extends MY_Controller {
     	);
     	$this->procedure_log_model->create_info($procedure_log_info);
     	 
-    	if($order_flag){
-    		show_tips('操作成功','','','edit');
-    	}else{
-    		show_tips('操作异常，请检测');
-    	}
+    	show_tips('操作成功','','','edit');
     	 
     }
     

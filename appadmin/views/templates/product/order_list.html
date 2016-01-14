@@ -123,6 +123,8 @@ function advance_one(obj,aid) {
     $.get('<{site_url url='/product/order/order_advance_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) {
                 	$(obj).parent().parent().children().eq(8).html("已垫付");
+                } else {
+	                alert("未付款的正常订单才能垫付");
                 }
             })
          },
