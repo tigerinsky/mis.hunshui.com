@@ -12,7 +12,7 @@ class order extends MY_Controller {
         self::$common_config = $this->config->item('common_config');
 
         $this->load->config("order", TRUE);
-        $this->orderRequest = $this->config->item('request');
+        $this->orderRequest = $this->config->item('order', 'request');
         $this->load->model("member/user_model", "user_model");
         $this->load->model("member/adv_consult_model", "adv_consult_model");
         $this->load->model("member/adv_article_model", "adv_article_model");
