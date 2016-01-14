@@ -366,15 +366,18 @@ class order extends MY_Controller {
     }
     
     
-    public function order_pay_one_ajax() {
+
+    //媒体主大款
+    public function order_pay_do() {
     	// 订单id
-    	$olid = intval($this->input->get('olid'));
+    	$olid = intval($this->input->post('olid'));
+        $accout = trim($this->input->post('account'));    
+        $content = trim($this->input->post('content'));    
     	if($olid>0) {
-    		/****************调用PC接口****************/
-    		// todo
-    		
             $data['olid'] = $olid;
             $data['user'] = $this->session->userdata('mis_user');
+            $data['accout'] = $accout;
+            $data['content'] = $content;
             $url = $this->orderRequest['plat_pay'];
             $this->load->library('curl');
             $this->curl->post($url, $data);
@@ -384,13 +387,11 @@ class order extends MY_Controller {
                 log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
                 show_tips($ret['errmsg']);
             } 
-    		
     	    show_tips('操作成功','','','edit');
     	} else {
             show_tips('参数错误');
-    	}
+        }
     }
-    
     // 取消操作
     public function order_cancel_one_ajax() {
     	// 订单id
