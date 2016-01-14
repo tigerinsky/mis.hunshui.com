@@ -238,7 +238,12 @@ class user extends MY_Controller {
 			$uid=$this->input->post('uid');
 			if($uid>0) {
 				$sql = "UPDATE {$this->table_name}  SET `level`= 2 WHERE uid={$uid}";
-				$this->db->query($sql);
+                if ($this->db->query($sql)) {
+			        $pre = self::get_user_key();
+			        $key = $pre.$uid;
+                    $info = array('level' => 2);
+			        $this->hMset($key, $info);
+                }
 				show_tips('操作成功',HTTP_REFERER);
 			} else {
 				show_tips('参数有误，请重新提交');
@@ -253,7 +258,12 @@ class user extends MY_Controller {
 			$uid=$this->input->post('uid');
 			if($uid>0) {
 				$sql = "UPDATE {$this->table_name}  SET `level`= 1 WHERE uid={$uid}";
-				$this->db->query($sql);
+                if ($this->db->query($sql)){
+			        $pre = self::get_user_key();
+			        $key = $pre.$uid;
+                    $info = array('level' => 1);
+			        $this->hMset($key, $info);
+                }
 				show_tips('操作成功',HTTP_REFERER);
 			} else {
 				show_tips('参数有误，请重新提交');
@@ -267,7 +277,12 @@ class user extends MY_Controller {
 		$aid = intval($this->input->get('uid'));
         if($aid>0) {
             $del_query = "UPDATE {$this->table_name}  SET `level`= 2 WHERE uid={$aid}";
-            $this->db->query($del_query);
+            if ($this->db->query($del_query)) {
+			        $pre = self::get_user_key();
+			        $key = $pre.$aid;
+                    $info = array('level' => 2);
+			        $this->hMset($key, $info);
+            }
             echo 1;
         } else {
             echo 0;
@@ -279,7 +294,12 @@ class user extends MY_Controller {
 		$aid = intval($this->input->get('uid'));
         if($aid>0) {
             $del_query = "UPDATE {$this->table_name}  SET `level`= 1 WHERE uid={$aid}";
-            $this->db->query($del_query);
+            if ($this->db->query($del_query)) {
+			        $pre = self::get_user_key();
+			        $key = $pre.$aid;
+                    $info = array('level' => 1);
+			        $this->hMset($key, $info);
+            }
             echo 1;
         } else {
             echo 0;
