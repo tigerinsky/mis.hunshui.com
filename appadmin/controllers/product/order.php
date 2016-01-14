@@ -364,7 +364,7 @@ class order extends MY_Controller {
             $this->load->library('curl');
             $this->curl->post($url, $data);
             $res = $this->curl->response;
-            $ret = json_decode($res, true);
+            $ret = @json_decode($res, true);
             if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
                 log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
                 show_tips($ret['errmsg']);
