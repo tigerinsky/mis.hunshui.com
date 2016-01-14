@@ -154,12 +154,6 @@ class advmgr extends MY_Controller {
     	$info['show_day']=date('Y-m-d h:i:s',$info['show_day']);
     	$input_box['show_day']=$this->form->date('info[show_day]',$info['show_day'],1);
     	
-    	$info['content'] = str_replace('&','&amp;',$info['content']);
-    	$info['content'] = str_replace('<','&lt;',$info['content']);
-    	$info['content'] = str_replace('>','&gt;',$info['content']);
-    	$info['content'] = str_replace('"','&quot;',$info['content']);
-    	$info['content'] = str_replace("'",'&#39;',$info['content']);
-    	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);
     	$this->smarty->assign('show_dialog','true');
@@ -186,13 +180,6 @@ class advmgr extends MY_Controller {
     	$info = $result->row_array();
     	$info['show_day']=date('Y-m-d h:i:s',$info['show_day']);
     	$input_box['show_day']=$this->form->date('info[show_day]',$info['show_day'],1);
-    	
-    	$info['content'] = str_replace('&','&amp;',$info['content']);
-    	$info['content'] = str_replace('<','&lt;',$info['content']);
-    	$info['content'] = str_replace('>','&gt;',$info['content']);
-    	$info['content'] = str_replace('"','&quot;',$info['content']);
-    	$info['content'] = str_replace("'",'&#39;',$info['content']);
-    	
     	
     	$this->smarty->assign('info', $info);
     	$this->smarty->assign('input_box',$input_box);

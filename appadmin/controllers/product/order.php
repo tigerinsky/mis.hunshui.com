@@ -351,7 +351,22 @@ class order extends MY_Controller {
     }
     
     // 给媒体主打款操作
-    public function order_pay_do() {
+    public function order_pay() {
+    	$this->load->library('form');
+    	$olid = intval($this->input->get('id'));
+    	
+    	// 订单信息
+    	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
+    
+    
+    	$this->smarty->assign('order_info', $order_info);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/order_pay.html");
+    }
+    
+    
+    public function order_pay_one_ajax() {
     	// 订单id
     	$olid = intval($this->input->get('olid'));
     	if($olid>0) {
@@ -368,12 +383,11 @@ class order extends MY_Controller {
             if ($this->curl->http_status_code != 200 || ($ret['errno'] != 0)) {
                 log_message('error', 'request api order failed, errno['.$ret['errno'].'], errmsg['.$ret['errmsg'].']');
                 show_tips($ret['errmsg']);
-                echo 0;
             } 
     		
-    		echo 1;
+    	    show_tips('操作成功','','','edit');
     	} else {
-    		echo 0;
+            show_tips('参数错误');
     	}
     }
     
