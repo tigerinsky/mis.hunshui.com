@@ -111,8 +111,11 @@ class adv_consult extends MY_Controller {
         $search_arr['time_start']=$this->form->date('time_start',$time_start,1);
         $search_arr['time_end']=$this->form->date('time_end',$time_end,1);
         
+        $ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+        
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('order_status_list', $order_status_list);
+        $this->smarty->assign('ad_location_list', $ad_location_list);
         $this->smarty->assign('list_data', $res_content);
         //$this->smarty->assign('list_data', $list_data);
         $this->smarty->assign('pages', $pages);
