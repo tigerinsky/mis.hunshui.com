@@ -10,6 +10,9 @@ class order extends MY_Controller {
         $this->dbr = $this->load->database("dbr", TRUE);
         $this->load->config("common_config", TRUE);
         self::$common_config = $this->config->item('common_config');
+
+        $this->load->config("order", TRUE);
+        $this->orderRequest = $this->config->item('request');
         $this->load->model("member/user_model", "user_model");
         $this->load->model("member/adv_consult_model", "adv_consult_model");
         $this->load->model("member/adv_article_model", "adv_article_model");
@@ -189,12 +192,26 @@ class order extends MY_Controller {
     	 
     	$cur_time = time();
     	if ($olid > 0) {
-    		// 修改order_list表
-    		$order_info = array(
-    				'ad_price'	=> $info['ad_price'],
-    				'utime'		=> $cur_time,
-    		);
-    		$order_flag = $this->order_list_model->update_info($order_info, $olid);
+
+            if ($info['ad_price'] <= 0) {
+                show_tips('价格不能为0');
+            }
+
+            $data = array(
+                'olid'  => $olid,
+                'ad_price' => $info['ad_price']
+                'user' => $this->session->userdata('mis_user'),
+
+            );
+            $url = $this->orderRequest['modify'];
+            $this->load->library('curl');
+            $this->curl->post($url, $data);
+            $res = $this->curl->response;
+            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
+                show_tips($res['errmsg']);
+                echo 0;
+            } 
     	}
     	 
     	// 记入流程表
@@ -301,13 +318,18 @@ class order extends MY_Controller {
     	if($olid>0) {
     		$cur_time = time();
     		
-    		// 修改order_list表, 平台付款，1未支付，2已垫付
-    		$order_info = array(
-    				'plat_payed' => 2,
-    				'utime'  => $cur_time,
-    		);
-    		$order_flag = $this->order_list_model->update_info($order_info, $olid);
-    		
+            $data['olid'] = $olid;
+            $data['user'] = $this->session->userdata('mis_user');
+            $url = $this->orderRequest['advance_pay'];
+            $this->load->library('curl');
+            $this->curl->post($url, $data);
+            $res = $this->curl->response;
+            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
+                show_tips($res['errmsg']);
+                echo 0;
+            } 
+            
     		// 记入流程表
     		$procedure_log_info = array(
     				'art_id'		=> 0,
@@ -333,10 +355,17 @@ class order extends MY_Controller {
     		/****************调用PC接口****************/
     		// todo
     		
-    		
-    		
-    		
-    		
+            $data['olid'] = $olid;
+            $data['user'] = $this->session->userdata('mis_user');
+            $url = $this->orderRequest['plat_pay'];
+            $this->load->library('curl');
+            $this->curl->post($url, $data);
+            $res = $this->curl->response;
+            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
+                show_tips($res['errmsg']);
+                echo 0;
+            } 
     		
     		/****************************************/
     		// 记入流程表
@@ -363,12 +392,19 @@ class order extends MY_Controller {
     	if($olid>0) {
     		/****************调用PC接口****************/
     		// todo
-    		
-    		
-    		
-    		
-    		
-    		
+            //
+
+            $data['olid'] = $olid;
+            $data['user'] = $this->session->userdata('mis_user'); // 获取mis用户
+            $url = $this->orderRequest['cancel'];
+            $this->load->library('curl');
+            $this->curl->post($url, $data);
+            $res = $this->curl->response;
+            if ($this->curl->http_status_code != 200 || ($res['errno'] != 0)) {
+                log_message('error', 'request api order failed, errno['.$res['errno'].'], errmsg['.$res['errmsg'].']');
+                show_tips($res['errmsg']);
+                echo 0;
+            } 
     		
     		/****************************************/
     		// 记入流程表
@@ -387,7 +423,4 @@ class order extends MY_Controller {
     		echo 0;
     	}
     }
-    
-	
-	
 }
