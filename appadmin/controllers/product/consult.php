@@ -151,6 +151,9 @@ class consult extends MY_Controller {
     	 
     	$order_id = $consult_info['order_id'];
     	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
+    	
+    	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
+    	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
     	 
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
@@ -185,6 +188,9 @@ class consult extends MY_Controller {
     	
     	$order_id = $consult_info['order_id'];
     	$order_info = $this->order_list_model->get_order_info_by_olid($order_id);
+    	
+    	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
+    	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
     	
     	$consult_status_list=array(1=>'待审核', 2=>'通过', 3=>'不通过');
     	$ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');

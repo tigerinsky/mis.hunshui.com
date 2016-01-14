@@ -165,6 +165,10 @@ class order extends MY_Controller {
     	// 订单信息
     	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
     	
+    	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
+    	//$order_info['ad_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 广告费
+    	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
+    	
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'已垫付');
     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
@@ -289,7 +293,10 @@ class order extends MY_Controller {
     	$input_box['pay_method_sel']=$this->form->select($pay_method_list,$adv_pay_info['pay_method'],'name="info[pay_method]"','付款方式');
     	
     	// 媒体主优惠金额
-    	$order_info['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
+    	$order_info['discount_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 优惠金额
+    	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
+    	$order_info['ad_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 广告费
+    	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
     	
     	$where_array = array();
     	$where_array[] = "order_id = '{$olid}' ";
