@@ -151,7 +151,7 @@ class banner extends MY_Controller {
     	$info = $this->input->post('info');
     	$pic = $this->input->post('pic');
     	
-    	$url = $pic[1];
+    	$url = $pic[0];
     	if( $url == '' || $info['type'] < 1){
     		show_tips('参数异常，请检测');
     	}
