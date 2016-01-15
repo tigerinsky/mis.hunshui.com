@@ -53,7 +53,7 @@ class banner extends MY_Controller {
         $pagesize  = 20;
         $offset    = $pagesize*($page-1);
         $limit     = " LIMIT $offset,$pagesize";
-		$order     = " ORDER BY bid DESC";
+		$order     = " ORDER BY type ASC, rank DESC";
         $sql_ct    = "SELECT bid FROM $this->table_name $where";
         $query     = $this->dbr->query($sql_ct);
         $log_num   = $query->num_rows();
@@ -65,7 +65,7 @@ class banner extends MY_Controller {
         
         log_message('debug', '[******************************]'. __METHOD__ .':'.__LINE__.' banner_list [' . json_encode($list_data) .']');
         
-        $banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+        $banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC首页', 3=>'PC广告广场');
         
         $this->smarty->assign('search_arr', $search_arr);
         $this->smarty->assign('list_data', $list_data);
@@ -80,7 +80,7 @@ class banner extends MY_Controller {
     function banner_add(){
     	$this->load->library('form');
     	
-    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC首页', 3=>'PC广告广场');
     	$input_box['banner_type_sel']=$this->form->select($banner_type_list,1,'name="info[type]"','选择类型');
 		
     	$this->smarty->assign('input_box',$input_box);
@@ -128,7 +128,7 @@ class banner extends MY_Controller {
     	// banner信息
     	$banner_info = $this->banner_model->get_banner_info_by_bid($bid);
     	
-    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC');
+    	$banner_type_list=array(1=>'原创', 2=>'限时抢', 3=>'PC首页', 3=>'PC广告广场');
     	$input_box['banner_type_sel']=$this->form->select($banner_type_list,$banner_info['type'],'name="info[type]"','选择类型');
     	
     	$this->smarty->assign('banner_info', $banner_info);
@@ -176,12 +176,11 @@ class banner extends MY_Controller {
     }
     
     
-    
     public function banner_del_one_ajax() {
     	$bid = intval($this->input->get('bid'));
     	if($bid>0) {
     		$cur_time = time();
-    		
+    
     		// 修改banner表, 是否删除：1、未删除，2、已删除
     		$banner_info = array(
     				'is_deleted' => 2,
@@ -193,6 +192,50 @@ class banner extends MY_Controller {
     		echo 0;
     	}
     }
+    
+    
+    
+    
+    
+    public function banner_top() {
+    	$this->load->library('form');
+    	$bid = intval($this->input->get('id'));
+    
+    	$this->smarty->assign('bid', $bid);
+    	$this->smarty->assign('input_box',$input_box);
+    	$this->smarty->assign('show_dialog','true');
+    	$this->smarty->assign('show_validator','true');
+    	$this->smarty->display("product/banner_top.html");
+    }
+    
+    
+    public function banner_top_do() {
+    	$cfg = $this->input->post('cfg');
+    	if($cfg['bid'] < 1) {
+    		show_tips('参数异常，请检测');
+    	} else {
+    		$bid = intval($cfg['bid']);
+    	}
+    	 
+    	if($bid>0) {
+    		$cur_time = time();
+    		
+    		$item = $this->banner_model->get_max_rank();
+    		$rank = intval($item['rank']) + 1;
+    		// 修改banner表, 置顶操作
+    		$banner_info = array(
+    				'rank'	=> $rank,
+    				'utime' => $cur_time,
+    		);
+    		$this->banner_model->update_info($banner_info, $bid);
+    		show_tips('操作成功','','','edit');
+    	} else {
+    		show_tips('操作异常，请检测');
+    	}
+    	 
+    }
+    
+    
     
     
     public function banner_top_one_ajax() {

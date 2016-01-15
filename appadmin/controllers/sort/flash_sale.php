@@ -63,8 +63,12 @@ class flash_sale extends MY_Controller {
         $result    = $this->dbr->query($sql);
         $list_data = $result->result_array();
         
+        $ad_location_list=array(1=>'单图文', 2=>'多图文头条', 4=>'多图文2~N条');
+        $status_list=array(1=>'正常', 2=>'关闭');
         
         $this->smarty->assign('search_arr', $search_arr);
+        $this->smarty->assign('ad_location_list', $ad_location_list);
+        $this->smarty->assign('status_list', $status_list);
         $this->smarty->assign('list_data', $list_data);
         $this->smarty->assign('pages', $pages);
         $this->smarty->assign('show_dialog', 'true');

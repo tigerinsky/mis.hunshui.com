@@ -39,8 +39,7 @@
             <th width="120">图片地址</th>
             <th width="120">跳转地址</th>
             <th width="120">描述</th>
-            <th width="50">类型</th>
-            <th width="50">排名</th>
+            <th width="80">类型</th>
             <th width="120">发布时间</th>
             <th width="120">管理操作</th>
             </tr>
@@ -55,11 +54,10 @@
             <td align="center"><a target="_blank" href="<{$row['redirect_url']}>" ><{$row['redirect_url']}></a></td>
             <td align="center"><{$row['description']}></td>
             <td align="center"><{$banner_type_list[$row['type']]}></td>
-            <td align="center"><{$row['rank']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
             <td align="center">
 			    <a href="javascript:edit(<{$row['bid']}>,'<{$row['bid']}>')">编辑</a> | 
-			    <a href="javascript:;" onclick="top_one(this,'<{$row['bid']}>')">置顶</a> | 
+			    <a href="javascript:top_one(<{$row['bid']}>,'<{$row['bid']}>')">置顶</a> | 
 			    <a href="javascript:;" onclick="delete_one(this,'<{$row['bid']}>')">删除</a>
             </td>
             </tr>
@@ -113,6 +111,12 @@ function delete_more_like(){
 function edit(id, name) {
 	window.top.art.dialog({id:'edit'}).close();
 	window.top.art.dialog({title:'编辑banner信息《'+name+'》',id:'edit',iframe:'<{site_url url='/product/banner/banner_edit/'}>?id='+id,width:'650',height:'400'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
+}
+
+
+function top_one(id, name) {
+	window.top.art.dialog({id:'edit'}).close();
+	window.top.art.dialog({title:'置顶操作',id:'edit',iframe:'<{site_url url='/product/banner/banner_top/'}>?id='+id,width:'200',height:'60'}, function(){var d = window.top.art.dialog({id:'edit'}).data.iframe;d.document.getElementById('dosubmit').click();return false;}, function(){window.top.art.dialog({id:'edit'}).close()});
 }
 //-->
 </script>

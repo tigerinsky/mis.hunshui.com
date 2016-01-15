@@ -20,8 +20,12 @@
 				<{$search_arr['plat_payed_sel']}>
 			    手机号：	
 				<input name="phone" type="text" value="<{$search_arr['phone']}>" class="input-text" />
+				广告标题：	
+				<input name="title" type="text" value="<{$search_arr['title']}>" class="input-text" />
+				<!-- 
 			    关键词：	
 				<input name="keywords" type="text" value="<{$search_arr['keywords']}>" class="input-text" />
+				 -->
 				<input type="submit" name="search" class="button" value="搜索" />
 		</div>
 		</td>
@@ -119,6 +123,8 @@ function advance_one(obj,aid) {
     $.get('<{site_url url='/product/order/order_advance_one_ajax/'}>?&olid='+aid+'&wb_hash='+wb_hash,function(data){
                 if(data == 1) {
                 	$(obj).parent().parent().children().eq(8).html("已垫付");
+                } else {
+	                alert("未付款的正常订单才能垫付");
                 }
             })
          },

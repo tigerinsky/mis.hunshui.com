@@ -37,7 +37,7 @@
             <th width="30">限时抢id</th>
             <th width="30">公众号id</th>
             <th width="30">用户id</th>
-            <th width="50">广告位置</th>
+            <th width="50">状态</th>
             <th width="120">抢购日期</th>
             <th width="120">发布时间段</th>
             <th width="120">创建时间</th>
@@ -47,7 +47,7 @@
             <th width="50">多图文头条原价</th>
             <th width="50">多图文价格</th>
             <th width="50">优惠多图文价格</th>
-            <th width="50">状态</th>
+            <th width="50">广告位置</th>
             <th width="120">管理操作</th>
             </tr>
         </thead>
@@ -59,7 +59,7 @@
             <td align="center"><{$row['fsid']}></td>
             <td align="center"><{$row['oaid']}></td>
             <td align="center"><{$row['uid']}></td>
-            <td align="center"><{$row['ad_location']}></td>
+            <td align="center"><{$status_list[$row['status']]}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['show_day'])}></td>
             <td align="center"><{$row['show_hours']}></td>
             <td align="center"><{date("Y-m-d H:i:s", $row['ctime'])}></td>
@@ -69,7 +69,7 @@
             <td align="center"><{$row['frt_multi_price']}></td>
             <td align="center"><{$row['multi_price']}></td>
             <td align="center"><{$row['promo_multi_price']}></td>
-            <td align="center"><{$row['status']}></td>
+            <td align="center"><{$ad_location_list[$row['ad_location']]}></td>
             <td align="center">
 			    <a href="javascript:edit(<{$row['fsid']}>,'<{$row['oaid']}>')">置顶</a>
             </td>

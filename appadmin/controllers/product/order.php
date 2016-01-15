@@ -87,11 +87,29 @@ class order extends MY_Controller {
         		$where_array[] = "ad_uid = '{$uid}' or news_uid = '{$uid}' ";
         	}
         	
-            $keywords = trim($this->input->get('keywords'));
-            $search_arr['keywords'] = $keywords;
-            if($keywords != ''){
-                $where_array[] = "olid like '%{$keywords}%' or ad_location like '%{$keywords}%' ";
-            }
+        	
+        	$title = trim($this->input->get('title'));
+        	$search_arr['title'] = $title;
+        	if($title != ''){
+        		// 通过文章标题模糊搜索符合条件的询购id
+        		$tmp_sql = "select aid from adv_consult as c, adv_article as a where c.art_id = a.art_id and title like '%{$title}%' ";
+        		$tmp_result = $this->dbr->query($tmp_sql);
+        		$tmp_list_data = $tmp_result->result_array();
+        		if (count($tmp_list_data) > 0) {
+        			$aid_list = array();
+        			foreach($tmp_list_data as $item) {
+        				$aid_list[] = $item['aid'];
+        			}
+        			$aid_list_str = implode(',', $aid_list);
+	        		$where_array[] = "aid in ({$aid_list_str}) ";
+        		}
+        	}
+        	
+//             $keywords = trim($this->input->get('keywords'));
+//             $search_arr['keywords'] = $keywords;
+//             if($keywords != ''){
+//                 $where_array[] = "olid like '%{$keywords}%' or ad_location like '%{$keywords}%' ";
+//             }
         }
         if(is_array($where_array) and count($where_array) > 0) {
             $where = ' WHERE '.join(' AND ',$where_array);
@@ -165,6 +183,10 @@ class order extends MY_Controller {
     	// 订单信息
     	$order_info = $this->order_list_model->get_order_info_by_olid($olid);
     	
+    	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
+    	$order_info['ad_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 广告费
+    	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
+    	
     	$pay_status_list=array(1=>'未支付', 2=>'支付');
     	$plat_payed_list=array(1=>'未支付', 2=>'已垫付');
     	$order_status_list=array(1=>'创建', 2=>'划款待执行', 3=>'媒体主执行完成', 9=>'订单完成', 10=>'订单取消');
@@ -199,7 +221,7 @@ class order extends MY_Controller {
 
             $data = array(
                 'olid'  => $olid,
-                'ad_price' => $info['ad_price'],
+                'ad_price' => $info['ad_price']*100,
                 'user' => $this->session->userdata('mis_user'),
 
             );
@@ -234,11 +256,7 @@ class order extends MY_Controller {
     	);
     	$this->procedure_log_model->create_info($procedure_log_info);
     	 
-    	if($order_flag){
-    		show_tips('操作成功','','','edit');
-    	}else{
-    		show_tips('操作异常，请检测');
-    	}
+    	show_tips('操作成功','','','edit');
     	 
     }
     
@@ -289,7 +307,10 @@ class order extends MY_Controller {
     	$input_box['pay_method_sel']=$this->form->select($pay_method_list,$adv_pay_info['pay_method'],'name="info[pay_method]"','付款方式');
     	
     	// 媒体主优惠金额
-    	$order_info['discount_price'] = $order_info['original_price'] - $order_info['ad_price']; // 优惠金额
+    	$order_info['discount_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 优惠金额
+    	$order_info['total_price'] = number_format($order_info['total_price']/100, 2, '.', ''); // 实际交易金额(含税)
+    	$order_info['ad_price'] = number_format($order_info['ad_price']/100, 2, '.', ''); // 广告费
+    	$order_info['original_price'] = number_format($order_info['original_price']/100, 2, '.', ''); // 原价
     	
     	$where_array = array();
     	$where_array[] = "order_id = '{$olid}' ";
